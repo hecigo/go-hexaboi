@@ -1,0 +1,68 @@
+basePath: /
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Hercules API Documentation.
+  termsOfService: http://swagger.io/terms/
+  title: Hercules API Documentation
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: Get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - Root
+  /v1/item:
+    get:
+      consumes:
+      - '*/*'
+      description: Search order items.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Search order items.
+      tags:
+      - Item
+  /v1/item/{code}:
+    get:
+      consumes:
+      - '*/*'
+      description: Search order item by code.
+      parameters:
+      - description: Code
+        in: path
+        name: code
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Search order item by code.
+      tags:
+      - Item
+schemes:
+- http
+swagger: "2.0"
