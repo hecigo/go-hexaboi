@@ -6,10 +6,10 @@ import (
 
 type Item struct {
 	EntityID
-	Code              string            `json:"code" gorm:"uniqueIndex; not null; type:varchar(100); check:code <> ''"`
-	Name              string            `json:"name" gorm:"not null; check:name <> ''"`
-	VariantAttributes map[string]string `json:"variant_attributes" gorm:"type:jsonb"`
-	MasterSKU         string            `json:"master_sku" gorm:"type:varchar(100)"`
+	Code              string            `json:"code,omitempty" gorm:"uniqueIndex; not null; type:varchar(100); check:code <> ''"`
+	Name              string            `json:"name,omitempty" gorm:"not null; check:name <> ''"`
+	VariantAttributes map[string]string `json:"variant_attributes,omitempty" gorm:"type:jsonb"`
+	MasterSKU         string            `json:"master_sku,omitempty" gorm:"type:varchar(100)"`
 	Entity
 }
 

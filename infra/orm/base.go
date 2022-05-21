@@ -7,7 +7,7 @@ import (
 )
 
 type EntityID struct {
-	ID uint64 `json:"id" gorm:"primaryKey"` // Always be auto-increment number
+	ID uint64 `json:"id,omitempty" gorm:"primaryKey"` // Always be auto-increment number
 }
 
 func NewEntityID(id uint64) *EntityID {
@@ -17,10 +17,10 @@ func NewEntityID(id uint64) *EntityID {
 }
 
 type Entity struct {
-	CreatedBy string    `json:"created_by"` // Username of creator
-	UpdatedBy string    `json:"updated_by"` // Username of the latest editor
-	CreatedAt time.Time `json:"created_at" gorm:"index,sort:desc"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"index,sort:desc"`
+	CreatedBy string    `json:"created_by,omitempty"` // Username of creator
+	UpdatedBy string    `json:"updated_by,omitempty"` // Username of the latest editor
+	CreatedAt time.Time `json:"created_at,omitempty" gorm:"index,sort:desc"`
+	UpdatedAt time.Time `json:"updated_at,omitempty" gorm:"index,sort:desc"`
 }
 
 func NewEntity(entity domain.Entity) *Entity {
