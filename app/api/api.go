@@ -47,10 +47,6 @@ func Init(env string) *Api {
 		EnableStackTrace: true,
 	}))
 
-	if core.GetBoolEnv("CACHE_ENABLE", false) {
-		(&middleware.Cache{}).Enable(app)
-	}
-
 	if core.GetBoolEnv("COMPRESS_ENABLE", false) {
 		(&middleware.Compress{}).Enable(app)
 	}
@@ -59,12 +55,20 @@ func Init(env string) *Api {
 		(&middleware.CORS{}).Enable(app)
 	}
 
+	// App health check. It must be by pass some middlewares.
+	app.Get("/", handler.HealthCheck)
+
+	if core.GetBoolEnv("CACHE_ENABLE", false) {
+		(&middleware.Cache{}).Enable(app)
+	}
+
 	if core.GetBoolEnv("PPROF_ENABLE", false) {
 		(&middleware.Pprof{}).Enable(app)
 	}
 
-	// App health check
-	app.Get("/", handler.HealthCheck)
+	if core.GetBoolEnv("HTTP_LOG_ENABLE", false) {
+		(&middleware.HttpLogger{}).Enable(app)
+	}
 
 	// Create a /v1 endpoint. Just replaces if the frontend is already.
 	root := app.Group(core.Getenv("APP_ROOT_PATH", appVersion[0:2]))
@@ -72,10 +76,6 @@ func Init(env string) *Api {
 
 	// Always response NotFound at the end of routes
 	app.Use(handler.NotFound)
-
-	if core.GetBoolEnv("HTTP_LOG_ENABLE", false) {
-		(&middleware.HttpLogger{}).Enable(app)
-	}
 
 	return &Api{App: app, Profile: env, IsProduction: isProduction}
 }
