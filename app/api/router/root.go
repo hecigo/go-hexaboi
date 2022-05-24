@@ -9,6 +9,8 @@ type Router interface {
 }
 
 func RegisterDefaultRouter(router fiber.Router) error {
+	(CategoryRouter{}).Register(router)
+	(BrandRouter{}).Register(router)
 	(ItemRouter{}).Register(router)
 	(SwaggerRouter{}).Register(router)
 

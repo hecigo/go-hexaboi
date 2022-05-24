@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"fmt"
+	"reflect"
 
+	"github.com/elliotchance/pie/v2"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"hoangphuc.tech/hercules/infra/core"
@@ -10,6 +11,12 @@ import (
 
 type Validator struct {
 	validate *validator.Validate
+}
+
+type ValidationError struct {
+	Status  int         `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 // Validator constructor
@@ -20,7 +27,7 @@ func NewValidator() *Validator {
 }
 
 // Validate body
-func (v *Validator) ValidateBody(dto interface{}) fiber.Handler {
+func (v *Validator) Body(dto interface{}) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return v.validateBody(c, dto)
 	}
@@ -32,19 +39,21 @@ func (v *Validator) validateBody(c *fiber.Ctx, dto interface{}) error {
 	}
 
 	if err := c.BodyParser(dto); err != nil {
-		return fmt.Errorf("CAN_NOT_PARSE_BODY\r\n%v", err)
+		c.Status(fiber.StatusBadRequest)
+		return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_BODY", err)
 	}
 
 	err := v.validate.Struct(dto)
 	if err != nil {
-		return fmt.Errorf("BODY_INVALID\r\n%v", err)
+		c.Status(fiber.StatusBadRequest)
+		return HError(c, fiber.StatusBadRequest, "BODY_INVALID", err, errorDetail(err))
 	}
 
 	return c.Next()
 }
 
 // Validate path params
-func (v *Validator) ValidateParams(dto interface{}) fiber.Handler {
+func (v *Validator) Params(dto interface{}) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return v.validateParams(c, dto)
 	}
@@ -55,26 +64,57 @@ func (v *Validator) validateParams(c *fiber.Ctx, dto interface{}) error {
 		return c.Next()
 	}
 
-	params := c.AllParams()
-	if len(params) == 0 {
+	fiberParams := c.AllParams()
+	if len(fiberParams) == 0 {
 		return c.Next()
 	}
 
-	dto, err := core.Utils{}.MapToStruct(params, dto)
+	// c.AllParams() always return a map[string]string,
+	// validate.Struct gets wrong error once a param is the number.
+	// We have to convert the string param to a number before validating.
+
+	// Extracts list of numeric field from DTO
+	elem := reflect.TypeOf(dto).Elem()
+	fieldsLen := elem.NumField()
+	var numFields []string
+	for i := 0; i < fieldsLen; i++ {
+		f := elem.Field(i)
+		if core.Utils.IsNumberField(f) {
+			jsonFieldName := core.Utils.GetJSONFieldName(f.Tag)
+			numFields = append(numFields, jsonFieldName)
+		}
+	}
+
+	// Convert map[string]string to map[string]interface{}
+	params := make(map[string]interface{})
+	for k, v := range fiberParams {
+		if pie.Contains(numFields, k) {
+			vInt, err := core.Utils.ParseUint(v)
+			if err != nil {
+				return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
+			}
+			params[k] = vInt
+		} else {
+			params[k] = v
+		}
+	}
+
+	// Convert map[string]interface{} to struct
+	dto, err := core.Utils.MapToStruct(params, dto)
 	if err != nil {
-		return fmt.Errorf("CAN_NOT_PARSE_PARAMS\r\n%v", err)
+		return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
 	}
 
 	err = v.validate.Struct(dto)
 	if err != nil {
-		return fmt.Errorf("PATH_PARAMS_INVALID\r\n%v", err)
+		return HError(c, fiber.StatusBadRequest, "PATH_PARAMS_INVALID", err, errorDetail(err))
 	}
 
 	return c.Next()
 }
 
 // Validate query string
-func (v *Validator) ValidateQuery(dto interface{}) fiber.Handler {
+func (v *Validator) Query(dto interface{}) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return v.validateQuery(c, dto)
 	}
@@ -86,19 +126,19 @@ func (v *Validator) validateQuery(c *fiber.Ctx, dto interface{}) error {
 	}
 
 	if err := c.QueryParser(dto); err != nil {
-		return fmt.Errorf("CAN_NOT_PARSE_QUERY_STRING\r\n%v", err)
+		return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_QUERY_STRING", err)
 	}
 
 	err := v.validate.Struct(dto)
 	if err != nil {
-		return fmt.Errorf("QUERY_STRING_INVALID\r\n%v", err)
+		return HError(c, fiber.StatusBadRequest, "QUERY_STRING_INVALID", err, errorDetail(err))
 	}
 
 	return c.Next()
 }
 
 // Validate all route: Params > Query string > Body
-func (v *Validator) ValidateAll(dto ...interface{}) fiber.Handler {
+func (v *Validator) All(dto ...struct{}) fiber.Handler {
 	return func(c *fiber.Ctx) (err error) {
 		if err := v.validateParams(c, dto); err != nil {
 			return err
@@ -114,4 +154,14 @@ func (v *Validator) ValidateAll(dto ...interface{}) fiber.Handler {
 
 		return c.Next()
 	}
+}
+
+func errorDetail(err error) map[string]string {
+	var errDetail map[string]string = make(map[string]string)
+	for _, err := range err.(validator.ValidationErrors) {
+		errDetail["field"] = err.Field()
+		errDetail["condition"] = err.ActualTag()
+		errDetail["param"] = err.Param()
+	}
+	return errDetail
 }

@@ -3,31 +3,45 @@ package orm
 import (
 	"time"
 
-	domain "hoangphuc.tech/hercules/domain/base"
+	"hoangphuc.tech/hercules/domain/base"
 )
 
-type EntityID struct {
-	ID uint64 `json:"id,omitempty" gorm:"primaryKey"` // Always be auto-increment number
+type EntityToModel interface {
+	ToModel(entity interface{})
 }
 
-func NewEntityID(id uint64) *EntityID {
+type EntityID struct {
+	ID uint `json:"id" gorm:"primaryKey"` // Always be auto-increment number
+}
+
+func NewEntityID(id uint) *EntityID {
 	return &EntityID{
 		ID: id,
 	}
 }
 
 type Entity struct {
-	CreatedBy string    `json:"created_by,omitempty"` // Username of creator
-	UpdatedBy string    `json:"updated_by,omitempty"` // Username of the latest editor
-	CreatedAt time.Time `json:"created_at,omitempty" gorm:"index,sort:desc"`
-	UpdatedAt time.Time `json:"updated_at,omitempty" gorm:"index,sort:desc"`
+	CreatedBy string    `json:"created_by"` // Username of creator
+	UpdatedBy string    `json:"updated_by"` // Username of the latest editor
+	CreatedAt time.Time `json:"created_at" gorm:"index,sort:desc"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"index,sort:desc"`
 }
 
-func NewEntity(entity domain.Entity) *Entity {
+func NewEntity(entity base.Entity) *Entity {
 	return &Entity{
 		CreatedBy: entity.CreatedBy,
 		UpdatedBy: entity.UpdatedBy,
 		CreatedAt: entity.CreatedAt,
 		UpdatedAt: entity.UpdatedAt,
 	}
+}
+
+func (e *Entity) ToModel(entity *base.Entity) {
+	if entity == nil {
+		entity = new(base.Entity)
+	}
+	entity.CreatedBy = e.CreatedBy
+	entity.CreatedAt = e.CreatedAt
+	entity.UpdatedBy = e.UpdatedBy
+	entity.UpdatedAt = e.UpdatedAt
 }

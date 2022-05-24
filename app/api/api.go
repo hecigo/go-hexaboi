@@ -35,6 +35,7 @@ func Init(env string) *Api {
 		Prefork:       isProduction,
 		JSONEncoder:   json.Marshal,
 		JSONDecoder:   json.Unmarshal,
+		ErrorHandler:  handler.DefaultError,
 	})
 
 	// Initialize middlewares

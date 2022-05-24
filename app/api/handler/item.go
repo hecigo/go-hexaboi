@@ -1,70 +1,56 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/hercules/domain/model"
+	"hoangphuc.tech/hercules/app/api/dto"
 	"hoangphuc.tech/hercules/infra/adapter"
-	"hoangphuc.tech/hercules/infra/orm"
+	"hoangphuc.tech/hercules/infra/core"
 )
 
 type ItemHandler struct {
+	repoItem adapter.ItemRepository
 }
 
-var (
-	repoItem adapter.ItemRepository = adapter.ItemRepository{}
-)
+func NewItemHandler() *ItemHandler {
+	return &ItemHandler{
+		repoItem: adapter.ItemRepository{},
+	}
+}
 
-// @Summary Search order item by code.
-// @Description Search order item by code.
-// @Tags Item
-// @Accept */*
-// @Produce json
-// @Success 200 {object} map[string]interface{}
-// @Param code path int true "Code"
-// @Router /v1/item/{code} [get]
-func (h ItemHandler) Get(c *fiber.Ctx) error {
+func (h ItemHandler) GetByCode(c *fiber.Ctx) error {
 	code := c.Params("code")
 
-	return c.SendString(fmt.Sprintf("Warehouse code: %s", code))
-}
-
-func (h ItemHandler) Create(c *fiber.Ctx) error {
-	// 1: Parse from DTO to Model
-	// 2: Model.services()
-	// 3: Parse from Model > ORM
-	// 4: Save ORM
-
-	// Parse payload as domain.Item
-	payload := new(model.Item)
-	if err := c.BodyParser(payload); err != nil {
-		return err
-	}
-
-	// Convert payload to orm.Item
-	item := orm.NewItem(payload)
-
-	// Create new item into repository
-	err := repoItem.Create(item)
+	item, err := h.repoItem.GetByCode(code)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(item)
+	return HJSON(c, item)
 }
 
-// @Summary Search order items.
-// @Description Search order items.
-// @Tags Item
-// @Accept */*
-// @Produce json
-// @Success 200 {string} status "ok"
-// @Router /v1/item [get]
-func (h ItemHandler) Search(c *fiber.Ctx) error {
+func (h ItemHandler) Get(c *fiber.Ctx) error {
+	id, _ := core.Utils.ParseUint(c.Params("id"))
+	item, err := h.repoItem.GetByID(id)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, item)
+}
 
-	return HJSON(c, APIResult{
-		Status:  200,
-		Message: "Search",
-	})
+func (h ItemHandler) Create(c *fiber.Ctx) error {
+	// Parse payload as domain.Item
+	d := new(dto.ItemCreated)
+	if err := c.BodyParser(d); err != nil {
+		return err
+	}
+
+	item := d.ToModel()
+
+	// Create new item into repository
+	err := h.repoItem.Create(item)
+	if err != nil {
+		return err
+	}
+
+	return HJSON(c, item)
 }

@@ -11,13 +11,13 @@ type ItemRouter struct{}
 
 func (r ItemRouter) Register(root fiber.Router) {
 	group := root.Group("/item")
-	itemHandler := handler.ItemHandler{}
-	validator := middleware.NewValidator()
+	handle := handler.NewItemHandler()
+	valid := middleware.NewValidator()
 
 	// GET
-	group.Get("/", validator.ValidateBody(&dto.Item1{}), itemHandler.Search)
-	group.Get("/:code", validator.ValidateParams(&dto.Item2{}), itemHandler.Search)
+	group.Get("/id.:id", valid.Params(&dto.EntityID{}), handle.Get)
+	group.Get("/:code", valid.Params(&dto.EntityCode{}), handle.GetByCode)
 
 	// POST
-	group.Post("/", itemHandler.Create)
+	group.Post("/", valid.Body(&dto.ItemCreated{}), handle.Create)
 }

@@ -1,0 +1,29 @@
+@baseUrl = http://localhost:3000/v0/item
+
+
+### GET
+GET {{baseUrl}}/id.36/ HTTP/1.1
+content-type: application/json
+
+### GET by code
+GET {{baseUrl}}/ecko-unltd-giay-sneakers-nam-is22-26511 HTTP/1.1
+content-type: application/json
+
+### CREATE
+POST {{baseUrl}}/ HTTP/1.1
+content-type: application/json
+
+{
+    "code": "ecko-unltd-giay-sneakers-nam-is22-26511",
+    "name": "Ecko Unltd giày sneakers nam IS22-26511",
+    "variant_attributes": {
+      "color": "red",
+      "size": "L"
+    },
+    "master_sku": "",
+    "primary_category_id": 4,
+    "brand_id": 3,
+    "categories_id": [18, 22],
+    "created_by": "admin",
+    "updated_by": "admin"
+}

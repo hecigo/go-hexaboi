@@ -94,6 +94,7 @@ func OpenConnection(config ...Config) error {
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true, // Always use singular table name
 			},
+			PrepareStmt: true,
 		})
 		if err != nil {
 			return err
