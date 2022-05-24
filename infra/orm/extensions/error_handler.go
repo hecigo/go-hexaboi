@@ -8,6 +8,7 @@ import (
 	"hoangphuc.tech/hercules/infra/core"
 )
 
+// Used to format any error to HPIResult
 func Errorf(err error) (error, bool) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return &core.HPIResult{

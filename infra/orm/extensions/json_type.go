@@ -35,33 +35,6 @@ func (j JSON) Value() (driver.Value, error) {
 	return string(str), err
 }
 
-func (j *JSON) Marshal(m interface{}) error {
-	bytes, err := json.Marshal(m)
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(bytes, &j); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (j JSON) Unmarshal() map[string]string {
-	if len(j) == 0 {
-		return nil
-	}
-
-	str, err := json.Marshal(j)
-	if err != nil {
-		return nil
-	}
-
-	var result map[string]string
-	json.Unmarshal([]byte(str), &result)
-
-	return result
-}
-
 func (JSON) GormDBDataType(db *gorm.DB, field *schema.Field) string {
 	// use field.Tag, field.TagSettings gets field's tags
 	// checkout https://github.com/go-gorm/gorm/blob/master/schema/field.go for all options
@@ -74,4 +47,33 @@ func (JSON) GormDBDataType(db *gorm.DB, field *schema.Field) string {
 		return "JSONB"
 	}
 	return ""
+}
+
+// Marshal everything to database JSON
+func (j *JSON) Marshal(m interface{}) error {
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(bytes, &j); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Unmarshal database JSON to map
+func (j JSON) Unmarshal() map[string]interface{} {
+	if len(j) == 0 {
+		return nil
+	}
+
+	str, err := json.Marshal(j)
+	if err != nil {
+		return nil
+	}
+
+	var result map[string]interface{}
+	json.Unmarshal([]byte(str), &result)
+
+	return result
 }

@@ -10,7 +10,7 @@ type Brand struct {
 	Entity
 }
 
-// Brand constructor
+// Initialize orm.Brand from model.Brand
 func NewBrand(_brand model.Brand) *Brand {
 	return &Brand{
 		EntityID: *NewEntityID(_brand.ID),
@@ -19,6 +19,7 @@ func NewBrand(_brand model.Brand) *Brand {
 	}
 }
 
+// Scan orm.Brand into model.Brand
 func (b *Brand) ToModel(brand *model.Brand) {
 	if brand == nil {
 		brand = new(model.Brand)

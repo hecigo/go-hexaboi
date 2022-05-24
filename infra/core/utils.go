@@ -16,7 +16,22 @@ type utils struct {
 }
 
 // Convert a map to struct type
-func (u utils) MapToStruct(source map[string]interface{}, dest interface{}) (interface{}, error) {
+func (u utils) MapToStruct(source map[string]interface{}, dest interface{}) error {
+	// Convert map to json string
+	jsonStr, err := json.Marshal(source)
+	if err != nil {
+		return err
+	}
+
+	// Convert json string to struct
+	if err := json.Unmarshal(jsonStr, dest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u utils) MapToStringMap(source map[string]interface{}) (dest *map[string]string, err error) {
 	// Convert map to json string
 	jsonStr, err := json.Marshal(source)
 	if err != nil {
@@ -24,6 +39,7 @@ func (u utils) MapToStruct(source map[string]interface{}, dest interface{}) (int
 	}
 
 	// Convert json string to struct
+	dest = new(map[string]string)
 	if err := json.Unmarshal(jsonStr, dest); err != nil {
 		return nil, err
 	}

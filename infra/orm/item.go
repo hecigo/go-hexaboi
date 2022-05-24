@@ -2,6 +2,7 @@ package orm
 
 import (
 	model "hoangphuc.tech/hercules/domain/model"
+	"hoangphuc.tech/hercules/infra/core"
 	"hoangphuc.tech/hercules/infra/orm/extensions"
 )
 
@@ -19,7 +20,7 @@ type Item struct {
 	Entity
 }
 
-// Item constructor
+// Initialize orm.Category from model.Category
 func NewItem(_item *model.Item) *Item {
 	item := &Item{
 		EntityID:  *NewEntityID(_item.ID),
@@ -47,6 +48,7 @@ func NewItem(_item *model.Item) *Item {
 	return item
 }
 
+// Scan orm.Item into model.Item
 func (o *Item) ToModel(m *model.Item) {
 	if m == nil {
 		m = new(model.Item)
@@ -58,7 +60,13 @@ func (o *Item) ToModel(m *model.Item) {
 	m.MasterSKU = o.MasterSKU
 	o.Brand.ToModel(&m.Brand)
 	o.PrimaryCategory.ToModel(&m.PrimaryCategory)
-	m.VariantAttributes = o.VariantAttributes.Unmarshal()
+
+	variants, err := core.Utils.MapToStringMap(o.VariantAttributes.Unmarshal())
+	if err != nil {
+		panic(err)
+	}
+	m.VariantAttributes = *variants
+
 	if o.Categories != nil && len(o.Categories) > 0 {
 		m.Categories = make([]model.Category, len(o.Categories))
 		for i, c := range o.Categories {

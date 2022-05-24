@@ -15,7 +15,7 @@ type Category struct {
 	Entity
 }
 
-// Category constructor
+// Initialize orm.Category from model.Category
 func NewCategory(_cate model.Category) *Category {
 	cate := &Category{
 		EntityID:   *NewEntityID(_cate.ID),
@@ -32,6 +32,7 @@ func NewCategory(_cate model.Category) *Category {
 	return cate
 }
 
+// Scan orm.Category into model.Category
 func (c *Category) ToModel(cate *model.Category) {
 	if cate == nil {
 		cate = new(model.Category)

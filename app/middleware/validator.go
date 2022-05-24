@@ -100,7 +100,7 @@ func (v *Validator) validateParams(c *fiber.Ctx, dto interface{}) error {
 	}
 
 	// Convert map[string]interface{} to struct
-	dto, err := core.Utils.MapToStruct(params, dto)
+	err := core.Utils.MapToStruct(params, dto)
 	if err != nil {
 		return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
 	}
