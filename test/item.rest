@@ -27,3 +27,16 @@ content-type: application/json
     "created_by": "admin",
     "updated_by": "admin"
 }
+
+### UPDATE 
+POST {{baseUrl}}/id.36 HTTP/1.1
+content-type: application/json
+
+{    
+    "variant_attributes": {
+      "color": "red",
+      "size": "L"
+    },
+    "categories_id": [18, 22],    
+    "updated_by": "admin"
+}

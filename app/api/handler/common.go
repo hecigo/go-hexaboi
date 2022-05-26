@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"hoangphuc.tech/hercules/app/middleware"
-	ormExt "hoangphuc.tech/hercules/infra/orm/extensions"
+	ext "hoangphuc.tech/hercules/infra/orm/ext"
 )
 
 func HJSON(c *fiber.Ctx, data interface{}) error {
@@ -18,7 +18,7 @@ func NotFound(c *fiber.Ctx) error {
 
 // Error response
 func DefaultError(c *fiber.Ctx, err error) error {
-	if err, ok := ormExt.Errorf(err); ok {
+	if err, ok := ext.Errorf(err); ok {
 		return middleware.HError(c, c.Response().StatusCode(), "ORM_ERROR", err)
 	}
 	return middleware.HError(c, c.Response().StatusCode(), "HPI_ERROR", err)

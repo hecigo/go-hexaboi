@@ -1,5 +1,9 @@
 @baseUrl = http://localhost:3000/v0/category
 
+### Get
+GET {{baseUrl}}/4 HTTP/1.1
+content-type: application/json
+
 
 ### Create
 POST {{baseUrl}}/ HTTP/1.1
@@ -12,6 +16,13 @@ content-type: application/json
     "updated_by": "admin"
 }
 
-### Get
-GET {{baseUrl}}/4 HTTP/1.1
+### UPDATE
+POST {{baseUrl}}/4 HTTP/1.1
 content-type: application/json
+
+{    
+    "name": "Giày sneakers",
+    "division_by": "category",
+    "parent_id": 3,
+    "updated_by": "admin"
+}

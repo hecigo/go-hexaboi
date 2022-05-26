@@ -11,11 +11,11 @@ type Brand struct {
 }
 
 // Initialize orm.Brand from model.Brand
-func NewBrand(_brand model.Brand) *Brand {
+func NewBrand(b *model.Brand) *Brand {
 	return &Brand{
-		EntityID: *NewEntityID(_brand.ID),
-		Name:     _brand.Name,
-		Entity:   *NewEntity(_brand.Entity),
+		EntityID: *NewEntityID(b.ID),
+		Name:     b.Name,
+		Entity:   *NewEntity(b.Entity),
 	}
 }
 

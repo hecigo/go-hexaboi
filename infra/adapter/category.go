@@ -14,7 +14,7 @@ var (
 
 func (*CategoryRepository) Create(cate *model.Category) error {
 	// Convert payload to orm.Item
-	ormCate := orm.NewCategory(*cate)
+	ormCate := orm.NewCategory(cate)
 	if err := repoCate.Create(ormCate); err != nil {
 		return err
 	}
@@ -29,6 +29,16 @@ func (*CategoryRepository) Create(cate *model.Category) error {
 	}
 
 	ormCate.ToModel(cate)
+	return nil
+}
+
+func (*CategoryRepository) Update(id uint, m *model.Category) error {
+	o := orm.NewCategory(m)
+	o.ID = id
+	if err := repoCate.Update(o); err != nil {
+		return err
+	}
+	o.ToModel(m)
 	return nil
 }
 

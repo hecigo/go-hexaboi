@@ -7,8 +7,9 @@ import (
 // Items can be goods, products, gifts, services...
 type Item struct {
 	base.EntityID
-	Code string `json:"code"`
-	Name string `json:"name"`
+	Code      string `json:"code"`
+	Name      string `json:"name"`
+	ShortName string `json:"short_name"`
 
 	// The key-value collection of variant attributes. Ex: color, size...
 	VariantAttributes map[string]string `json:"variant_attributes"`

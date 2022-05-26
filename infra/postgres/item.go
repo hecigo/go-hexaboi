@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"gorm.io/gorm/clause"
 	"hoangphuc.tech/hercules/domain/base"
 	"hoangphuc.tech/hercules/infra/orm"
 )
@@ -14,6 +15,14 @@ func (r *ItemRepository) Create(item *orm.Item) error {
 	// For many2many associations, GORM will upsert the associations before creating the join table references.
 	// if you want to skip the upserting of associations, you could skip it like Categories.*
 	result := DB().Omit("PrimaryCategory, Brand, Categories.*").Create(&item)
+	return result.Error
+}
+
+func (r *ItemRepository) Update(item *orm.Item) error {
+	result := DB().Clauses(clause.Returning{}).Omit("Code, PrimaryCategory, Brand, Categories.*").Updates(item)
+	if result.Error != nil {
+		return result.Error
+	}
 	return result.Error
 }
 

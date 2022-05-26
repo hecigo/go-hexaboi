@@ -16,20 +16,20 @@ type Category struct {
 }
 
 // Initialize orm.Category from model.Category
-func NewCategory(_cate model.Category) *Category {
-	cate := &Category{
-		EntityID:   *NewEntityID(_cate.ID),
-		Name:       _cate.Name,
-		DivisionBy: _cate.DivisionBy,
-		Entity:     *NewEntity(_cate.Entity),
+func NewCategory(cate *model.Category) *Category {
+	result := &Category{
+		EntityID:   *NewEntityID(cate.ID),
+		Name:       cate.Name,
+		DivisionBy: cate.DivisionBy,
+		Entity:     *NewEntity(cate.Entity),
 	}
-	if _cate.Parent != nil {
-		cate.Parent = NewCategory(*_cate.Parent)
-		cate.ParentID = new(uint)
-		*cate.ParentID = _cate.Parent.ID
+	if cate.Parent != nil {
+		result.Parent = NewCategory(cate.Parent)
+		result.ParentID = new(uint)
+		*result.ParentID = cate.Parent.ID
 	}
 
-	return cate
+	return result
 }
 
 // Scan orm.Category into model.Category

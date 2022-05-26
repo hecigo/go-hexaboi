@@ -14,8 +14,18 @@ var (
 
 func (*BrandRepository) Create(m *model.Brand) error {
 	// Convert payload to orm.Item
-	o := orm.NewBrand(*m)
+	o := orm.NewBrand(m)
 	if err := repoBrand.Create(o); err != nil {
+		return err
+	}
+	o.ToModel(m)
+	return nil
+}
+
+func (*BrandRepository) Update(id uint, m *model.Brand) error {
+	o := orm.NewBrand(m)
+	o.ID = id
+	if err := repoBrand.Update(o); err != nil {
 		return err
 	}
 	o.ToModel(m)

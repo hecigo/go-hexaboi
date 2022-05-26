@@ -1,51 +1,57 @@
 package orm
 
 import (
+	"errors"
+
+	"gorm.io/gorm"
 	model "hoangphuc.tech/hercules/domain/model"
-	"hoangphuc.tech/hercules/infra/core"
-	"hoangphuc.tech/hercules/infra/orm/extensions"
+	"hoangphuc.tech/hercules/infra/orm/ext"
 )
 
 type Item struct {
 	EntityID
-	Code              string          `json:"code" gorm:"uniqueIndex; not null; type:varchar(50); check:code <> ''"`
-	Name              string          `json:"name" gorm:"not null; check:name <> ''"`
-	VariantAttributes extensions.JSON `json:"variant_attributes" gorm:"type:json"`
-	MasterSKU         string          `json:"master_sku" gorm:"type:varchar(50)"`
-	PrimaryCategoryID uint            `json:"primary_category_id"`
-	PrimaryCategory   Category        `json:"primary_category" gorm:"foreignKey:PrimaryCategoryID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID           uint            `json:"brand_id"`
-	Brand             Brand           `json:"brand" gorm:"foreignKey:BrandID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Categories        []Category      `json:"categories" gorm:"many2many:item_j_category; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Code              string     `json:"code" gorm:"uniqueIndex; not null; type:varchar(50); check:code <> ''"`
+	Name              string     `json:"name" gorm:"not null; check:name <> ''"`
+	ShortName         string     `json:"short_name"`
+	VariantAttributes ext.JSON   `json:"variant_attributes"`
+	MasterSKU         string     `json:"master_sku" gorm:"type:varchar(50)"`
+	PrimaryCategoryID uint       `json:"primary_category_id" gorm:"not null;"`
+	PrimaryCategory   Category   `json:"primary_category" gorm:"foreignKey:PrimaryCategoryID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandID           uint       `json:"brand_id" gorm:"not null;"`
+	Brand             Brand      `json:"brand" gorm:"foreignKey:BrandID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Categories        []Category `json:"categories" gorm:"many2many:item_j_category; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Entity
 }
 
 // Initialize orm.Category from model.Category
-func NewItem(_item *model.Item) *Item {
-	item := &Item{
-		EntityID:  *NewEntityID(_item.ID),
-		Code:      _item.Code,
-		Name:      _item.Name,
-		MasterSKU: _item.MasterSKU,
-		Entity:    *NewEntity(_item.Entity),
+func NewItem(item *model.Item) *Item {
+	result := &Item{
+		EntityID:  *NewEntityID(item.ID),
+		Code:      item.Code,
+		Name:      item.Name,
+		ShortName: item.ShortName,
+		MasterSKU: item.MasterSKU,
+		Entity:    *NewEntity(item.Entity),
 	}
 
-	item.VariantAttributes = make(extensions.JSON)
-	item.VariantAttributes.Marshal(_item.VariantAttributes)
+	if item.VariantAttributes != nil {
+		result.VariantAttributes = *new(ext.JSON)
+		result.VariantAttributes.Load(item.VariantAttributes)
+	}
 
 	// Brand
-	item.BrandID = _item.Brand.ID
-	item.Brand = *NewBrand(_item.Brand)
+	result.BrandID = item.Brand.ID
+	result.Brand = *NewBrand(&item.Brand)
 
 	// Categories
-	item.PrimaryCategoryID = _item.PrimaryCategory.ID
-	item.PrimaryCategory = *NewCategory(_item.PrimaryCategory)
+	result.PrimaryCategoryID = item.PrimaryCategory.ID
+	result.PrimaryCategory = *NewCategory(&item.PrimaryCategory)
 
-	for _, c := range _item.Categories {
-		item.Categories = append(item.Categories, *NewCategory(c))
+	for _, c := range item.Categories {
+		result.Categories = append(result.Categories, *NewCategory(&c))
 	}
 
-	return item
+	return result
 }
 
 // Scan orm.Item into model.Item
@@ -57,15 +63,16 @@ func (o *Item) ToModel(m *model.Item) {
 	m.ID = o.ID
 	m.Code = o.Code
 	m.Name = o.Name
+	m.ShortName = o.ShortName
 	m.MasterSKU = o.MasterSKU
 	o.Brand.ToModel(&m.Brand)
 	o.PrimaryCategory.ToModel(&m.PrimaryCategory)
 
-	variants, err := core.Utils.MapToStringMap(o.VariantAttributes.Unmarshal())
+	variants, err := o.VariantAttributes.ToStrMap()
 	if err != nil {
 		panic(err)
 	}
-	m.VariantAttributes = *variants
+	m.VariantAttributes = variants
 
 	if o.Categories != nil && len(o.Categories) > 0 {
 		m.Categories = make([]model.Category, len(o.Categories))
@@ -73,4 +80,13 @@ func (o *Item) ToModel(m *model.Item) {
 			c.ToModel(&m.Categories[i])
 		}
 	}
+}
+
+func (u *Item) BeforeUpdate(tx *gorm.DB) (err error) {
+	// if Role changed
+	if tx.Statement.Changed("VariantAttributes") {
+		return errors.New("VariantAttributes not allowed to change")
+	}
+
+	return nil
 }

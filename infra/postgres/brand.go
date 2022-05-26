@@ -22,3 +22,11 @@ func (r *BrandRepository) GetByID(id uint) (*orm.Brand, error) {
 	result := DB().Take(&o, id)
 	return &o, result.Error
 }
+
+func (r *BrandRepository) Update(brand *orm.Brand) error {
+	result := DB().Clauses(clause.Returning{}).Updates(brand)
+	if result.Error != nil {
+		return result.Error
+	}
+	return result.Error
+}

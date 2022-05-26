@@ -35,3 +35,11 @@ func (r *CategoryRepository) GetByIDNoRef(id uint) (*orm.Category, error) {
 	result := DB().Take(&cate, id)
 	return &cate, result.Error
 }
+
+func (r *CategoryRepository) Update(cate *orm.Category) error {
+	result := DB().Clauses(clause.Returning{}).Omit("Parent").Updates(cate)
+	if result.Error != nil {
+		return result.Error
+	}
+	return result.Error
+}

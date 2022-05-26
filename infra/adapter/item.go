@@ -36,6 +36,16 @@ func (*ItemRepository) Create(m *model.Item) error {
 	return nil
 }
 
+func (*ItemRepository) Update(id uint, m *model.Item) error {
+	o := orm.NewItem(m)
+	o.ID = id
+	if err := repoItem.Update(o); err != nil {
+		return err
+	}
+	o.ToModel(m)
+	return nil
+}
+
 func (*ItemRepository) GetByID(id uint) (*model.Item, error) {
 	o, err := repoItem.GetByID(id)
 	if err != nil {

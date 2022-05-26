@@ -4,7 +4,7 @@ import "hoangphuc.tech/hercules/infra/orm"
 
 func AutoMigrate() error {
 
-	// Migrate `item`
+	// Migrate
 	err := DB().AutoMigrate(&orm.Category{}, &orm.Brand{}, &orm.Item{})
 	if err != nil {
 		return err

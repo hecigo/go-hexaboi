@@ -14,7 +14,10 @@ func (r BrandRouter) Register(root fiber.Router) {
 	handle := handler.NewBrandHandler()
 	valid := middleware.NewValidator()
 
+	// GET
+	group.Get("/:id", valid.Params(&dto.EntityID{}), handle.Get)
+
 	// POST
 	group.Post("/", valid.Body(&dto.BrandCreated{}), handle.Create)
-	group.Get("/:id", valid.Params(&dto.EntityID{}), handle.Get)
+	group.Post("/:id", valid.Params(&dto.EntityID{}), valid.Body(&dto.BrandUpdated{}), handle.Update)
 }

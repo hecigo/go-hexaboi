@@ -17,6 +17,15 @@ func NewCategoryHandler() *CategoryHandler {
 	}
 }
 
+func (h CategoryHandler) Get(c *fiber.Ctx) error {
+	id, _ := core.Utils.ParseUint(c.Params("id"))
+	cate, err := h.repoCate.GetByID(id)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, cate)
+}
+
 func (h CategoryHandler) Create(c *fiber.Ctx) error {
 	// Parse payload as domain.Item
 	dtoCate := new(dto.CategoryCreated)
@@ -35,11 +44,18 @@ func (h CategoryHandler) Create(c *fiber.Ctx) error {
 	return HJSON(c, cate)
 }
 
-func (h CategoryHandler) Get(c *fiber.Ctx) error {
+func (h CategoryHandler) Update(c *fiber.Ctx) error {
 	id, _ := core.Utils.ParseUint(c.Params("id"))
-	cate, err := h.repoCate.GetByID(id)
+
+	// Parse payload as domain
+	d := new(dto.CategoryUpdated)
+	if err := c.BodyParser(d); err != nil {
+		return err
+	}
+	m := d.ToModel()
+	err := h.repoCate.Update(id, m)
 	if err != nil {
 		return err
 	}
-	return HJSON(c, cate)
+	return HJSON(c, m)
 }

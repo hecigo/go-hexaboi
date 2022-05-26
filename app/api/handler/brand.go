@@ -17,6 +17,15 @@ func NewBrandHandler() *BrandHandler {
 	}
 }
 
+func (h BrandHandler) Get(c *fiber.Ctx) error {
+	id, _ := core.Utils.ParseUint(c.Params("id"))
+	m, err := h.repoBrand.GetByID(id)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, m)
+}
+
 func (h BrandHandler) Create(c *fiber.Ctx) error {
 	// Parse payload as domain.Item
 	d := new(dto.BrandCreated)
@@ -35,9 +44,16 @@ func (h BrandHandler) Create(c *fiber.Ctx) error {
 	return HJSON(c, m)
 }
 
-func (h BrandHandler) Get(c *fiber.Ctx) error {
+func (h BrandHandler) Update(c *fiber.Ctx) error {
 	id, _ := core.Utils.ParseUint(c.Params("id"))
-	m, err := h.repoBrand.GetByID(id)
+
+	// Parse payload as domain
+	d := new(dto.BrandUpdated)
+	if err := c.BodyParser(d); err != nil {
+		return err
+	}
+	m := d.ToModel()
+	err := h.repoBrand.Update(id, m)
 	if err != nil {
 		return err
 	}
