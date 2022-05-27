@@ -1,7 +1,7 @@
 package orm
 
 import (
-	"errors"
+	"database/sql"
 
 	"gorm.io/gorm"
 	model "hoangphuc.tech/hercules/domain/model"
@@ -10,16 +10,16 @@ import (
 
 type Item struct {
 	EntityID
-	Code              string     `json:"code" gorm:"uniqueIndex; not null; type:varchar(50); check:code <> ''"`
-	Name              string     `json:"name" gorm:"not null; check:name <> ''"`
-	ShortName         string     `json:"short_name"`
-	VariantAttributes ext.JSON   `json:"variant_attributes"`
-	MasterSKU         string     `json:"master_sku" gorm:"type:varchar(50)"`
-	PrimaryCategoryID uint       `json:"primary_category_id" gorm:"not null;"`
-	PrimaryCategory   Category   `json:"primary_category" gorm:"foreignKey:PrimaryCategoryID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID           uint       `json:"brand_id" gorm:"not null;"`
-	Brand             Brand      `json:"brand" gorm:"foreignKey:BrandID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Categories        []Category `json:"categories" gorm:"many2many:item_j_category; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Code              string      `json:"code" gorm:"uniqueIndex; not null; type:varchar(50); check:code <> ''"`
+	Name              string      `json:"name" gorm:"not null; check:name <> ''"`
+	ShortName         string      `json:"short_name"`
+	VariantAttributes *ext.JSON   `json:"variant_attributes"`
+	MasterSKU         string      `json:"master_sku" gorm:"type:varchar(50)"`
+	PrimaryCategoryID uint        `json:"primary_category_id" gorm:"not null;"`
+	PrimaryCategory   Category    `json:"primary_category" gorm:"foreignKey:PrimaryCategoryID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandID           uint        `json:"brand_id" gorm:"not null;"`
+	Brand             Brand       `json:"brand" gorm:"foreignKey:BrandID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Categories        []*Category `json:"categories" gorm:"many2many:item_j_category; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Entity
 }
 
@@ -35,8 +35,8 @@ func NewItem(item *model.Item) *Item {
 	}
 
 	if item.VariantAttributes != nil {
-		result.VariantAttributes = *new(ext.JSON)
-		result.VariantAttributes.Load(item.VariantAttributes)
+		result.VariantAttributes = new(ext.JSON)
+		result.VariantAttributes.Load(*item.VariantAttributes)
 	}
 
 	// Brand
@@ -47,8 +47,10 @@ func NewItem(item *model.Item) *Item {
 	result.PrimaryCategoryID = item.PrimaryCategory.ID
 	result.PrimaryCategory = *NewCategory(&item.PrimaryCategory)
 
-	for _, c := range item.Categories {
-		result.Categories = append(result.Categories, *NewCategory(&c))
+	if item.Categories != nil {
+		for _, c := range item.Categories {
+			result.Categories = append(result.Categories, NewCategory(c))
+		}
 	}
 
 	return result
@@ -68,25 +70,29 @@ func (o *Item) ToModel(m *model.Item) {
 	o.Brand.ToModel(&m.Brand)
 	o.PrimaryCategory.ToModel(&m.PrimaryCategory)
 
-	variants, err := o.VariantAttributes.ToStrMap()
-	if err != nil {
-		panic(err)
+	if o.VariantAttributes != nil {
+		variants, err := o.VariantAttributes.ToStrMap()
+		if err != nil {
+			panic(err)
+		}
+		m.VariantAttributes = variants
 	}
-	m.VariantAttributes = variants
 
 	if o.Categories != nil && len(o.Categories) > 0 {
-		m.Categories = make([]model.Category, len(o.Categories))
-		for i, c := range o.Categories {
-			c.ToModel(&m.Categories[i])
+		m.Categories = make([]*model.Category, len(o.Categories))
+		for i, oc := range o.Categories {
+			m.Categories[i] = new(model.Category)
+			oc.ToModel(m.Categories[i])
 		}
 	}
 }
 
-func (u *Item) BeforeUpdate(tx *gorm.DB) (err error) {
-	// if Role changed
-	if tx.Statement.Changed("VariantAttributes") {
-		return errors.New("VariantAttributes not allowed to change")
+// Updating data in same transaction
+func (item *Item) BeforeUpdate(tx *gorm.DB) (err error) {
+	if (item.Categories != nil) && len(item.Categories) > 0 {
+		// item.Categories is a many2many association, so we need to delete it before updating.
+		// On updating, GORM will re-create new associations automatically.
+		tx.Statement.Exec("DELETE FROM item_j_category WHERE item_id = @item_id", sql.Named("item_id", item.ID))
 	}
-
 	return nil
 }

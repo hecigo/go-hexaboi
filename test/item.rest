@@ -2,7 +2,7 @@
 
 
 ### GET
-GET {{baseUrl}}/id.36/ HTTP/1.1
+GET {{baseUrl}}/id.41/ HTTP/1.1
 content-type: application/json
 
 ### GET by code
@@ -29,14 +29,13 @@ content-type: application/json
 }
 
 ### UPDATE 
-POST {{baseUrl}}/id.36 HTTP/1.1
+POST {{baseUrl}}/id.41 HTTP/1.1
 content-type: application/json
 
-{    
+{ 
     "variant_attributes": {
       "color": "red",
       "size": "L"
-    },
-    "categories_id": [18, 22],    
+    },    
     "updated_by": "admin"
 }

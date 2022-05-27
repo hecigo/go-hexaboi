@@ -29,7 +29,7 @@ func (j JSON) Value() (driver.Value, error) {
 // Scan scan value into Jsonb, implements sql.Scanner interface
 func (j *JSON) Scan(value interface{}) error {
 	if value == nil {
-		*j = JSON("null")
+		*j = JSON(nil)
 		return nil
 	}
 	var bytes []byte
@@ -63,6 +63,25 @@ func (j *JSON) UnmarshalJSON(b []byte) error {
 
 // Load interface{} into JSON
 func (j *JSON) Load(m interface{}) error {
+	if m == nil {
+		*j = JSON(nil)
+		return nil
+	}
+
+	// Empty map as NULL
+	if _, ok := m.(map[string]interface{}); ok {
+		if len(m.(map[string]interface{})) == 0 {
+			*j = JSON(nil)
+			return nil
+		}
+	}
+	if _, ok := m.(map[string]string); ok {
+		if len(m.(map[string]string)) == 0 {
+			*j = JSON(nil)
+			return nil
+		}
+	}
+
 	bytes, err := json.Marshal(m)
 	if err != nil {
 		return err
@@ -91,7 +110,7 @@ func (j JSON) ToMap() (map[string]interface{}, error) {
 	return result, nil
 }
 
-func (j JSON) ToStrMap() (map[string]string, error) {
+func (j JSON) ToStrMap() (*map[string]string, error) {
 	jMap, err := j.ToMap()
 	if err != nil {
 		return nil, err
@@ -100,7 +119,7 @@ func (j JSON) ToStrMap() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return *result, nil
+	return result, nil
 }
 
 func (j JSON) String() string {

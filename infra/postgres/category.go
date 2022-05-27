@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"hoangphuc.tech/hercules/domain/base"
 	"hoangphuc.tech/hercules/infra/orm"
@@ -41,5 +42,8 @@ func (r *CategoryRepository) Update(cate *orm.Category) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	return result.Error
+	if result.RowsAffected <= 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
 }

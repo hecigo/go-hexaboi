@@ -28,7 +28,7 @@ func (ic *ItemCreated) ToModel() *model.Item {
 		Code:              ic.Code,
 		Name:              ic.Name,
 		ShortName:         ic.ShortName,
-		VariantAttributes: ic.VariantAttributes,
+		VariantAttributes: &ic.VariantAttributes,
 		MasterSKU:         ic.MasterSKU,
 		PrimaryCategory: model.Category{
 			EntityID: base.EntityID{
@@ -47,7 +47,7 @@ func (ic *ItemCreated) ToModel() *model.Item {
 	}
 
 	for _, c := range ic.CategoriesID {
-		mi.Categories = append(mi.Categories, model.Category{
+		mi.Categories = append(mi.Categories, &model.Category{
 			EntityID: base.EntityID{
 				ID: c,
 			},
@@ -70,10 +70,9 @@ type ItemUpdated struct {
 
 func (ic *ItemUpdated) ToModel() *model.Item {
 	mi := &model.Item{
-		Name:              ic.Name,
-		ShortName:         ic.ShortName,
-		VariantAttributes: ic.VariantAttributes,
-		MasterSKU:         ic.MasterSKU,
+		Name:      ic.Name,
+		ShortName: ic.ShortName,
+		MasterSKU: ic.MasterSKU,
 		PrimaryCategory: model.Category{
 			EntityID: base.EntityID{
 				ID: ic.PrimaryCategoryID,
@@ -89,8 +88,12 @@ func (ic *ItemUpdated) ToModel() *model.Item {
 		},
 	}
 
+	if ic.VariantAttributes != nil {
+		mi.VariantAttributes = &ic.VariantAttributes
+	}
+
 	for _, c := range ic.CategoriesID {
-		mi.Categories = append(mi.Categories, model.Category{
+		mi.Categories = append(mi.Categories, &model.Category{
 			EntityID: base.EntityID{
 				ID: c,
 			},

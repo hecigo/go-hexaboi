@@ -12,7 +12,7 @@ type Item struct {
 	ShortName string `json:"short_name"`
 
 	// The key-value collection of variant attributes. Ex: color, size...
-	VariantAttributes map[string]string `json:"variant_attributes"`
+	VariantAttributes *map[string]string `json:"variant_attributes"`
 
 	// This SKU represents a group of SKU of the same type.
 	// It is the parent/configurable SKU as well.
@@ -22,7 +22,7 @@ type Item struct {
 	PrimaryCategory Category `json:"primary_category"`
 
 	// All categories including SKU
-	Categories []Category `json:"categories"`
+	Categories []*Category `json:"categories"`
 
 	// Brand
 	Brand Brand `json:"brand"`
