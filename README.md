@@ -2,7 +2,7 @@
 
 ### Environment variables
 
-Create `.env.local`
+Create `.env.local` in the project directory
 
 ```bash
 
