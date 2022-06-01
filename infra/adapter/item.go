@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"hoangphuc.tech/hercules/domain/model"
+	"hoangphuc.tech/hercules/infra/bigquery"
 	"hoangphuc.tech/hercules/infra/orm"
 	"hoangphuc.tech/hercules/infra/postgres"
 )
@@ -9,7 +10,8 @@ import (
 type ItemRepository struct{}
 
 var (
-	repoItem postgres.ItemRepository = postgres.ItemRepository{}
+	repoItem   postgres.ItemRepository = postgres.ItemRepository{}
+	bqRepoItem bigquery.ItemRepository = bigquery.ItemRepository{}
 )
 
 func (*ItemRepository) Create(m *model.Item) error {
@@ -19,14 +21,14 @@ func (*ItemRepository) Create(m *model.Item) error {
 	}
 
 	// Fetch primary_category
-	cate, err := repoCate.GetByIDNoRef(o.PrimaryCategoryID)
+	cate, err := repoCate.GetByCodeNoJoins(o.PrimaryCategoryCode)
 	if err != nil {
 		return err
 	}
 	o.PrimaryCategory = *cate
 
 	// Fetch brand
-	brand, err := repoBrand.GetByID(o.BrandID)
+	brand, err := repoBrand.GetByCode(o.BrandCode)
 	if err != nil {
 		return err
 	}
@@ -34,6 +36,24 @@ func (*ItemRepository) Create(m *model.Item) error {
 
 	o.ToModel(m)
 	return nil
+}
+
+func (*ItemRepository) BatchCreate(m []*model.Item) (int64, error) {
+	var ormRecords []*orm.Item
+	for _, mi := range m {
+		o := orm.NewItem(mi)
+		ormRecords = append(ormRecords, o)
+	}
+
+	if count, err := repoItem.BatchCreate(ormRecords); err != nil {
+		return count, err
+	}
+
+	for i, o := range ormRecords {
+		o.ToModel(m[i])
+	}
+
+	return int64(len(ormRecords)), nil
 }
 
 func (*ItemRepository) Update(id uint, m *model.Item) error {
@@ -66,4 +86,25 @@ func (*ItemRepository) GetByCode(code string) (*model.Item, error) {
 	var m model.Item
 	o.ToModel(&m)
 	return &m, nil
+}
+
+// Query all brand from BigQuery
+func (*ItemRepository) BQFindAll(page uint, pageSize uint) ([]*model.Item, error) {
+	items, err := bqRepoItem.FindAllOnPage(page, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	var r []*model.Item
+	for _, b := range items {
+		var m model.Item
+		b.ToModel(&m)
+		r = append(r, &m)
+	}
+	return r, nil
+}
+
+func (*ItemRepository) BQCount() (count uint64, err error) {
+	count, err = bqRepoItem.Count()
+	return count, err
 }

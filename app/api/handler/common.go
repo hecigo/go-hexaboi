@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"hoangphuc.tech/hercules/app/middleware"
+	"hoangphuc.tech/hercules/app/api/middleware"
 	ext "hoangphuc.tech/hercules/infra/orm/ext"
 )
 

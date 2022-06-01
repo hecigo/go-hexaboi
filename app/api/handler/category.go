@@ -17,6 +17,15 @@ func NewCategoryHandler() *CategoryHandler {
 	}
 }
 
+func (h CategoryHandler) GetByCode(c *fiber.Ctx) error {
+	code := c.Params("code")
+	cate, err := h.repoCate.GetByCode(code)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, cate)
+}
+
 func (h CategoryHandler) Get(c *fiber.Ctx) error {
 	id, _ := core.Utils.ParseUint(c.Params("id"))
 	cate, err := h.repoCate.GetByID(id)

@@ -10,12 +10,14 @@ type Brand struct {
 
 // Used to validate on creation
 type BrandCreated struct {
+	Code string `json:"code" validate:"required,max=50"`
 	Name string `json:"name" validate:"required"`
 	Entity
 }
 
 func (c *BrandCreated) ToModel() *model.Brand {
 	m := &model.Brand{
+		Code:   c.Code,
 		Name:   c.Name,
 		Entity: *c.Entity.ToModel(),
 	}

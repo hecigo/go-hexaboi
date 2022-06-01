@@ -5,23 +5,49 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/spf13/cobra"
 
 	"hoangphuc.tech/hercules/app/api/handler"
+	"hoangphuc.tech/hercules/app/api/middleware"
 	"hoangphuc.tech/hercules/app/api/router"
-	"hoangphuc.tech/hercules/app/middleware"
 	"hoangphuc.tech/hercules/infra/core"
+	"hoangphuc.tech/hercules/infra/postgres"
 
 	_ "hoangphuc.tech/hercules/docs"
 )
 
-type Api struct {
+type API struct {
 	App          *fiber.App
 	Profile      string
 	IsProduction bool
 }
 
-func Init(env string) *Api {
+var listen string
 
+func Register(rootApp string, env string, rootCmd *cobra.Command) {
+	var selfCmd = &cobra.Command{
+		Use:     "serve",
+		Short:   "Start " + rootApp + " RESTful API",
+		Long:    rootApp + ` RESTful API provides inventory data and requests for other services`,
+		Example: "hercules serve -l localhost:3000",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Initialize new API
+			api := New(env)
+
+			// Open PostgreSQL connections
+			postgres.OpenDefaultConnection()
+			defer postgres.CloseAll()
+
+			// Listen serves HTTP requests from the given addr
+			return api.App.Listen(listen)
+		},
+	}
+	selfCmd.Flags().StringVarP(&listen, "listen", "l", "localhost:3000", "Listen serves HTTP requests from the given addr")
+
+	rootCmd.AddCommand(selfCmd)
+}
+
+func New(env string) *API {
 	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
 	// go run app.go -prod
@@ -77,5 +103,5 @@ func Init(env string) *Api {
 	// Always response NotFound at the end of routes
 	app.Use(handler.NotFound)
 
-	return &Api{App: app, Profile: env, IsProduction: isProduction}
+	return &API{App: app, Profile: env, IsProduction: isProduction}
 }

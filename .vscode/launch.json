@@ -5,7 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug",
+      "name": "Launch file",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["pull", "-d", "bigquery", "-m", "item"],
+      "showLog": true
+    },
+    {
+      "name": "Debug AIR",
       "type": "go",
       "request": "attach",
       "mode": "remote",

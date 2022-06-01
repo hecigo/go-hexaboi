@@ -17,13 +17,22 @@ func NewBrandHandler() *BrandHandler {
 	}
 }
 
-func (h BrandHandler) Get(c *fiber.Ctx) error {
-	id, _ := core.Utils.ParseUint(c.Params("id"))
-	m, err := h.repoBrand.GetByID(id)
+func (h BrandHandler) GetByCode(c *fiber.Ctx) error {
+	code := c.Params("code")
+	brand, err := h.repoBrand.GetByCode(code)
 	if err != nil {
 		return err
 	}
-	return HJSON(c, m)
+	return HJSON(c, brand)
+}
+
+func (h BrandHandler) Get(c *fiber.Ctx) error {
+	id, _ := core.Utils.ParseUint(c.Params("id"))
+	item, err := h.repoBrand.GetByID(id)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, item)
 }
 
 func (h BrandHandler) Create(c *fiber.Ctx) error {

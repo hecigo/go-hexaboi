@@ -2,7 +2,7 @@ project_name = hercules
 image_name = hercules:latest
 
 dev:
-	go run main.go
+	air
 
 requirements:
 	go mod tidy

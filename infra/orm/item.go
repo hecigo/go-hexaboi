@@ -10,16 +10,16 @@ import (
 
 type Item struct {
 	EntityID
-	Code              string      `json:"code" gorm:"uniqueIndex; not null; type:varchar(50); check:code <> ''"`
-	Name              string      `json:"name" gorm:"not null; check:name <> ''"`
-	ShortName         string      `json:"short_name"`
-	VariantAttributes *ext.JSON   `json:"variant_attributes"`
-	MasterSKU         string      `json:"master_sku" gorm:"type:varchar(50)"`
-	PrimaryCategoryID uint        `json:"primary_category_id" gorm:"not null;"`
-	PrimaryCategory   Category    `json:"primary_category" gorm:"foreignKey:PrimaryCategoryID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BrandID           uint        `json:"brand_id" gorm:"not null;"`
-	Brand             Brand       `json:"brand" gorm:"foreignKey:BrandID; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Categories        []*Category `json:"categories" gorm:"many2many:item_j_category; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Code                string      `json:"code" gorm:"uniqueIndex; not null; type:varchar(50);"`
+	Name                string      `json:"name" gorm:"not null; check:name <> ''"`
+	ShortName           string      `json:"short_name"`
+	VariantAttributes   *ext.JSON   `json:"variant_attributes"`
+	MasterSKU           string      `json:"master_sku" gorm:"type:varchar(50)"`
+	PrimaryCategoryCode string      `json:"primary_category_code" gorm:"column:category_code; not null;"`
+	PrimaryCategory     Category    `json:"primary_category" gorm:"foreignKey:PrimaryCategoryCode; references:Code; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandCode           string      `json:"brand_code" gorm:"not null;"`
+	Brand               Brand       `json:"brand" gorm:"foreignKey:BrandCode; references:Code; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Categories          []*Category `json:"categories" gorm:"many2many:item_j_category; foreignKey:Code; joinForeignKey:ItemCode; references: Code; joinReferences: CategoryCode; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Entity
 }
 
@@ -36,15 +36,15 @@ func NewItem(item *model.Item) *Item {
 
 	if item.VariantAttributes != nil {
 		result.VariantAttributes = new(ext.JSON)
-		result.VariantAttributes.Load(*item.VariantAttributes)
+		result.VariantAttributes.Scan(*item.VariantAttributes)
 	}
 
 	// Brand
-	result.BrandID = item.Brand.ID
+	result.BrandCode = item.Brand.Code
 	result.Brand = *NewBrand(&item.Brand)
 
 	// Categories
-	result.PrimaryCategoryID = item.PrimaryCategory.ID
+	result.PrimaryCategoryCode = item.PrimaryCategory.Code
 	result.PrimaryCategory = *NewCategory(&item.PrimaryCategory)
 
 	if item.Categories != nil {
@@ -67,8 +67,16 @@ func (o *Item) ToModel(m *model.Item) {
 	m.Name = o.Name
 	m.ShortName = o.ShortName
 	m.MasterSKU = o.MasterSKU
-	o.Brand.ToModel(&m.Brand)
+
 	o.PrimaryCategory.ToModel(&m.PrimaryCategory)
+	if m.PrimaryCategory.Code == "" {
+		m.PrimaryCategory.Code = o.PrimaryCategoryCode
+	}
+
+	o.Brand.ToModel(&m.Brand)
+	if m.Brand.Code == "" {
+		m.Brand.Code = o.BrandCode
+	}
 
 	if o.VariantAttributes != nil {
 		variants, err := o.VariantAttributes.ToStrMap()

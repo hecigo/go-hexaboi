@@ -1,11 +1,11 @@
 @baseUrl = http://localhost:3000/v0/item
 
 
-### GET
+### GET /id.{id}
 GET {{baseUrl}}/id.41/ HTTP/1.1
 content-type: application/json
 
-### GET by code
+### GET /{sku_code}
 GET {{baseUrl}}/ecko-unltd-giay-sneakers-nam-is22-26511 HTTP/1.1
 content-type: application/json
 
@@ -29,6 +29,7 @@ content-type: application/json
 }
 
 ### UPDATE 
+# Specify ID via path and only POST updated fields
 POST {{baseUrl}}/id.41 HTTP/1.1
 content-type: application/json
 

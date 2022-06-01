@@ -28,3 +28,7 @@ type Item struct {
 	Brand Brand `json:"brand"`
 	base.Entity
 }
+
+func (b Item) String() string {
+	return b.Code + "\t" + b.Name
+}

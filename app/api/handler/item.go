@@ -19,12 +19,10 @@ func NewItemHandler() *ItemHandler {
 
 func (h ItemHandler) GetByCode(c *fiber.Ctx) error {
 	code := c.Params("code")
-
 	item, err := h.repoItem.GetByCode(code)
 	if err != nil {
 		return err
 	}
-
 	return HJSON(c, item)
 }
 

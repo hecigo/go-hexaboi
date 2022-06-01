@@ -19,6 +19,12 @@ func (r *ItemRepository) Create(item *orm.Item) error {
 	return result.Error
 }
 
+// Batch create category
+func (r *ItemRepository) BatchCreate(items []*orm.Item) (int64, error) {
+	result := DB().Omit(clause.Associations).Create(&items)
+	return result.RowsAffected, result.Error
+}
+
 // Update item
 func (r *ItemRepository) Update(item *orm.Item) error {
 	result := DB().Clauses(clause.Returning{}).Omit("Code, PrimaryCategory, Brand, Categories.*").Updates(item)

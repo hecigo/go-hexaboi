@@ -26,7 +26,7 @@ func (j JSON) Value() (driver.Value, error) {
 	return string(bytes), err
 }
 
-// Scan scan value into Jsonb, implements sql.Scanner interface
+// Scan value into JSON, implements sql.Scanner interface
 func (j *JSON) Scan(value interface{}) error {
 	if value == nil {
 		*j = JSON(nil)
@@ -38,6 +38,13 @@ func (j *JSON) Scan(value interface{}) error {
 		bytes = v
 	case string:
 		bytes = []byte(v)
+	case map[string]interface{}:
+	case map[string]string:
+		mbytes, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+		bytes = mbytes
 	default:
 		return errors.New(fmt.Sprint("Failed to unmarshal JSONB value:", value))
 	}
@@ -57,38 +64,6 @@ func (j JSON) MarshalJSON() ([]byte, error) {
 func (j *JSON) UnmarshalJSON(b []byte) error {
 	result := json.RawMessage{}
 	err := result.UnmarshalJSON(b)
-	*j = JSON(result)
-	return err
-}
-
-// Load interface{} into JSON
-func (j *JSON) Load(m interface{}) error {
-	if m == nil {
-		*j = JSON(nil)
-		return nil
-	}
-
-	// Empty map as NULL
-	if _, ok := m.(map[string]interface{}); ok {
-		if len(m.(map[string]interface{})) == 0 {
-			*j = JSON(nil)
-			return nil
-		}
-	}
-	if _, ok := m.(map[string]string); ok {
-		if len(m.(map[string]string)) == 0 {
-			*j = JSON(nil)
-			return nil
-		}
-	}
-
-	bytes, err := json.Marshal(m)
-	if err != nil {
-		return err
-	}
-
-	result := json.RawMessage{}
-	err = result.UnmarshalJSON(bytes)
 	*j = JSON(result)
 	return err
 }

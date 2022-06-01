@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"hoangphuc.tech/hercules/domain/model"
+	"hoangphuc.tech/hercules/infra/bigquery"
 	"hoangphuc.tech/hercules/infra/orm"
 	"hoangphuc.tech/hercules/infra/postgres"
 )
@@ -9,7 +10,8 @@ import (
 type CategoryRepository struct{}
 
 var (
-	repoCate postgres.CategoryRepository = postgres.CategoryRepository{}
+	repoCate   postgres.CategoryRepository = postgres.CategoryRepository{}
+	bqRepoCate bigquery.CategoryRepository = bigquery.CategoryRepository{}
 )
 
 func (*CategoryRepository) Create(cate *model.Category) error {
@@ -32,6 +34,24 @@ func (*CategoryRepository) Create(cate *model.Category) error {
 	return nil
 }
 
+func (*CategoryRepository) BatchCreate(m []*model.Category) (int64, error) {
+	var ormRecords []*orm.Category
+	for _, mi := range m {
+		o := orm.NewCategory(mi)
+		ormRecords = append(ormRecords, o)
+	}
+
+	if count, err := repoCate.BatchCreate(ormRecords); err != nil {
+		return count, err
+	}
+
+	for i, o := range ormRecords {
+		o.ToModel(m[i])
+	}
+
+	return int64(len(ormRecords)), nil
+}
+
 func (*CategoryRepository) Update(id uint, m *model.Category) error {
 	o := orm.NewCategory(m)
 	o.ID = id
@@ -40,6 +60,17 @@ func (*CategoryRepository) Update(id uint, m *model.Category) error {
 	}
 	o.ToModel(m)
 	return nil
+}
+
+func (*CategoryRepository) GetByCode(code string) (*model.Category, error) {
+	o, err := repoCate.GetByCode(code)
+	if err != nil {
+		return nil, err
+	}
+
+	var m model.Category
+	o.ToModel(&m)
+	return &m, nil
 }
 
 func (*CategoryRepository) GetByID(id uint) (*model.Category, error) {
@@ -51,4 +82,20 @@ func (*CategoryRepository) GetByID(id uint) (*model.Category, error) {
 	var cate model.Category
 	ormCate.ToModel(&cate)
 	return &cate, nil
+}
+
+// Query all brand from BigQuery
+func (*CategoryRepository) BQFindAll() ([]*model.Category, error) {
+	cates, err := bqRepoCate.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var r []*model.Category
+	for _, b := range cates {
+		var m model.Category
+		b.ToModel(&m)
+		r = append(r, &m)
+	}
+	return r, nil
 }

@@ -1,7 +1,7 @@
 @baseUrl = http://localhost:3000/v0/brand
 
 
-### Get
+### GET /{id}
 GET {{baseUrl}}/2 HTTP/1.1
 content-type: application/json
 
@@ -16,6 +16,7 @@ content-type: application/json
 }
 
 ### UPDATE
+# Specify ID via path and only POST updated fields
 POST {{baseUrl}}/2 HTTP/1.1
 content-type: application/json
 

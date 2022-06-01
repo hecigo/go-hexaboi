@@ -2,7 +2,7 @@
 
 ### Environment variables
 
-Create `.env.local` in the project directory
+Create `.env.local`
 
 ```bash
 
@@ -112,6 +112,20 @@ DB_POSTGRES_MAX_OPEN_CONNS=20
 # Sets the maximum amount of time a connection may be reused.
 # Optional. Default value "30m"
 DB_POSTGRES_CONN_MAX_LIFETIME=30m
+
+
+
+# ----- DB: BIGQUERY -----
+# As this is using the Google Cloud Go SDK, you will need to have your credentials available
+# via the GOOGLE_APPLICATION_CREDENTIALS environment variable point to your credential JSON file.
+# View more: https://github.com/go-gorm/bigquery
+# Inserts connection name after DB_BIGQUERY if using multiple connections.
+# For example, DB_BIGQUERY_ABC_HOST..., "ABC" is the connection name.
+
+# BigQuery connection string
+# Default format: bigquery://projectid/dataset
+# You can also use the location format: bigquery://projectid/location/dataset
+DB_BIGQUERY_DSN="bigquery://{projectid}/{location}/{dataset}"
 ```
 
 ### Start the application

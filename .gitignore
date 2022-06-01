@@ -71,3 +71,4 @@ Temporary Items
 .env.*.local
 
 database/*
+__debug_bin

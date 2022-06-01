@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000/v0/category
 
-### Get
+### GET /{id}
 GET {{baseUrl}}/4 HTTP/1.1
 content-type: application/json
 
@@ -17,6 +17,7 @@ content-type: application/json
 }
 
 ### UPDATE
+# Specify ID via path and only POST updated fields
 POST {{baseUrl}}/4 HTTP/1.1
 content-type: application/json
 

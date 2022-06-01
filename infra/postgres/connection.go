@@ -22,22 +22,22 @@ type Config struct {
 	ConnectionMaxLifetime time.Duration
 }
 
-var Databases map[string]*gorm.DB = make(map[string]*gorm.DB)
+var databases map[string]*gorm.DB = make(map[string]*gorm.DB)
 
 // Get the default database
 func DB() *gorm.DB {
-	if len(Databases) == 0 {
+	if len(databases) == 0 {
 		panic("No database found")
 	}
-	return Databases["default"]
+	return databases["default"]
 }
 
 // Get a database by name
 func DBByName(name string) *gorm.DB {
-	if len(Databases) == 0 {
+	if len(databases) == 0 {
 		panic("No database found")
 	}
-	return Databases[name]
+	return databases[name]
 }
 
 // Open the default connection to main database.
@@ -149,17 +149,17 @@ func OpenConnection(config ...Config) error {
 		sqlDB.SetConnMaxLifetime(cfg.ConnectionMaxLifetime)
 
 		// Append to DB map
-		if Databases == nil {
-			Databases = make(map[string]*gorm.DB)
+		if databases == nil {
+			databases = make(map[string]*gorm.DB)
 		}
 
 		// Clear existed connection to renew
-		if Databases[cfg.ConnectionName] != nil {
-			Close(Databases[cfg.ConnectionName])
-			Databases[cfg.ConnectionName] = nil
+		if databases[cfg.ConnectionName] != nil {
+			Close(databases[cfg.ConnectionName])
+			databases[cfg.ConnectionName] = nil
 		}
 
-		Databases[cfg.ConnectionName] = db
+		databases[cfg.ConnectionName] = db
 		Print(cfg)
 	}
 
@@ -168,17 +168,19 @@ func OpenConnection(config ...Config) error {
 
 func Close(db *gorm.DB) error {
 	sqlDB, err := db.DB()
-	sqlDB.Close()
-	return err
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
 }
 
-func CloseAll() {
-	log.Println("Closing database...")
-	for key, db := range Databases {
-		sqlDB, _ := db.DB()
-		sqlDB.Close()
-		log.Printf("DB['%s']\r\n", key)
+func CloseAll() error {
+	for _, db := range databases {
+		// By pass error to continue the next connection
+		Close(db)
 	}
+	log.Println("Closed PostgreSQL connections...")
+	return nil
 }
 
 func Print(cfg Config) {

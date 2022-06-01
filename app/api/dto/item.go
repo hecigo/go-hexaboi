@@ -11,7 +11,7 @@ type Item struct {
 
 // Used to validate on creation
 type ItemCreated struct {
-	Code              string            `json:"code" validate:"required"`
+	Code              string            `json:"code" validate:"required,max=50"`
 	Name              string            `json:"name" validate:"required"`
 	ShortName         string            `json:"short_name"`
 	VariantAttributes map[string]string `json:"variant_attributes"`

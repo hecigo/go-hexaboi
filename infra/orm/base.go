@@ -3,6 +3,7 @@ package orm
 import (
 	"time"
 
+	"gorm.io/gorm"
 	"hoangphuc.tech/hercules/domain/base"
 )
 
@@ -45,3 +46,5 @@ func (e *Entity) ToModel(entity *base.Entity) {
 	entity.UpdatedBy = e.UpdatedBy
 	entity.UpdatedAt = e.UpdatedAt
 }
+
+type FindInBatchCallback func(tx *gorm.DB, batch int) error

@@ -2,8 +2,10 @@ package model
 
 import "hoangphuc.tech/hercules/domain/base"
 
+// Item grouping, category
 type Category struct {
 	base.EntityID
+	Code string `json:"code"`
 	Name string `json:"name"`
 
 	// Products belonging to this category are grouped by the specified division.
@@ -14,11 +16,16 @@ type Category struct {
 	base.Entity
 }
 
+func (b Category) String() string {
+	return b.Code + "\t" + b.Name
+}
+
 // Kind of how to group products.
 type Division string
 
 const (
-	DIVISION_CATEGORY Division = "category"
-	DIVISION_CAMPAIGN Division = "campaign"
-	DIVISION_CUSTOM   Division = "custom"
+	DIVISION_MERCHANDISE Division = "merchandise"
+	DIVISION_CONSUMER    Division = "consumer"
+	DIVISION_CAMPAIGN    Division = "campaign"
+	DIVISION_CUSTOM      Division = "custom"
 )

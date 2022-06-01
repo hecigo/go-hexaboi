@@ -11,6 +11,7 @@ type Category struct {
 
 // Used to validate on creation
 type CategoryCreated struct {
+	Code       string         `json:"code" validate:"required,max=50"`
 	Name       string         `json:"name" validate:"required"`
 	DivisionBy model.Division `json:"division_by" validate:"required,oneof=category campaign custom"`
 	ParentID   uint           `json:"parent_id"`
@@ -19,6 +20,7 @@ type CategoryCreated struct {
 
 func (cc *CategoryCreated) ToModel() *model.Category {
 	mc := &model.Category{
+		Code:       cc.Code,
 		Name:       cc.Name,
 		DivisionBy: cc.DivisionBy,
 		Entity:     *cc.Entity.ToModel(),
@@ -37,7 +39,7 @@ func (cc *CategoryCreated) ToModel() *model.Category {
 
 type CategoryUpdated struct {
 	Name       string         `json:"name"`
-	DivisionBy model.Division `json:"division_by" validate:"oneof=category campaign custom"`
+	DivisionBy model.Division `json:"division_by" validate:"oneof=merchandise consumer campaign custom"`
 	ParentID   *uint          `json:"parent_id"`
 	UpdatedBy  string         `json:"updated_by" validate:"required"`
 }
