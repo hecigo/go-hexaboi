@@ -49,7 +49,7 @@ func GetDurationEnv(key string, fallback time.Duration) time.Duration {
 
 // Get application name
 func AppName() string {
-	return Getenv("APP_NAME", "go-hexaboi")
+	return Getenv("APP_NAME", "gohexaboi")
 }
 
 // Get application version

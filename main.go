@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
-	"log"
+
+	log "github.com/sirupsen/logrus"
+
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -29,14 +31,17 @@ func main() {
 	godotenv.Load(".env." + *env)
 	godotenv.Load() // Load the default environment
 
+	// Initialize logger
+	core.InitLogger()
+
 	appName := core.Getenv("APP_NAME", "Gohexaboi")
 	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
 	// rootCmd represents the base command when called without any subcommands
 	var rootCmd = &cobra.Command{
 		Use:     strings.ToLower(appName),
-		Short:   appName + " is HPI - Inventory Management Service",
-		Long:    appName + ` is the Inventory Management Service (IMS) built by HPI-Tech`,
+		Short:   appName + " is HPI - Golang Hexagonal Boilerplate",
+		Long:    appName + ` is the Golang Hexagonal Boilerplate Service built by HPI.Tech`,
 		Version: appVersion,
 	}
 	rootCmd.PersistentFlags().StringVarP(env, "env", "e", "", "environment profile name")
