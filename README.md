@@ -134,42 +134,11 @@ DB_BIGQUERY_DSN="bigquery://{projectid}/{location}/{dataset}"
 # Via air (hot reload)
 air
 
-# Via make
-make dev
-
 # Or go run
 go run main.go
 
 # VSCode debug
 Just F5 😄
-```
-
-### Use local container
-
-```
-# Clean packages
-make clean-packages
-
-# Generate go.mod & go.sum files
-make requirements
-
-# Generate docker image
-make build
-
-# Generate docker image with no cache
-make build-no-cache
-
-# Run the project in a local container
-make up
-
-# Run local container in background
-make up-silent
-
-# Stop container
-make stop
-
-# Start container
-make start
 ```
 
 ### Use docker-compose
