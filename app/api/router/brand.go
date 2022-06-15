@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/hercules/app/api/dto"
-	"hoangphuc.tech/hercules/app/api/handler"
-	"hoangphuc.tech/hercules/app/api/middleware"
+	"hoangphuc.tech/go-hexaboi/app/api/dto"
+	"hoangphuc.tech/go-hexaboi/app/api/handler"
+	"hoangphuc.tech/go-hexaboi/app/api/middleware"
 )
 
 type BrandRouter struct{}

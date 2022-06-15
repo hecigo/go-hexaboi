@@ -5,13 +5,15 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/goccy/go-json"
+	"hoangphuc.tech/go-hexaboi/infra/core"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
-	"hoangphuc.tech/hercules/infra/core"
 )
 
 // JSON defined JSON data type, need to implements driver.Valuer, sql.Scanner interface
@@ -39,6 +41,11 @@ func (j *JSON) Scan(value interface{}) error {
 	case string:
 		bytes = []byte(v)
 	case map[string]interface{}:
+		mbytes, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+		bytes = mbytes
 	case map[string]string:
 		mbytes, err := json.Marshal(v)
 		if err != nil {
@@ -69,32 +76,34 @@ func (j *JSON) UnmarshalJSON(b []byte) error {
 }
 
 // Deserialize JSON to map[string]interface{}
-func (j JSON) ToMap() (map[string]interface{}, error) {
+func (j JSON) ToMap() map[string]interface{} {
 	if len(j) == 0 {
-		return nil, nil
+		return nil
 	}
 
 	str, err := json.Marshal(j)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil
 	}
 
 	var result map[string]interface{}
 	json.Unmarshal([]byte(str), &result)
 
-	return result, nil
+	return result
 }
 
-func (j JSON) ToStrMap() (*map[string]string, error) {
-	jMap, err := j.ToMap()
-	if err != nil {
-		return nil, err
+func (j JSON) ToStrMap() *map[string]string {
+	jMap := j.ToMap()
+	if jMap == nil {
+		return nil
 	}
 	result, err := core.Utils.MapToStringMap(jMap)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil
 	}
-	return result, nil
+	return result
 }
 
 func (j JSON) String() string {

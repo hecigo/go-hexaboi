@@ -7,13 +7,13 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/cobra"
 
-	"hoangphuc.tech/hercules/app/api/handler"
-	"hoangphuc.tech/hercules/app/api/middleware"
-	"hoangphuc.tech/hercules/app/api/router"
-	"hoangphuc.tech/hercules/infra/core"
-	"hoangphuc.tech/hercules/infra/postgres"
+	"hoangphuc.tech/go-hexaboi/app/api/handler"
+	"hoangphuc.tech/go-hexaboi/app/api/middleware"
+	"hoangphuc.tech/go-hexaboi/app/api/router"
+	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/postgres"
 
-	_ "hoangphuc.tech/hercules/docs"
+	_ "hoangphuc.tech/go-hexaboi/docs"
 )
 
 type API struct {
@@ -29,7 +29,7 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 		Use:     "serve",
 		Short:   "Start " + rootApp + " RESTful API",
 		Long:    rootApp + ` RESTful API provides inventory data and requests for other services`,
-		Example: "hercules serve -l localhost:3000",
+		Example: "gohexaboi serve -l localhost:3000",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Initialize new API
 			api := New(env)
@@ -55,7 +55,7 @@ func New(env string) *API {
 
 	// Create a new app
 	app := fiber.New(fiber.Config{
-		AppName:       core.Getenv("APP_NAME", "hercules") + " " + appVersion,
+		AppName:       core.Getenv("APP_NAME", "gohexaboi") + " " + appVersion,
 		StrictRouting: false,
 		CaseSensitive: false,
 		Prefork:       isProduction,

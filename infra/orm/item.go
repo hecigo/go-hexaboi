@@ -4,8 +4,8 @@ import (
 	"database/sql"
 
 	"gorm.io/gorm"
-	model "hoangphuc.tech/hercules/domain/model"
-	"hoangphuc.tech/hercules/infra/orm/ext"
+	model "hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/go-hexaboi/infra/orm/ext"
 )
 
 type Item struct {
@@ -79,11 +79,7 @@ func (o *Item) ToModel(m *model.Item) {
 	}
 
 	if o.VariantAttributes != nil {
-		variants, err := o.VariantAttributes.ToStrMap()
-		if err != nil {
-			panic(err)
-		}
-		m.VariantAttributes = variants
+		m.VariantAttributes = o.VariantAttributes.ToStrMap()
 	}
 
 	if o.Categories != nil && len(o.Categories) > 0 {

@@ -1,7 +1,7 @@
 package orm
 
 import (
-	model "hoangphuc.tech/hercules/domain/model"
+	model "hoangphuc.tech/go-hexaboi/domain/model"
 )
 
 type Brand struct {

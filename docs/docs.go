@@ -110,8 +110,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:3000",
 	BasePath:         "/",
 	Schemes:          []string{"http"},
-	Title:            "Hercules API Documentation",
-	Description:      "Hercules API Documentation.",
+	Title:            "Gohexaboi API Documentation",
+	Description:      "Gohexaboi API Documentation.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

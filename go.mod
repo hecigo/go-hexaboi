@@ -1,4 +1,4 @@
-module hoangphuc.tech/hercules
+module hoangphuc.tech/go-hexaboi
 
 go 1.18
 

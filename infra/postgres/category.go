@@ -3,8 +3,8 @@ package postgres
 import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"hoangphuc.tech/hercules/domain/base"
-	"hoangphuc.tech/hercules/infra/orm"
+	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/go-hexaboi/infra/orm"
 )
 
 type CategoryRepository struct {

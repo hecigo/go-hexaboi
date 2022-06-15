@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"hoangphuc.tech/hercules/infra/postgres"
+	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
 
 type Migrate struct {
@@ -18,7 +18,7 @@ func (m *Migrate) Register(rootApp string, env string, rootCmd *cobra.Command) {
 		Use:     "migrate",
 		Short:   "Migrate database",
 		Long:    `A RESTful API mode of IMS built with gofiber`,
-		Example: "hercules migrate -d postgres",
+		Example: "gohexaboi migrate -d postgres",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch *m.db {
 			case "postgres":

@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/goccy/go-json"
 )
@@ -90,3 +91,16 @@ func (u utils) IsNumberField(f reflect.StructField) bool {
 }
 
 //#endregion
+
+// Get number of days in a year
+func (u utils) NumOfDaysInYear(year int) uint {
+	beginOfYear := time.Date(year, time.January, 1, 0, 0, 0, 0, time.UTC)
+	endOfYear := time.Date(year, time.December, 31, 0, 0, 0, 0, time.UTC)
+	diff := endOfYear.Sub(beginOfYear)
+	return uint(diff.Hours() / 24)
+}
+
+// Get now() timestamp as ISO-8601
+func (u utils) NowStr() string {
+	return time.Now().UTC().Format("2006-01-02T15:04:05-0700")
+}

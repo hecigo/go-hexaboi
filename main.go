@@ -8,9 +8,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
-	"hoangphuc.tech/hercules/app/api"
-	"hoangphuc.tech/hercules/app/cli"
-	"hoangphuc.tech/hercules/infra/core"
+	"hoangphuc.tech/go-hexaboi/app/api"
+	"hoangphuc.tech/go-hexaboi/app/cli"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 var (
@@ -29,7 +29,7 @@ func main() {
 	godotenv.Load(".env." + *env)
 	godotenv.Load() // Load the default environment
 
-	appName := core.Getenv("APP_NAME", "Hercules")
+	appName := core.Getenv("APP_NAME", "Gohexaboi")
 	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
 	// rootCmd represents the base command when called without any subcommands

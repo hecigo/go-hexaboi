@@ -1,6 +1,6 @@
 package model
 
-import "hoangphuc.tech/hercules/domain/base"
+import "hoangphuc.tech/go-hexaboi/domain/base"
 
 // Warehouse
 type Warehouse struct {

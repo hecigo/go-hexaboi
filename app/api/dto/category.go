@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"hoangphuc.tech/hercules/domain/base"
-	"hoangphuc.tech/hercules/domain/model"
+	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/go-hexaboi/domain/model"
 )
 
 type Category struct {

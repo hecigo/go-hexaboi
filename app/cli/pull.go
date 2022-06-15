@@ -7,9 +7,9 @@ import (
 
 	"github.com/jackc/pgconn"
 	"github.com/spf13/cobra"
-	"hoangphuc.tech/hercules/infra/adapter"
-	"hoangphuc.tech/hercules/infra/bigquery"
-	"hoangphuc.tech/hercules/infra/postgres"
+	"hoangphuc.tech/go-hexaboi/infra/adapter"
+	"hoangphuc.tech/go-hexaboi/infra/bigquery"
+	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
 
 type Pull struct {
@@ -28,7 +28,7 @@ func (p *Pull) Register(rootApp string, env string, rootCmd *cobra.Command) {
 		Use:     "pull",
 		Short:   "Pull master data",
 		Long:    `Pull master data from a repository`,
-		Example: "hercules pull -d bigquery -m item",
+		Example: "gohexaboi pull -d bigquery -m item",
 		Run: func(cmd *cobra.Command, args []string) {
 
 			switch *p.db {

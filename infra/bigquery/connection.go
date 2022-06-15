@@ -7,7 +7,7 @@ import (
 	"gorm.io/driver/bigquery"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"hoangphuc.tech/hercules/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 var databases map[string]*gorm.DB = make(map[string]*gorm.DB)

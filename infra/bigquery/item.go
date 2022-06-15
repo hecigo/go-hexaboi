@@ -3,9 +3,9 @@ package bigquery
 import (
 	"fmt"
 
-	"hoangphuc.tech/hercules/domain/base"
-	"hoangphuc.tech/hercules/infra/orm"
-	"hoangphuc.tech/hercules/infra/orm/ext"
+	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/go-hexaboi/infra/orm"
+	"hoangphuc.tech/go-hexaboi/infra/orm/ext"
 )
 
 type ItemRepository struct {

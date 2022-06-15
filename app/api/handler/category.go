@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/hercules/app/api/dto"
-	"hoangphuc.tech/hercules/infra/adapter"
-	"hoangphuc.tech/hercules/infra/core"
+	"hoangphuc.tech/go-hexaboi/app/api/dto"
+	"hoangphuc.tech/go-hexaboi/infra/adapter"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 type CategoryHandler struct {

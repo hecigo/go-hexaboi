@@ -1,6 +1,6 @@
 package model
 
-import "hoangphuc.tech/hercules/domain/base"
+import "hoangphuc.tech/go-hexaboi/domain/base"
 
 // Transaction presents stock moving between different warehouses
 type Transaction struct {

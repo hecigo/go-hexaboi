@@ -1,6 +1,6 @@
 package postgres
 
-import "hoangphuc.tech/hercules/infra/orm"
+import "hoangphuc.tech/go-hexaboi/infra/orm"
 
 func AutoMigrate(model string) error {
 

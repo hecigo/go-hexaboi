@@ -11,7 +11,7 @@ RUN go mod download \
     && go mod verify
 
 # Builds the application as a staticly linked one, to allow it to run on alpine
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o hercules .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o gohexaboi .
 
 # Moving the binary to the 'final Image' to make it smaller
 FROM alpine:latest
@@ -19,11 +19,11 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=build \
-    ["/go/src/hoangphuc.tech/hercules", \
+    ["/go/src/hoangphuc.tech/go-hexaboi", \
     "/go/src/hoangphuc.tech/favicon.ico", \
     "/go/src/hoangphuc.tech/.env", "./"]
 
 # Exposes port 8080 because our program listens on that port
 EXPOSE 8080
 
-CMD ["./hercules","localhost:8080"]
+CMD ["./gohexaboi","localhost:8080"]

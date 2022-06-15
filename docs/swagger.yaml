@@ -5,9 +5,9 @@ info:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
-  description: Hercules API Documentation.
+  description: Gohexaboi API Documentation.
   termsOfService: http://swagger.io/terms/
-  title: Hercules API Documentation
+  title: Gohexaboi API Documentation
   version: "1.0"
 paths:
   /:

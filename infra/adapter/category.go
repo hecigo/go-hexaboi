@@ -1,10 +1,10 @@
 package adapter
 
 import (
-	"hoangphuc.tech/hercules/domain/model"
-	"hoangphuc.tech/hercules/infra/bigquery"
-	"hoangphuc.tech/hercules/infra/orm"
-	"hoangphuc.tech/hercules/infra/postgres"
+	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/go-hexaboi/infra/bigquery"
+	"hoangphuc.tech/go-hexaboi/infra/orm"
+	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
 
 type CategoryRepository struct{}

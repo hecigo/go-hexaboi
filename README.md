@@ -7,7 +7,7 @@ Create `.env.local`
 ```bash
 
 # Mandatory variables
-APP_NAME=hercules
+APP_NAME=gohexaboi
 APP_VERSION=v1.0.0
 
 # (Optional) Special API root path. If it's not specified, the default is the first two characters of APP_VERSION.
@@ -189,8 +189,8 @@ swag init -g app.go
 ## Production
 
 ```bash
-docker build -t hercules .
-docker run -d -p 3000:3000 hercules
+docker build -t gohexaboi .
+docker run -d -p 3000:3000 gohexaboi
 ```
 
 Go to http://localhost:3000

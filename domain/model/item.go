@@ -1,7 +1,7 @@
 package model
 
 import (
-	base "hoangphuc.tech/hercules/domain/base"
+	base "hoangphuc.tech/go-hexaboi/domain/base"
 )
 
 // Items can be goods, products, gifts, services...
