@@ -13,6 +13,8 @@
     "postgres": "postgres",
     "ext": "middleware",
     "migration": "markdown",
-    "bigquery": "bigquery"
+    "bigquery": "bigquery",
+    "elasticsearch": "elasticsearch",
+    "redis": "redis"
   }
 }

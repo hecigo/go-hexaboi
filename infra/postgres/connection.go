@@ -2,9 +2,10 @@ package postgres
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -190,10 +191,10 @@ func Print(cfg Config) {
 	}
 
 	fmt.Printf("\r\n┌─────── PostgreSQL/%s: Connected ─────────\r\n", cfg.ConnectionName)
-	fmt.Printf("| %s: %s\r\n", fmt.Sprintf("DB_POSTGRES%s_DSN", _connName), cfg.DSN)
-	fmt.Printf("| %s: %d\r\n", fmt.Sprintf("DB_POSTGRES%s_MAX_IDLE_CONNS", _connName), cfg.MaxIdleConns)
-	fmt.Printf("| %s: %d\r\n", fmt.Sprintf("DB_POSTGRES%s_MAX_OPEN_CONNS", _connName), cfg.MaxOpenConns)
-	fmt.Printf("| %s: %v\r\n", fmt.Sprintf("DB_POSTGRES%s_CONN_MAX_LIFETIME", _connName), cfg.ConnectionMaxLifetime)
+	fmt.Printf("| DB_POSTGRES%s_DSN: %s\r\n", _connName, cfg.DSN)
+	fmt.Printf("| DB_POSTGRES%s_MAX_IDLE_CONNS: %d\r\n", _connName, cfg.MaxIdleConns)
+	fmt.Printf("| DB_POSTGRES%s_MAX_OPEN_CONNS: %d\r\n", _connName, cfg.MaxOpenConns)
+	fmt.Printf("| DB_POSTGRES%s_CONN_MAX_LIFETIME: %v\r\n", _connName, cfg.ConnectionMaxLifetime)
 	fmt.Println("└──────────────────────────────────")
 
 }

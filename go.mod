@@ -6,6 +6,7 @@ require github.com/gofiber/fiber/v2 v2.34.1 // direct
 
 require (
 	github.com/arsmn/fiber-swagger/v2 v2.31.1
+	github.com/elastic/go-elasticsearch/v7 v7.17.1
 	github.com/elliotchance/pie/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/goccy/go-json v0.9.7
