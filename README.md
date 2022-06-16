@@ -143,6 +143,22 @@ ELASTICSEARCH_BASIC_AUTH="username:password" # Default empty string
 ELASTICSEARCH_MAX_RETRIES=3 # Default 3
 ELASTICSEARCH_DEBUG=false # Show debug log. Default false
 
+
+
+# ----- DB: REDIS -----
+# Redis client
+# View more: https://redis.uptrace.dev
+# Support only single-mode temporarily.
+
+# Allows multiple connections with dot-comma (;)
+# The master in the first position and then the slaves
+REDIS_URL="localhost:6379"
+REDIS_BASIC_AUTH="username:password" # Default empty string
+REDIS_DB=0
+REDIS_MAX_RETRIES=3
+REDIS_DIAL_TIMEOUT=1s
+REDIS_READ_TIMEOUT=3s
+REDIS_WRITE_TIMEOUT=3s
 ```
 
 ### Start the application

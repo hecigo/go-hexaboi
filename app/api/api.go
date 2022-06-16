@@ -13,6 +13,7 @@ import (
 	"hoangphuc.tech/go-hexaboi/infra/core"
 	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hoangphuc.tech/go-hexaboi/infra/redis"
 
 	_ "hoangphuc.tech/go-hexaboi/docs"
 )
@@ -41,6 +42,9 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 
 			// Initialize Elasticsearch clients
 			elasticsearch.OpenDefaultConnection()
+
+			// Redis connections
+			redis.OpenDefaultConnection()
 
 			// Listen serves HTTP requests from the given addr
 			return api.App.Listen(listen)

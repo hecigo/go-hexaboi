@@ -7,7 +7,9 @@ import (
 func InitLogger() {
 	// Log as JSON instead of the default ASCII formatter.
 	if GetBoolEnv("LOG_AS_JSON", false) {
-		log.SetFormatter(&log.TextFormatter{})
+		log.SetFormatter(&log.TextFormatter{
+			ForceColors: true,
+		})
 	} else {
 		log.SetFormatter(&log.JSONFormatter{})
 	}

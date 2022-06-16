@@ -113,7 +113,7 @@ func Print(cfg Config) {
 
 	fmt.Printf("\r\n┌─────── Elasticsearch/%s: Ready ─────────\r\n", cfg.ConnectionName)
 	fmt.Printf("| ELASTICSEARCH%s_URL: %s\r\n", _connName, cfg.Addresses)
-	if cfg.BasicAuth != nil {
+	if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
 		fmt.Printf("| ELASTICSEARCH%s_BASIC_AUTH: %s\r\n", _connName, cfg.BasicAuth)
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
