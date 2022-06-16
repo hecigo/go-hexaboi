@@ -11,6 +11,7 @@ import (
 	"hoangphuc.tech/go-hexaboi/app/api/middleware"
 	"hoangphuc.tech/go-hexaboi/app/api/router"
 	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
 
 	_ "hoangphuc.tech/go-hexaboi/docs"
@@ -37,6 +38,9 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 			// Open PostgreSQL connections
 			postgres.OpenDefaultConnection()
 			defer postgres.CloseAll()
+
+			// Initialize Elasticsearch clients
+			elasticsearch.OpenDefaultConnection()
 
 			// Listen serves HTTP requests from the given addr
 			return api.App.Listen(listen)
