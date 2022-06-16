@@ -23,10 +23,12 @@ type Config struct {
 	WriteTimeout   time.Duration
 }
 
-var clients map[string]*redis.Client = make(map[string]*redis.Client)
+var (
+	clients map[string]redis.UniversalClient = make(map[string]redis.UniversalClient)
+)
 
 // Get the default Elasticsearch client
-func Client() *redis.Client {
+func Client() redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
 	}
@@ -34,9 +36,12 @@ func Client() *redis.Client {
 }
 
 // Get the default Elasticsearch client by name
-func ClientByName(name string) *redis.Client {
+func ClientByName(name string) redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
+	}
+	if clients[name] == nil {
+		log.Errorf("Not found client: %s", name)
 	}
 	return clients[name]
 }
@@ -87,32 +92,45 @@ func OpenConnectionByName(connName string) error {
 
 func OpenConnection(config ...Config) error {
 	for _, cfg := range config {
-		for _, addr := range cfg.Addresses {
-			rdsCfg := &redis.Options{
-				Addr:         addr,
-				MaxRetries:   cfg.MaxRetries,
-				DialTimeout:  cfg.DialTimeout,
-				ReadTimeout:  cfg.ReadTimeout,
-				WriteTimeout: cfg.WriteTimeout,
-			}
-
-			if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
-				rdsCfg.Username = cfg.BasicAuth[0]
-				rdsCfg.Password = cfg.BasicAuth[1]
-			}
-
-			client := redis.NewClient(rdsCfg)
-
-			// Clear existed connection to renew
-			if clients[cfg.ConnectionName] != nil {
-				clients[cfg.ConnectionName] = nil
-			}
-
-			clients[cfg.ConnectionName] = client
-			Print(cfg)
+		rdsCfg := &redis.UniversalOptions{
+			Addrs:        cfg.Addresses,
+			MaxRetries:   cfg.MaxRetries,
+			DialTimeout:  cfg.DialTimeout,
+			ReadTimeout:  cfg.ReadTimeout,
+			WriteTimeout: cfg.WriteTimeout,
+			MasterName:   "primary",
 		}
+
+		if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
+			rdsCfg.Username = cfg.BasicAuth[0]
+			rdsCfg.Password = cfg.BasicAuth[1]
+		}
+
+		client := redis.NewUniversalClient(rdsCfg)
+
+		// Clear existed connection to renew
+		if clients[cfg.ConnectionName] != nil {
+			Close(clients[cfg.ConnectionName])
+			clients[cfg.ConnectionName] = nil
+		}
+		clients[cfg.ConnectionName] = client
+
+		Print(cfg)
 	}
 
+	return nil
+}
+
+func Close(client redis.UniversalClient) error {
+	return client.Close()
+}
+
+func CloseAll() error {
+	for _, client := range clients {
+		// By pass error to continue the next connection
+		Close(client)
+	}
+	log.Info("Closed Redis clients...")
 	return nil
 }
 
@@ -132,6 +150,6 @@ func Print(cfg Config) {
 	fmt.Printf("| REDIS%s_DIAL_TIMEOUT: %v\r\n", _connName, cfg.DialTimeout)
 	fmt.Printf("| REDIS%s_READ_TIMEOUT: %v\r\n", _connName, cfg.ReadTimeout)
 	fmt.Printf("| REDIS%s_WRITE_TIMEOUT: %v\r\n", _connName, cfg.WriteTimeout)
-	fmt.Println("└──────────────────────────────────")
+	fmt.Println("└──────────────────────────────────────")
 
 }

@@ -118,6 +118,6 @@ func Print(cfg Config) {
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
 	fmt.Printf("| ELASTICSEARCH%s_DEBUG: %v\r\n", _connName, cfg.EnableDebugLogger)
-	fmt.Println("└──────────────────────────────────")
+	fmt.Println("└──────────────────────────────────────────────")
 
 }

@@ -147,8 +147,7 @@ ELASTICSEARCH_DEBUG=false # Show debug log. Default false
 
 # ----- DB: REDIS -----
 # Redis client
-# View more: https://redis.uptrace.dev
-# Support only single-mode temporarily.
+# View more: https://redis.uptrace.dev/guide/universal.html
 
 # Allows multiple connections with dot-comma (;)
 # The master in the first position and then the slaves
@@ -159,6 +158,9 @@ REDIS_MAX_RETRIES=3
 REDIS_DIAL_TIMEOUT=1s
 REDIS_READ_TIMEOUT=3s
 REDIS_WRITE_TIMEOUT=3s
+
+# If you want to use cache, please add "_CACHE" to your config key
+REDIS_CACHE_URL="localhost:6379"
 ```
 
 ### Start the application

@@ -195,6 +195,6 @@ func Print(cfg Config) {
 	fmt.Printf("| DB_POSTGRES%s_MAX_IDLE_CONNS: %d\r\n", _connName, cfg.MaxIdleConns)
 	fmt.Printf("| DB_POSTGRES%s_MAX_OPEN_CONNS: %d\r\n", _connName, cfg.MaxOpenConns)
 	fmt.Printf("| DB_POSTGRES%s_CONN_MAX_LIFETIME: %v\r\n", _connName, cfg.ConnectionMaxLifetime)
-	fmt.Println("└──────────────────────────────────")
+	fmt.Println("└───────────────────────────────────────────────")
 
 }

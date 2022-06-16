@@ -7,11 +7,11 @@ import (
 func InitLogger() {
 	// Log as JSON instead of the default ASCII formatter.
 	if GetBoolEnv("LOG_AS_JSON", false) {
+		log.SetFormatter(&log.JSONFormatter{})
+	} else {
 		log.SetFormatter(&log.TextFormatter{
 			ForceColors: true,
 		})
-	} else {
-		log.SetFormatter(&log.JSONFormatter{})
 	}
 	switch Getenv("LOG_LEVEL", "Warn") {
 	case "Trace":
