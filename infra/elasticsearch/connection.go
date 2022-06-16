@@ -20,7 +20,7 @@ type Config struct {
 
 var clients map[string]*elasticsearch.Client = make(map[string]*elasticsearch.Client)
 
-// Get the default database
+// Get the default Elasticsearch client
 func Client() *elasticsearch.Client {
 	if len(clients) == 0 {
 		panic("No client found")
@@ -28,7 +28,7 @@ func Client() *elasticsearch.Client {
 	return clients["default"]
 }
 
-// Get a database by name
+// Get the default Elasticsearch client by name
 func ClientByName(name string) *elasticsearch.Client {
 	if len(clients) == 0 {
 		panic("No client found")
