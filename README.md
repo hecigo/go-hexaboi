@@ -99,7 +99,10 @@ DB_POSTGRES_USER=gorm
 DB_POSTGRES_PWD=gorm
 DB_POSTGRES_DB_NAME=gorm
 DB_POSTGRES_SSL_MODE=disable
+
+# Allows multiple connections with dot-comma (;)
 DB_POSTGRES_DSN="host=${DB_POSTGRES_HOST} user=${DB_POSTGRES_USER} password=${DB_POSTGRES_PWD} dbname=${DB_POSTGRES_DB_NAME} port=${DB_POSTGRES_PORT} sslmode=${DB_POSTGRES_SSL_MODE}"
+DB_POSTGRES_DSN_REPLICAS="" # Default empty string
 
 # Sets the maximum number of connections in the idle connection pool.
 # Optional. Default value 5
@@ -126,6 +129,20 @@ DB_POSTGRES_CONN_MAX_LIFETIME=30m
 # Default format: bigquery://projectid/dataset
 # You can also use the location format: bigquery://projectid/location/dataset
 DB_BIGQUERY_DSN="bigquery://{projectid}/{location}/{dataset}"
+
+
+
+# ----- DB: ELASTICSEARCH -----
+# Elasticsearch client
+# View more: https://github.com/elastic/go-elasticsearch
+# Inserts connection name after ELASTICSEARCH if using multiple connections.
+# For example, ELASTICSEARCH_ABC_URL..., "ABC" is the connection name.
+
+ELASTICSEARCH_URL="localhost:9200" # Allows multiple connections with dot-comma (;)
+ELASTICSEARCH_BASIC_AUTH="username:password" # Default empty string
+ELASTICSEARCH_MAX_RETRIES=3 # Default 3
+ELASTICSEARCH_DEBUG=false # Show debug log. Default false
+
 ```
 
 ### Start the application
