@@ -161,6 +161,12 @@ REDIS_WRITE_TIMEOUT=3s
 
 # If you want to use cache, please add "_CACHE" to your config key
 REDIS_CACHE_URL="localhost:6379"
+
+# Use local in-process storage to cache the small subset of popular keys.
+# These data are cleared after each deployment.
+# Default cache 1000 keys for 1 minute
+REDIS_CACHE_TINYFLU_SIZE=1000
+REDIS_CACHE_TINYFLU_DURATION=1m
 ```
 
 ### Start the application
