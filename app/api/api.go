@@ -45,7 +45,6 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 
 			// Redis connections
 			redis.OpenDefaultConnection()
-			redis.InitCache()
 			defer redis.CloseAll()
 
 			// Listen serves HTTP requests from the given addr

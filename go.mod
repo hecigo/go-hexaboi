@@ -9,6 +9,8 @@ require (
 	github.com/elastic/go-elasticsearch/v7 v7.17.1
 	github.com/elliotchance/pie/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.11.0
+	github.com/go-redis/cache/v8 v8.4.3
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/goccy/go-json v0.9.7
 	github.com/jackc/pgconn v1.12.1
 	github.com/joho/godotenv v1.4.0
@@ -40,8 +42,6 @@ require (
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
-	github.com/go-redis/cache/v8 v8.4.3 // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
