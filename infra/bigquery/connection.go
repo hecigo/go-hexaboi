@@ -2,7 +2,8 @@ package bigquery
 
 import (
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"gorm.io/driver/bigquery"
 	"gorm.io/gorm"
@@ -61,7 +62,7 @@ func OpenDefaultConnection() error {
 		return nil
 	}
 
-	log.Println(fmt.Errorf("%w", err))
+	log.Error(err)
 	log.Fatal("Force stop application, cause of the DB connection has an error.")
 	return err
 }
@@ -106,7 +107,7 @@ func Close(db *gorm.DB) error {
 }
 
 func CloseAll() error {
-	log.Println("Closing BigQuery connections...")
+	log.Info("Closing BigQuery connections...")
 	for _, db := range databases {
 		// By pass error to continue the next connection
 		Close(db)

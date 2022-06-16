@@ -48,7 +48,7 @@ func OpenDefaultConnection() error {
 		return nil
 	}
 
-	log.Println(fmt.Errorf("%w", err))
+	log.Error(err)
 	log.Fatal("Force stop application, cause of the DB connection has an error.")
 	return err
 }
@@ -180,7 +180,7 @@ func CloseAll() error {
 		// By pass error to continue the next connection
 		Close(db)
 	}
-	log.Println("Closed PostgreSQL connections...")
+	log.Info("Closed PostgreSQL connections...")
 	return nil
 }
 
