@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-redis/cache/v8 v8.4.3
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/goccy/go-json v0.9.7
 	github.com/jackc/pgconn v1.12.1
 	github.com/joho/godotenv v1.4.0

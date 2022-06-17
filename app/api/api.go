@@ -12,6 +12,7 @@ import (
 	"hoangphuc.tech/go-hexaboi/app/api/router"
 	"hoangphuc.tech/go-hexaboi/infra/core"
 	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
+	"hoangphuc.tech/go-hexaboi/infra/orientdb"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
 	"hoangphuc.tech/go-hexaboi/infra/redis"
 
@@ -43,9 +44,13 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 			// Initialize Elasticsearch clients
 			elasticsearch.OpenDefaultConnection()
 
-			// Redis connections
+			// Initialize Redis clients
 			redis.OpenDefaultConnection()
 			defer redis.CloseAll()
+
+			// Open OrientDB connections
+			orientdb.OpenDefaultConnection()
+			defer orientdb.CloseAll()
 
 			// Listen serves HTTP requests from the given addr
 			return api.App.Listen(listen)

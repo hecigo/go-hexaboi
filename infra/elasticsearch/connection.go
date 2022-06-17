@@ -36,7 +36,7 @@ func ClientByName(name string) *elasticsearch.Client {
 	return clients[name]
 }
 
-// Open the default connection to main database.
+// Initialize the default Elasticsearch client
 func OpenDefaultConnection() error {
 	err := OpenConnectionByName("")
 	if err == nil {

@@ -46,7 +46,7 @@ func ClientByName(name string) redis.UniversalClient {
 	return clients[name]
 }
 
-// Open the default connection to main database.
+// Initialize the default Redis client
 func OpenDefaultConnection() error {
 	err := OpenConnectionByName("")
 	if err == nil {
