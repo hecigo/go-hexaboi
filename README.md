@@ -167,6 +167,21 @@ REDIS_CACHE_URL="localhost:6379"
 # Default cache 1000 keys for 1 minute
 REDIS_CACHE_TINYFLU_SIZE=1000
 REDIS_CACHE_TINYFLU_DURATION=1m
+
+
+
+# ----- DB: OrientDB -----
+# OrientDB RESTful client
+# View more: https://orientdb.org/docs/3.0.x/misc/OrientDB-REST.html
+ORIENTDB_URL="localhost:2480"
+ORIENTDB_DB="gohexaboi" # Database name
+ORIENTDB_AUTH="username:password"
+ORIENTDB_DEBUG=false # Enable debug logging. Default is false
+ORIENTDB_TIMEOUT=10s # Timeout for connection. Default is 10s
+ORIENTDB_MAX_RETRIES=3 # Maximum number of retry attempts. Default is 3
+ORIENTDB_RETRY_WAIT_TIMEOUT=250ms # Waiting for each attempt. Default is 250ms
+ORIENTDB_RETRY_MAX_WAIT_TIMEOUT=3s # Total of waiting time for attempts. Default is 3s
+
 ```
 
 ### Start the application

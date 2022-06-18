@@ -2,6 +2,7 @@ package orientdb
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
@@ -64,8 +65,8 @@ func OpenConnectionByName(connName string) error {
 	auth := core.Getenv(fmt.Sprintf("ORIENTDB%s_AUTH", _connName), "")
 	timeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_TIMEOUT", _connName), 10*time.Second)
 	maxRetries := core.GetIntEnv(fmt.Sprintf("ORIENTDB%s_MAX_RETRIES", _connName), 3)
-	retryWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_WAIT_TIMEOUT", _connName), 100*time.Millisecond)
-	retryMaxWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_MAX_WAIT_TIMEOUT", _connName), 2*time.Second)
+	retryWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_WAIT_TIMEOUT", _connName), 250*time.Millisecond)
+	retryMaxWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_MAX_WAIT_TIMEOUT", _connName), 3*time.Second)
 	isDebug := core.GetBoolEnv(fmt.Sprintf("ORIENTDB%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
@@ -117,8 +118,18 @@ func OpenConnection(config ...Config) error {
 		resp, err := client.R().Get("/connect/" + cfg.Database)
 		if err != nil {
 			log.Fatal(err)
+			continue
 		} else {
-			log.Info(resp)
+			// Receives OSSESSIONID of OrientDB
+			if resp.StatusCode() == http.StatusNoContent {
+				client.SetCookies(resp.Cookies())
+			} else {
+				log.Fatalf("can not connect to OrientDB of %s", cfg.ConnectionName)
+				if cfg.IsDebug {
+					log.Debug(resp)
+				}
+				continue
+			}
 		}
 
 		if clients[cfg.ConnectionName] != nil {
@@ -126,6 +137,7 @@ func OpenConnection(config ...Config) error {
 			clients[cfg.ConnectionName] = nil
 		}
 		clients[cfg.ConnectionName] = client
+		Print(cfg, *client)
 	}
 
 	return nil
@@ -148,17 +160,18 @@ func CloseAll() error {
 	return nil
 }
 
-func Print(cfg Config) {
+func Print(cfg Config, client resty.Client) {
 	_connName := cfg.ConnectionName
 	if cfg.ConnectionName == "default" {
 		_connName = ""
 	}
 
-	fmt.Printf("\r\n┌─────── OrientDB/%s: Ready ─────────\r\n", cfg.ConnectionName)
+	fmt.Printf("\r\n┌─────── OrientDB/%s: Connected ─────────\r\n", cfg.ConnectionName)
 	fmt.Printf("| ORIENTDB%s_URL: %s\r\n", _connName, cfg.BaseURL)
 	if cfg.Authen != "" {
 		fmt.Printf("| ORIENTDB%s_AUTH: %s\r\n", _connName, cfg.Authen)
 	}
+	fmt.Printf("| ORIENTDB%s_COOKIES: %v\r\n", _connName, client.Cookies)
 	fmt.Printf("| ORIENTDB%s_TIMEOUT: %d\r\n", _connName, cfg.Timeout)
 	fmt.Printf("| ORIENTDB%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
 	fmt.Printf("| ORIENTDB%s_RETRY_WAIT_TIMEOUT: %d\r\n", _connName, cfg.RetryWaitTimeout)
