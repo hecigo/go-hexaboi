@@ -35,5 +35,9 @@ func Errorf(err error) (error, bool) {
 		}, true
 	}
 
+	if err, ok := err.(*core.HPIResult); ok {
+		return err, true
+	}
+
 	return err, false
 }
