@@ -6,7 +6,7 @@ GET {{baseUrl}}/id.41/ HTTP/1.1
 content-type: application/json
 
 ### GET /{sku_code}
-GET {{baseUrl}}/ecko-unltd-giay-sneakers-nam-is22-26511 HTTP/1.1
+GET {{baseUrl}}/8025727438204 HTTP/1.1
 content-type: application/json
 
 ### CREATE

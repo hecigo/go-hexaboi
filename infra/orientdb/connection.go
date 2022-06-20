@@ -93,6 +93,7 @@ func OpenConnection(config ...Config) error {
 	for _, cfg := range config {
 		client := resty.New()
 		client.SetBaseURL(cfg.BaseURL).
+			SetPathParam("db", cfg.Database).
 			SetTimeout(cfg.Timeout).
 			SetRetryCount(cfg.MaxRetries).
 			SetRetryWaitTime(cfg.RetryWaitTimeout).
@@ -179,3 +180,10 @@ func Print(cfg Config, client resty.Client) {
 	fmt.Printf("| ORIENTDB%s_DEBUG: %v\r\n", _connName, cfg.IsDebug)
 	fmt.Println("└──────────────────────────────────────────────")
 }
+
+const (
+	CMD_QUERY       = "/query/{db}/sql/{query}"
+	CMD_QUERY_LIMIT = "/query/{db}/sql/{query}/{limit}"
+	CMD_QUERY_FULL  = "/query/{db}/sql/{query}/{limit}/{fetch_plan}"
+	CMD_FUNCTION    = "/function/{db}/{func_name}/"
+)

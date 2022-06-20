@@ -3,6 +3,7 @@ package adapter
 import (
 	"hoangphuc.tech/go-hexaboi/domain/model"
 	"hoangphuc.tech/go-hexaboi/infra/bigquery"
+	"hoangphuc.tech/go-hexaboi/infra/orientdb"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
@@ -10,8 +11,9 @@ import (
 type ItemRepository struct{}
 
 var (
-	repoItem   postgres.ItemRepository = postgres.ItemRepository{}
-	bqRepoItem bigquery.ItemRepository = bigquery.ItemRepository{}
+	repoItem      postgres.ItemRepository = postgres.ItemRepository{}
+	bqRepoItem    bigquery.ItemRepository = bigquery.ItemRepository{}
+	graphRepoItem orientdb.ItemRepository = orientdb.ItemRepository{}
 )
 
 func (*ItemRepository) Create(m *model.Item) error {
@@ -78,8 +80,8 @@ func (*ItemRepository) GetByID(id uint) (*model.Item, error) {
 }
 
 func (*ItemRepository) GetByCode(code string) (*model.Item, error) {
-	o, err := repoItem.GetByCode(code)
-	if err != nil {
+	o, err := graphRepoItem.GetByCode(code)
+	if err != nil || o == nil {
 		return nil, err
 	}
 
