@@ -1,10 +1,6 @@
 package orientdb
 
 import (
-	"bytes"
-
-	"github.com/goccy/go-json"
-
 	log "github.com/sirupsen/logrus"
 
 	"hoangphuc.tech/go-hexaboi/domain/base"
@@ -16,8 +12,13 @@ type ItemRepository struct {
 }
 
 func (r *ItemRepository) GetByCode(code string) (*orm.Item, error) {
-	var queryErr Errors
-	resp, err := Client().R().SetError(&queryErr).
+	var (
+		funcErr    Errors
+		funcResult Result
+	)
+	resp, err := Client().R().
+		SetError(&funcErr).
+		SetResult(&funcResult).
 		SetPathParam("func_name", "get_item").
 		SetBody(map[string]interface{}{"code": code}).
 		Post(CMD_FUNCTION)
@@ -26,18 +27,9 @@ func (r *ItemRepository) GetByCode(code string) (*orm.Item, error) {
 	}
 
 	if resp.IsError() {
-		log.Error(queryErr.Errors[0])
-		return nil, queryErr.Errors[0].ToHPIError()
+		log.Error(funcErr.Errors[0])
+		return nil, funcErr.Errors[0].ToHPIError()
 	}
 
-	log.Debugln(resp)
 	return nil, nil
-}
-
-func JSONMarshal(t interface{}) ([]byte, error) {
-	buffer := &bytes.Buffer{}
-	encoder := json.NewEncoder(buffer)
-	encoder.SetEscapeHTML(false)
-	err := encoder.Encode(t)
-	return buffer.Bytes(), err
 }

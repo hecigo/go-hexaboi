@@ -23,7 +23,7 @@ type Item struct {
 	Entity
 }
 
-// Initialize orm.Category from model.Category
+// Initialize orm.Item from model.Item
 func NewItem(item *model.Item) *Item {
 	result := &Item{
 		EntityID:  *NewEntityID(item.ID),

@@ -185,5 +185,5 @@ const (
 	CMD_QUERY       = "/query/{db}/sql/{query}"
 	CMD_QUERY_LIMIT = "/query/{db}/sql/{query}/{limit}"
 	CMD_QUERY_FULL  = "/query/{db}/sql/{query}/{limit}/{fetch_plan}"
-	CMD_FUNCTION    = "/function/{db}/{func_name}/"
+	CMD_FUNCTION    = "/function/{db}/{func_name}"
 )
