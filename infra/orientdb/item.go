@@ -4,6 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 )
 
@@ -31,5 +32,9 @@ func (r *ItemRepository) GetByCode(code string) (*orm.Item, error) {
 		return nil, funcErr.Errors[0].ToHPIError()
 	}
 
-	return nil, nil
+	// TODO: Map Result to orm.Item
+	var item *orm.Item
+	core.UnmarshalNoPanic(funcResult.Result[0], &item)
+
+	return item, nil
 }
