@@ -2,7 +2,6 @@ package adapter
 
 import (
 	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
@@ -10,8 +9,7 @@ import (
 type CategoryRepository struct{}
 
 var (
-	repoCate   postgres.CategoryRepository = postgres.CategoryRepository{}
-	bqRepoCate bigquery.CategoryRepository = bigquery.CategoryRepository{}
+	repoCate postgres.CategoryRepository = postgres.CategoryRepository{}
 )
 
 func (*CategoryRepository) Create(cate *model.Category) error {
@@ -86,16 +84,5 @@ func (*CategoryRepository) GetByID(id uint) (*model.Category, error) {
 
 // Query all brand from BigQuery
 func (*CategoryRepository) BQFindAll() ([]*model.Category, error) {
-	cates, err := bqRepoCate.FindAll()
-	if err != nil {
-		return nil, err
-	}
-
-	var r []*model.Category
-	for _, b := range cates {
-		var m model.Category
-		b.ToModel(&m)
-		r = append(r, &m)
-	}
-	return r, nil
+	return nil, nil
 }

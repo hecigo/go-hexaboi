@@ -2,7 +2,6 @@ package adapter
 
 import (
 	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
 )
@@ -10,8 +9,7 @@ import (
 type BrandRepository struct{}
 
 var (
-	repoBrand   postgres.BrandRepository = postgres.BrandRepository{}
-	bqRepoBrand bigquery.BrandRepository = bigquery.BrandRepository{}
+	repoBrand postgres.BrandRepository = postgres.BrandRepository{}
 )
 
 func (*BrandRepository) Create(m *model.Brand) error {
@@ -76,16 +74,5 @@ func (*BrandRepository) GetByCode(code string) (*model.Brand, error) {
 
 // Query all brand from BigQuery
 func (*BrandRepository) BQFindAll() ([]*model.Brand, error) {
-	brands, err := bqRepoBrand.FindAll()
-	if err != nil {
-		return nil, err
-	}
-
-	var r []*model.Brand
-	for _, b := range brands {
-		var m model.Brand
-		b.ToModel(&m)
-		r = append(r, &m)
-	}
-	return r, nil
+	return nil, nil
 }

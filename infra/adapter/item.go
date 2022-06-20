@@ -2,7 +2,6 @@ package adapter
 
 import (
 	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
 	"hoangphuc.tech/go-hexaboi/infra/orientdb"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
@@ -12,7 +11,6 @@ type ItemRepository struct{}
 
 var (
 	repoItem      postgres.ItemRepository = postgres.ItemRepository{}
-	bqRepoItem    bigquery.ItemRepository = bigquery.ItemRepository{}
 	graphRepoItem orientdb.ItemRepository = orientdb.ItemRepository{}
 )
 
@@ -92,21 +90,9 @@ func (*ItemRepository) GetByCode(code string) (*model.Item, error) {
 
 // Query all brand from BigQuery
 func (*ItemRepository) BQFindAll(page uint, pageSize uint) ([]*model.Item, error) {
-	items, err := bqRepoItem.FindAllOnPage(page, pageSize)
-	if err != nil {
-		return nil, err
-	}
-
-	var r []*model.Item
-	for _, b := range items {
-		var m model.Item
-		b.ToModel(&m)
-		r = append(r, &m)
-	}
-	return r, nil
+	return nil, nil
 }
 
 func (*ItemRepository) BQCount() (count uint64, err error) {
-	count, err = bqRepoItem.Count()
-	return count, err
+	return 0, nil
 }

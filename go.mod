@@ -18,7 +18,6 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/swaggo/swag v1.8.2
-	gorm.io/driver/bigquery v1.0.18
 	gorm.io/driver/postgres v1.3.7
 	gorm.io/gorm v1.23.6
 	gorm.io/plugin/dbresolver v1.2.1
@@ -32,7 +31,6 @@ require (
 
 require (
 	cloud.google.com/go v0.102.0 // indirect
-	cloud.google.com/go/bigquery v1.32.0 // indirect
 	cloud.google.com/go/compute v1.6.1 // indirect
 	cloud.google.com/go/iam v0.3.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
@@ -88,5 +86,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 
 )
-
-replace gorm.io/driver/bigquery v1.0.18 => ../gorm-bigquery-driver

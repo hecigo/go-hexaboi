@@ -40,8 +40,8 @@ func main() {
 	// rootCmd represents the base command when called without any subcommands
 	var rootCmd = &cobra.Command{
 		Use:     strings.ToLower(appName),
-		Short:   appName + " is HPI - Golang Hexagonal Boilerplate",
-		Long:    appName + ` is the Golang Hexagonal Boilerplate Service built by HPI.Tech`,
+		Short:   appName + " is HPI - Golang Dora Service",
+		Long:    appName + ` is the Golang Dora Service built by HPI.Tech`,
 		Version: appVersion,
 	}
 	rootCmd.PersistentFlags().StringVarP(env, "env", "e", "", "environment profile name")
@@ -49,7 +49,6 @@ func main() {
 	// Register commands
 	api.Register(appName, *env, rootCmd)
 	(&cli.Migrate{}).Register(appName, *env, rootCmd)
-	(&cli.Pull{}).Register(appName, *env, rootCmd)
 
 	err := rootCmd.Execute()
 	if err != nil {
