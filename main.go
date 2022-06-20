@@ -19,6 +19,9 @@ var (
 	env = flag.String("env", "", "Environment profile")
 )
 
+// @host localhost:3000
+// @BasePath /v1/
+// @schemes http
 func main() {
 	// Load .env (view more: https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use)
 	if env == nil || *env == "" {

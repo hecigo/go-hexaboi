@@ -1,8 +1,13 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
         "contact": {}
     },
+    "host": "localhost:3000",
+    "basePath": "/v1/",
     "paths": {
         "/": {
             "get": {

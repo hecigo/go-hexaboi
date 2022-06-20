@@ -1,12 +1,10 @@
 package model
 
-import "hoangphuc.tech/go-hexaboi/domain/base"
-
 type Brand struct {
-	base.EntityID
-	Code string `json:"code"`
-	Name string `json:"name"`
-	base.Entity
+	Code      string `json:"brand_code"`
+	Name      string `json:"brand_name"`
+	IsActived int8   `json:"is_actived"`
+	IsDeleted int8   `json:"is_deleted"`
 }
 
 func (b Brand) String() string {

@@ -53,29 +53,29 @@ func (h ItemHandler) Create(c *fiber.Ctx) error {
 	item := d.ToModel()
 
 	// Create new item into repository
-	err := h.repoItem.Create(item)
-	if err != nil {
-		return err
-	}
+	// err := h.repoItem.Create(item)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return HJSON(c, item)
 }
 
 func (h ItemHandler) Update(c *fiber.Ctx) error {
-	id, _ := core.Utils.ParseUint(c.Params("id"))
+	// id, _ := core.Utils.ParseUint(c.Params("id"))
 
-	// Parse payload as domain.Item
-	d := new(dto.ItemUpdated)
-	if err := c.BodyParser(d); err != nil {
-		return err
-	}
+	// // Parse payload as domain.Item
+	// d := new(dto.ItemUpdated)
+	// if err := c.BodyParser(d); err != nil {
+	// 	return err
+	// }
 
 	// Create new item into repository
-	item := d.ToModel()
-	err := h.repoItem.Update(id, item)
-	if err != nil {
-		return err
-	}
+	// item := d.ToModel()
+	// err := h.repoItem.Update(id, item)
+	// if err != nil {
+	// 	return err
+	// }
 
-	return HJSON(c, item)
+	return HJSON(c, nil)
 }

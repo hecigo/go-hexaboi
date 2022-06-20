@@ -17,9 +17,8 @@ type BrandCreated struct {
 
 func (c *BrandCreated) ToModel() *model.Brand {
 	m := &model.Brand{
-		Code:   c.Code,
-		Name:   c.Name,
-		Entity: *c.Entity.ToModel(),
+		Code: c.Code,
+		Name: c.Name,
 	}
 
 	return m

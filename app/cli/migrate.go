@@ -26,7 +26,7 @@ func (m *Migrate) Register(rootApp string, env string, rootCmd *cobra.Command) {
 				postgres.OpenDefaultConnection()
 				defer postgres.CloseAll()
 
-				postgres.AutoMigrate(*m.model)
+				// postgres.AutoMigrate(*m.model)
 			default:
 				log.Fatal("Database type must be 'postgres'")
 			}
