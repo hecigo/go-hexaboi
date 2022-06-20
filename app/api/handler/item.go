@@ -17,6 +17,14 @@ func NewItemHandler() *ItemHandler {
 	}
 }
 
+// @Summary Show the status of server...
+// @Description Get the status of server...
+// @Tags Item
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Param   code  path      string  true  "Item Code"
+// @Router /item/{code} [get]
 func (h ItemHandler) GetByCode(c *fiber.Ctx) error {
 	code := c.Params("code")
 	item, err := h.repoItem.GetByCode(code)

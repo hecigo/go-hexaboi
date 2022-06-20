@@ -17,4 +17,26 @@ paths:
       summary: Show the status of server.
       tags:
       - Root
+  /item/{code}:
+    get:
+      consumes:
+      - '*/*'
+      description: Get the status of server...
+      parameters:
+      - description: Item Code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server...
+      tags:
+      - Item
 swagger: "2.0"

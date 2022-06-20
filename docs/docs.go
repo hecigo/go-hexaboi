@@ -39,6 +39,39 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/item/{code}": {
+            "get": {
+                "description": "Get the status of server...",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Show the status of server...",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Item Code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
         }
     }
 }`
