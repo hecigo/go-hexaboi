@@ -1,0 +1,26 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+
+phases:
+  install:
+    commands:
+      - apt-get -y update && apt-get -y install openssh-client
+  pre_build:
+    commands:
+      - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      - echo "$PRIVATE_KEY" > ~/.ssh/private_key
+      - chmod 400 ~/.ssh/private_key
+      - git config --global user.name "codebuild"
+      - git config --global user.email "codebuild@aws.com"
+      - git -c core.sshCommand="ssh -i ~/.ssh/private_key" clone git@github.com:HPI-Tech/kubernetes.git
+  build:
+    commands:
+      - cd kubernetes/$FOLDER_IN_GITHUB_KUBERNETES/$ENVIRONMENT
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 7)
+      - CI_REGISTRY_IMAGE=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - PREV_IMAGE=$(awk -v image="$CI_REGISTRY_IMAGE" '$0 ~ image {print $2}' overwrite.deployment.yaml | tail -1)
+      - sed -i "s|$PREV_IMAGE|$CI_REGISTRY_IMAGE:$COMMIT_HASH|g" overwrite.deployment.yaml
+      - git commit -am "update image for ${FOLDER_IN_GITHUB_KUBERNETES}"
+      - git -c core.sshCommand="ssh -i ~/.ssh/private_key" push
