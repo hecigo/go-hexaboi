@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type Config struct {

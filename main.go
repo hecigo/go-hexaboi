@@ -10,9 +10,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
-	"hoangphuc.tech/go-hexaboi/app/api"
-	"hoangphuc.tech/go-hexaboi/app/cli"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/app/api"
+	"hoangphuc.tech/dora/app/cli"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 var (

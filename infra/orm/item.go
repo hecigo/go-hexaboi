@@ -1,6 +1,11 @@
 package orm
 
-import "hoangphuc.tech/go-hexaboi/domain/model"
+import (
+	"encoding/json"
+	"fmt"
+
+	"hoangphuc.tech/dora/domain/model"
+)
 
 // Items can be goods, products, gifts, services...
 type Item struct {
@@ -35,6 +40,14 @@ type Item struct {
 	Inventorys []*Inventory `json:"inventorys"`
 }
 
+type AttributeOrm struct {
+	AttributeCode           string `json:"attributeCode"`
+	AttributeName           string `json:"attributeName"`
+	AttributeValue          string `json:"attributeValue"`
+	AttributeDisplayedValue string `json:"attributeDisplayedValue"`
+	IsVariant               bool   `json:"isVariant"`
+}
+
 func (o *Item) ToModel(m *model.Item) {
 	if m == nil {
 		m = new(model.Item)
@@ -52,14 +65,17 @@ func (o *Item) ToModel(m *model.Item) {
 	m.Description = o.Description
 	m.IsActived = o.IsActived
 
-	// o.Inventorys.ToModel(&m.Inventorys)
+	if o.ItemAttribute != "" {
+		// json.Unmarshal([]byte(o.ItemAttribute), &m.ItemAttribute)
+		var result AttributeOrm
+		err := json.Unmarshal([]byte(o.ItemAttribute), &result)
+		if err != nil {
+			fmt.Print(err)
+		}
+		if result != nil {
 
-	// o.Brands.ToModel(&m.Brands)
-	// if m.Brands.Code == "" {
-	// 	m.Brands.Code = o.BrandCode
-	// }
-
-	m.ItemAttribute = o.ItemAttribute
+		}
+	}
 
 	if o.Inventorys != nil && len(o.Inventorys) > 0 {
 		m.Inventorys = make([]*model.Inventory, len(o.Inventorys))

@@ -16,8 +16,8 @@ type Item struct {
 	IsDeleted    int8    `json:"is_deleted"`
 
 	// The key-value collection of variant attributes. Ex: color, size...
-	// ItemAttribute *map[string]string `json:"item_attribute"`
-	ItemAttribute string `json:"item_attribute"`
+	ItemAttribute []*ItemAttribute `json:"item_attribute"`
+	// ItemAttribute string `json:"item_attribute"`
 
 	// This SKU represents a group of SKU of the same type.
 	// It is the parent/configurable SKU as well.

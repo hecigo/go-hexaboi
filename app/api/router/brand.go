@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/app/api/dto"
-	"hoangphuc.tech/go-hexaboi/app/api/handler"
-	"hoangphuc.tech/go-hexaboi/app/api/middleware"
+	"hoangphuc.tech/dora/app/api/dto"
+	"hoangphuc.tech/dora/app/api/handler"
+	"hoangphuc.tech/dora/app/api/middleware"
 )
 
 type BrandRouter struct{}

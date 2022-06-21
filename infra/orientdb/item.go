@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/infra/core"
-	"hoangphuc.tech/go-hexaboi/infra/orm"
+	"hoangphuc.tech/dora/domain/base"
+	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/dora/infra/orm"
 )
 
 type ItemRepository struct {

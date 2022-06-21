@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type Config struct {

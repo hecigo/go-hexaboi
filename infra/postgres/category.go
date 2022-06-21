@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/dora/domain/base"
 )
 
 type CategoryRepository struct {

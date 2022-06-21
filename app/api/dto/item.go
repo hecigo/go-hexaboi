@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/dora/domain/model"
 )
 
 type Item struct {

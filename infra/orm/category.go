@@ -1,6 +1,6 @@
 package orm
 
-import "hoangphuc.tech/go-hexaboi/domain/model"
+import "hoangphuc.tech/dora/domain/model"
 
 // Item grouping, category
 type Category struct {

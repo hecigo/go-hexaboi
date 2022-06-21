@@ -1,8 +1,8 @@
 package adapter
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hoangphuc.tech/dora/domain/model"
+	"hoangphuc.tech/dora/infra/postgres"
 )
 
 type BrandRepository struct{}

@@ -3,7 +3,7 @@ package orm
 import (
 	"fmt"
 
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/dora/domain/model"
 )
 
 // Item grouping, category

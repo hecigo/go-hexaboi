@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/go-redis/cache/v8"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 var defaultInstance *cache.Cache

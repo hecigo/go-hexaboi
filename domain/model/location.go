@@ -1,6 +1,6 @@
 package model
 
-import "hoangphuc.tech/go-hexaboi/domain/base"
+import "hoangphuc.tech/dora/domain/base"
 
 // Geographic location
 type GEOLocation struct {
