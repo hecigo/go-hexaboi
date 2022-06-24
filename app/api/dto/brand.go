@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/dora/domain/model"
 )
 
 type Brand struct {
@@ -17,9 +17,8 @@ type BrandCreated struct {
 
 func (c *BrandCreated) ToModel() *model.Brand {
 	m := &model.Brand{
-		Code:   c.Code,
-		Name:   c.Name,
-		Entity: *c.Entity.ToModel(),
+		Code: c.Code,
+		Name: c.Name,
 	}
 
 	return m

@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug API",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["serve"],
+      "showLog": true
+    },
+    {
       "name": "Launch file",
       "type": "go",
       "request": "launch",

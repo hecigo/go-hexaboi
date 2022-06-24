@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/app/api/dto"
-	"hoangphuc.tech/go-hexaboi/infra/adapter"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/app/api/dto"
+	"hoangphuc.tech/dora/infra/adapter"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type BrandHandler struct {
