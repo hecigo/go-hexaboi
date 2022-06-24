@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -17,11 +18,13 @@ type Config struct {
 	BasicAuth           []string
 	MaxRetries          int
 	MaxIdleConnsPerHost int
+	IdleConnTimeout     time.Duration
+	SearchTimeout       time.Duration
 	EnableDebugLogger   bool
 }
 
 var clients map[string]*elasticsearch.Client = make(map[string]*elasticsearch.Client)
-var configs map[string]*elasticsearch.Config = make(map[string]*elasticsearch.Config)
+var configs map[string]Config = make(map[string]Config)
 
 // Get the default Elasticsearch client
 func Client() *elasticsearch.Client {
@@ -36,13 +39,13 @@ func ClientByName(name string) *elasticsearch.Client {
 	return clients[name]
 }
 
-func GetConfig() *elasticsearch.Config {
+func GetConfig() Config {
 	return GetConfigByName("default")
 }
 
-func GetConfigByName(name string) *elasticsearch.Config {
+func GetConfigByName(name string) Config {
 	if len(configs) == 0 {
-		return nil
+		panic("No config found")
 	}
 	return configs[name]
 }
@@ -69,6 +72,8 @@ func OpenConnectionByName(connName string) error {
 	basicAuth := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
 	maxRetries := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
 	maxIdleConnsPerHost := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST", _connName), 10)
+	idleConnTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_IDLE_CONN_TIMEOUT", _connName), 15*time.Minute)
+	searchTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
 	enableDebugLogger := core.GetBoolEnv(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
@@ -82,6 +87,8 @@ func OpenConnectionByName(connName string) error {
 		BasicAuth:           strings.Split(basicAuth, ":"),
 		MaxRetries:          maxRetries,
 		MaxIdleConnsPerHost: maxIdleConnsPerHost,
+		IdleConnTimeout:     idleConnTimeout,
+		SearchTimeout:       searchTimeout,
 		EnableDebugLogger:   enableDebugLogger,
 	})
 
@@ -96,6 +103,7 @@ func OpenConnection(config ...Config) error {
 			EnableDebugLogger: cfg.EnableDebugLogger,
 			Transport: &http.Transport{
 				MaxIdleConnsPerHost: cfg.MaxIdleConnsPerHost,
+				IdleConnTimeout:     cfg.IdleConnTimeout,
 			},
 		}
 
@@ -115,7 +123,7 @@ func OpenConnection(config ...Config) error {
 		}
 
 		clients[cfg.ConnectionName] = client
-		configs[cfg.ConnectionName] = &esCfg
+		configs[cfg.ConnectionName] = cfg
 		Print(cfg)
 	}
 

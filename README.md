@@ -142,6 +142,9 @@ ELASTICSEARCH_URL="localhost:9200" # Allows multiple connections with dot-comma 
 ELASTICSEARCH_BASIC_AUTH="username:password" # Default empty string
 ELASTICSEARCH_MAX_RETRIES=3 # Default 3
 ELASTICSEARCH_DEBUG=false # Show debug log. Default false
+ELASTICSEARCH_MAX_IDLE_CONNS_PER_HOST=10
+ELASTICSEARCH_IDLE_CONN_TIMEOUT=15m
+ELASTICSEARCH_SEARCH_TIMEOUT=5s
 
 
 
