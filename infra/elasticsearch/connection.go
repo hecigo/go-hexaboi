@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/elastic/go-elasticsearch/v7"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type Config struct {

@@ -10,12 +10,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -45,9 +40,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/item": {
+        "/item/{code}": {
             "get": {
-                "description": "Search order items.",
+                "description": "Get the status of server...",
                 "consumes": [
                     "*/*"
                 ],
@@ -57,34 +52,11 @@ const docTemplate = `{
                 "tags": [
                     "Item"
                 ],
-                "summary": "Search order items.",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/item/{code}": {
-            "get": {
-                "description": "Search order item by code.",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Item"
-                ],
-                "summary": "Search order item by code.",
+                "summary": "Show the status of server...",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Code",
+                        "type": "string",
+                        "description": "Item Code",
                         "name": "code",
                         "in": "path",
                         "required": true
@@ -106,12 +78,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "",
 	Host:             "localhost:3000",
-	BasePath:         "/",
+	BasePath:         "/v1/",
 	Schemes:          []string{"http"},
-	Title:            "Gohexaboi API Documentation",
-	Description:      "Gohexaboi API Documentation.",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/app/api/dto"
-	"hoangphuc.tech/go-hexaboi/infra/adapter"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/app/api/dto"
+	"hoangphuc.tech/dora/infra/adapter"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type CategoryHandler struct {
@@ -45,16 +45,16 @@ func (h CategoryHandler) Create(c *fiber.Ctx) error {
 	cate := dtoCate.ToModel()
 
 	// Create new item into repository
-	err := h.repoCate.Create(cate)
-	if err != nil {
-		return err
-	}
+	// err := h.repoCate.Create(cate)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return HJSON(c, cate)
 }
 
 func (h CategoryHandler) Update(c *fiber.Ctx) error {
-	id, _ := core.Utils.ParseUint(c.Params("id"))
+	// id, _ := core.Utils.ParseUint(c.Params("id"))
 
 	// Parse payload as domain
 	d := new(dto.CategoryUpdated)
@@ -62,9 +62,9 @@ func (h CategoryHandler) Update(c *fiber.Ctx) error {
 		return err
 	}
 	m := d.ToModel()
-	err := h.repoCate.Update(id, m)
-	if err != nil {
-		return err
-	}
+	// // err := h.repoCate.Update(id, m)
+	// if err != nil {
+	// 	return err
+	// }
 	return HJSON(c, m)
 }

@@ -3,15 +3,15 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  bin = "./tmp/gohexaboi serve"
-  cmd = "go build -gcflags=all='-N -l' -o ./tmp/gohexaboi ."
+  bin = "./tmp/main serve"
+  cmd = "go build -gcflags=all='-N -l' -o ./tmp/main ."
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
   follow_symlink = false
-  full_bin = "dlv exec --accept-multiclient --log --headless --continue --listen :2345 --api-version 2 ./tmp/gohexaboi serve"    
+  full_bin = "dlv exec --accept-multiclient --log --headless --continue --listen :2345 --api-version 2 ./tmp/main serve"    
   include_dir = []
   include_ext = ["go", "tpl", "tmpl", "html"]
   kill_delay = "0s"
@@ -30,7 +30,7 @@ tmp_dir = "tmp"
   time = false
 
 [misc]
-  clean_on_exit = true
+  clean_on_exit = false
 
 [screen]
-  clear_on_rebuild = true
+  clear_on_rebuild = false

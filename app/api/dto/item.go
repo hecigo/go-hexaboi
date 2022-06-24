@@ -1,8 +1,7 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/dora/domain/model"
 )
 
 type Item struct {
@@ -25,34 +24,17 @@ type ItemCreated struct {
 
 func (ic *ItemCreated) ToModel() *model.Item {
 	mi := &model.Item{
-		Code:              ic.Code,
-		Name:              ic.Name,
-		ShortName:         ic.ShortName,
-		VariantAttributes: &ic.VariantAttributes,
-		MasterSKU:         ic.MasterSKU,
-		PrimaryCategory: model.Category{
-			EntityID: base.EntityID{
-				ID: ic.PrimaryCategoryID,
-			},
-		},
-		Brand: model.Brand{
-			EntityID: base.EntityID{
-				ID: ic.BrandID,
-			},
-		},
-		Entity: base.Entity{
-			CreatedBy: ic.CreatedBy,
-			UpdatedBy: ic.UpdatedBy,
-		},
+		Code: ic.Code,
+		Name: ic.Name,
 	}
 
-	for _, c := range ic.CategoriesID {
-		mi.Categories = append(mi.Categories, &model.Category{
-			EntityID: base.EntityID{
-				ID: c,
-			},
-		})
-	}
+	// for _, c := range ic.CategoriesID {
+	// 	mi.Categories = append(mi.Categories, &model.Category{
+	// 		EntityID: base.EntityID{
+	// 			ID: c,
+	// 		},
+	// 	})
+	// }
 
 	return mi
 }
@@ -66,41 +48,6 @@ type ItemUpdated struct {
 	CategoriesID      []uint            `json:"categories_id" validate:"dive,gt=0"`
 	BrandID           uint              `json:"brand_id" validate:"omitempty,gt=0"`
 	UpdatedBy         string            `json:"updated_by" validate:"required"`
-}
-
-func (ic *ItemUpdated) ToModel() *model.Item {
-	mi := &model.Item{
-		Name:      ic.Name,
-		ShortName: ic.ShortName,
-		MasterSKU: ic.MasterSKU,
-		PrimaryCategory: model.Category{
-			EntityID: base.EntityID{
-				ID: ic.PrimaryCategoryID,
-			},
-		},
-		Brand: model.Brand{
-			EntityID: base.EntityID{
-				ID: ic.BrandID,
-			},
-		},
-		Entity: base.Entity{
-			UpdatedBy: ic.UpdatedBy,
-		},
-	}
-
-	if ic.VariantAttributes != nil {
-		mi.VariantAttributes = &ic.VariantAttributes
-	}
-
-	for _, c := range ic.CategoriesID {
-		mi.Categories = append(mi.Categories, &model.Category{
-			EntityID: base.EntityID{
-				ID: c,
-			},
-		})
-	}
-
-	return mi
 }
 
 type ItemFilterDto struct {

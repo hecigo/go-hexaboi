@@ -1,11 +1,12 @@
 package orientdb
 
 import (
-	log "github.com/sirupsen/logrus"
+	"fmt"
 
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/infra/core"
-	"hoangphuc.tech/go-hexaboi/infra/orm"
+	log "github.com/sirupsen/logrus"
+	"hoangphuc.tech/dora/domain/base"
+	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/dora/infra/orm"
 )
 
 type ItemRepository struct {
@@ -31,10 +32,18 @@ func (r *ItemRepository) GetByCode(code string) (*orm.Item, error) {
 		log.Error(funcErr.Errors[0])
 		return nil, funcErr.Errors[0].ToHPIError()
 	}
-
-	// TODO: Map Result to orm.Item
 	var item *orm.Item
-	core.UnmarshalNoPanic(funcResult.Result[0], &item)
+	err2 := core.Utils.MapToStruct(funcResult.Result[0], &item)
+
+	if err2 != nil {
+		fmt.Printf("MapToStruct falied ", err2)
+	}
+	if item != nil {
+		fmt.Printf("item: ", item.Code)
+	}
+	if len(funcErr.Errors) > 0 {
+		return item, funcErr.Errors[0]
+	}
 
 	return item, nil
 }

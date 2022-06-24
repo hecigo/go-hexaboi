@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 )
 
 type CORS struct {

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/goccy/go-json"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/dora/infra/core"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

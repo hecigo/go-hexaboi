@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/dora/domain/base"
 )
 
 type Entity struct {

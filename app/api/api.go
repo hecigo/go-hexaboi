@@ -7,16 +7,16 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/cobra"
 
-	"hoangphuc.tech/go-hexaboi/app/api/handler"
-	"hoangphuc.tech/go-hexaboi/app/api/middleware"
-	"hoangphuc.tech/go-hexaboi/app/api/router"
-	"hoangphuc.tech/go-hexaboi/infra/core"
-	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
-	"hoangphuc.tech/go-hexaboi/infra/orientdb"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
-	"hoangphuc.tech/go-hexaboi/infra/redis"
+	"hoangphuc.tech/dora/app/api/handler"
+	"hoangphuc.tech/dora/app/api/middleware"
+	"hoangphuc.tech/dora/app/api/router"
+	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/dora/infra/elasticsearch"
+	"hoangphuc.tech/dora/infra/orientdb"
+	"hoangphuc.tech/dora/infra/postgres"
+	"hoangphuc.tech/dora/infra/redis"
 
-	_ "hoangphuc.tech/go-hexaboi/docs"
+	_ "hoangphuc.tech/dora/docs"
 )
 
 type API struct {
