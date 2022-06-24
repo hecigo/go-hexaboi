@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -11,21 +12,20 @@ import (
 )
 
 type Config struct {
-	ConnectionName    string
-	Addresses         []string
-	BasicAuth         []string
-	MaxRetries        int
-	EnableDebugLogger bool
+	ConnectionName      string
+	Addresses           []string
+	BasicAuth           []string
+	MaxRetries          int
+	MaxIdleConnsPerHost int
+	EnableDebugLogger   bool
 }
 
 var clients map[string]*elasticsearch.Client = make(map[string]*elasticsearch.Client)
+var configs map[string]*elasticsearch.Config = make(map[string]*elasticsearch.Config)
 
 // Get the default Elasticsearch client
 func Client() *elasticsearch.Client {
-	if len(clients) == 0 {
-		panic("No client found")
-	}
-	return clients["default"]
+	return ClientByName("default")
 }
 
 // Get the default Elasticsearch client by name
@@ -34,6 +34,17 @@ func ClientByName(name string) *elasticsearch.Client {
 		panic("No client found")
 	}
 	return clients[name]
+}
+
+func GetConfig() *elasticsearch.Config {
+	return GetConfigByName("default")
+}
+
+func GetConfigByName(name string) *elasticsearch.Config {
+	if len(configs) == 0 {
+		return nil
+	}
+	return configs[name]
 }
 
 // Initialize the default Elasticsearch client
@@ -57,6 +68,7 @@ func OpenConnectionByName(connName string) error {
 	addresses := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_URL", _connName), "")
 	basicAuth := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
 	maxRetries := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
+	maxIdleConnsPerHost := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST", _connName), 10)
 	enableDebugLogger := core.GetBoolEnv(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
@@ -65,11 +77,12 @@ func OpenConnectionByName(connName string) error {
 	}
 
 	err := OpenConnection(Config{
-		ConnectionName:    connName,
-		Addresses:         strings.Split(addresses, ";"),
-		BasicAuth:         strings.Split(basicAuth, ":"),
-		MaxRetries:        maxRetries,
-		EnableDebugLogger: enableDebugLogger,
+		ConnectionName:      connName,
+		Addresses:           strings.Split(addresses, ";"),
+		BasicAuth:           strings.Split(basicAuth, ":"),
+		MaxRetries:          maxRetries,
+		MaxIdleConnsPerHost: maxIdleConnsPerHost,
+		EnableDebugLogger:   enableDebugLogger,
 	})
 
 	return err
@@ -81,6 +94,9 @@ func OpenConnection(config ...Config) error {
 			Addresses:         cfg.Addresses,
 			MaxRetries:        cfg.MaxRetries,
 			EnableDebugLogger: cfg.EnableDebugLogger,
+			Transport: &http.Transport{
+				MaxIdleConnsPerHost: cfg.MaxIdleConnsPerHost,
+			},
 		}
 
 		if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
@@ -99,6 +115,7 @@ func OpenConnection(config ...Config) error {
 		}
 
 		clients[cfg.ConnectionName] = client
+		configs[cfg.ConnectionName] = &esCfg
 		Print(cfg)
 	}
 
@@ -117,6 +134,7 @@ func Print(cfg Config) {
 		fmt.Printf("| ELASTICSEARCH%s_BASIC_AUTH: %s\r\n", _connName, cfg.BasicAuth)
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
+	fmt.Printf("| ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST: %d\r\n", _connName, cfg.MaxIdleConnsPerHost)
 	fmt.Printf("| ELASTICSEARCH%s_DEBUG: %v\r\n", _connName, cfg.EnableDebugLogger)
 	fmt.Println("└──────────────────────────────────────────────")
 
