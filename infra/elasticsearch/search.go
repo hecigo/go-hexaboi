@@ -14,7 +14,7 @@ var (
 	esDefaultConfig = GetConfig()
 )
 
-func Search(index string, query interface{}) (interface{}, error) {
+func Search(index string, query interface{}, result interface{}) error {
 	client := Client()
 	var buf bytes.Buffer
 	var reqBody map[string]interface{}
@@ -23,14 +23,14 @@ func Search(index string, query interface{}) (interface{}, error) {
 	case string:
 		core.UnmarshalNoPanic(query, &reqBody)
 		if err := json.NewEncoder(&buf).Encode(query); err != nil {
-			return nil, err
+			return err
 		}
 	case map[string]interface{}:
 		if err := json.NewEncoder(&buf).Encode(query); err != nil {
-			return nil, err
+			return err
 		}
 	default:
-		return nil, fmt.Errorf("type of query must be JSON string or map[string]interface{}")
+		return fmt.Errorf("type of query must be JSON string or map[string]interface{}")
 	}
 
 	resp, err := client.Search(
@@ -42,24 +42,27 @@ func Search(index string, query interface{}) (interface{}, error) {
 		withErrorTrace(),
 	)
 	if err != nil {
-		return nil, err
-	}
-
-	var respBody map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
-		return nil, err
+		return err
 	}
 
 	if resp.IsError() {
+		var errBody map[string]interface{}
+		if err := json.NewDecoder(resp.Body).Decode(&errBody); err != nil {
+			return err
+		}
 		return nil, &core.HPIResult{
 			Status:    resp.StatusCode,
 			Message:   resp.String(),
-			Data:      respBody,
+			Data:      errBody,
 			ErrorCode: "ES_ERROR",
 		}
 	}
 
-	return respBody, nil
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func withTimeout() func(*esapi.SearchRequest) {
