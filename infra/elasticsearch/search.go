@@ -50,7 +50,7 @@ func Search(index string, query interface{}, result interface{}) error {
 		if err := json.NewDecoder(resp.Body).Decode(&errBody); err != nil {
 			return err
 		}
-		return nil, &core.HPIResult{
+		return &core.HPIResult{
 			Status:    resp.StatusCode,
 			Message:   resp.String(),
 			Data:      errBody,
