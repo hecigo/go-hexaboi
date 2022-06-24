@@ -3,7 +3,7 @@ package orientdb
 import (
 	"strconv"
 
-	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 type Errors struct {

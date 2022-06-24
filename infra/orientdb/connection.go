@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/go-resty/resty/v2"
-	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 type Config struct {

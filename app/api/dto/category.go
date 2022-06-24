@@ -1,7 +1,8 @@
 package dto
 
 import (
-	"hoangphuc.tech/dora/domain/model"
+	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hoangphuc.tech/go-hexaboi/domain/model"
 )
 
 type Category struct {
@@ -19,12 +20,18 @@ type CategoryCreated struct {
 
 func (cc *CategoryCreated) ToModel() *model.Category {
 	mc := &model.Category{
-		Code: cc.Code,
-		Name: cc.Name,
+		Code:       cc.Code,
+		Name:       cc.Name,
+		DivisionBy: cc.DivisionBy,
+		Entity:     *cc.Entity.ToModel(),
 	}
 
 	if cc.ParentID > 0 {
-
+		mc.Parent = &model.Category{
+			EntityID: base.EntityID{
+				ID: cc.ParentID,
+			},
+		}
 	}
 
 	return mc
@@ -39,11 +46,16 @@ type CategoryUpdated struct {
 
 func (ic *CategoryUpdated) ToModel() *model.Category {
 	m := &model.Category{
-		Name: ic.Name,
+		Name:       ic.Name,
+		DivisionBy: ic.DivisionBy,
 	}
 
 	if ic.ParentID != nil {
-
+		m.Parent = &model.Category{
+			EntityID: base.EntityID{
+				ID: *ic.ParentID,
+			},
+		}
 	}
 
 	return m

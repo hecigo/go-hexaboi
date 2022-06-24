@@ -5,7 +5,7 @@ import (
 
 	"github.com/jackc/pgconn"
 	"gorm.io/gorm"
-	"hoangphuc.tech/dora/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 // Used to format any error to HPIResult

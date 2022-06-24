@@ -1,6 +1,6 @@
 package model
 
-import "hoangphuc.tech/dora/domain/base"
+import "hoangphuc.tech/go-hexaboi/domain/base"
 
 type Document struct {
 	base.EntityID

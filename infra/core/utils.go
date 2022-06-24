@@ -23,6 +23,7 @@ func (u utils) MapToStruct(source map[string]interface{}, dest interface{}) erro
 	if err != nil {
 		return err
 	}
+
 	// Convert json string to struct
 	if err := json.Unmarshal(jsonStr, dest); err != nil {
 		return err

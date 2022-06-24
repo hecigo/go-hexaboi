@@ -1,11 +1,19 @@
 package model
 
+import "hoangphuc.tech/go-hexaboi/domain/base"
+
 // Item grouping, category
 type Category struct {
-	Code      string `json:"category_code"`
-	Name      string `json:"category_name"`
-	IsActived int8   `json:"is_actived"`
-	IsDeleted int8   `json:"is_deleted"`
+	base.EntityID
+	Code string `json:"code"`
+	Name string `json:"name"`
+
+	// Products belonging to this category are grouped by the specified division.
+	DivisionBy Division `json:"division_by"`
+
+	// Parent category
+	Parent *Category `json:"parent"`
+	base.Entity
 }
 
 func (b Category) String() string {

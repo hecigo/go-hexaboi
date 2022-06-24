@@ -1,96 +1,85 @@
 package orm
 
 import (
-	"encoding/json"
-	"fmt"
+	"database/sql"
 
-	"hoangphuc.tech/dora/domain/model"
+	"gorm.io/gorm"
+	model "hoangphuc.tech/go-hexaboi/domain/model"
+	"hoangphuc.tech/go-hexaboi/infra/orm/ext"
 )
 
-// Items can be goods, products, gifts, services...
 type Item struct {
-	Code         string  `json:"item_code"`
-	Name         string  `json:"item_name"`
-	Description  string  `json:"item_description"`
-	BrandCode    string  `json:"brand_code"`
-	Image        string  `json:"item_image"`
-	CategoryCode string  `json:"category_code"`
-	ListedPrice  float32 `json:"listed_price"`
-	SalesPrice   float32 `json:"sales_price"`
-	FullPrice    float32 `json:"full_price"`
-	Type         string  `json:"type"`
-	IsActived    int8    `json:"is_actived"`
-	IsDeleted    int8    `json:"is_deleted"`
+	EntityID
+	Code                string      `json:"code" gorm:"uniqueIndex; not null; type:varchar(50);"`
+	Name                string      `json:"name" gorm:"not null; check:name <> ''"`
+	ShortName           string      `json:"short_name"`
+	VariantAttributes   *ext.JSON   `json:"variant_attributes"`
+	MasterSKU           string      `json:"master_sku" gorm:"type:varchar(50)"`
+	PrimaryCategoryCode string      `json:"primary_category_code" gorm:"column:category_code; not null;"`
+	PrimaryCategory     Category    `json:"primary_category" gorm:"foreignKey:PrimaryCategoryCode; references:Code; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BrandCode           string      `json:"brand_code" gorm:"not null;"`
+	Brand               Brand       `json:"brand" gorm:"foreignKey:BrandCode; references:Code; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Categories          []*Category `json:"categories" gorm:"many2many:item_j_category; foreignKey:Code; joinForeignKey:ItemCode; references: Code; joinReferences: CategoryCode; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Entity
+}
 
-	// The key-value collection of variant attributes. Ex: color, size...
-	// ItemAttribute *map[string]string `json:"item_attribute"`
-	ItemAttribute string `json:"item_attribute"`
+// Initialize orm.Item from model.Item
+func NewItem(item *model.Item) *Item {
+	result := &Item{
+		EntityID:  *NewEntityID(item.ID),
+		Code:      item.Code,
+		Name:      item.Name,
+		ShortName: item.ShortName,
+		MasterSKU: item.MasterSKU,
+		Entity:    *NewEntity(item.Entity),
+	}
 
-	// This SKU represents a group of SKU of the same type.
-	// It is the parent/configurable SKU as well.
-	ParentCode string `json:"parent_code"`
-
-	// All categories including SKU
-	Categories []*Category `json:"categorys"`
+	if item.VariantAttributes != nil {
+		result.VariantAttributes = new(ext.JSON)
+		result.VariantAttributes.Scan(*item.VariantAttributes)
+	}
 
 	// Brand
-	Brands []*Brand `json:"brands"`
+	result.BrandCode = item.Brand.Code
+	result.Brand = *NewBrand(&item.Brand)
 
-	// danh sách tồn kho của 1 sản phẩm
-	Inventorys []*Inventory `json:"inventorys"`
+	// Categories
+	result.PrimaryCategoryCode = item.PrimaryCategory.Code
+	result.PrimaryCategory = *NewCategory(&item.PrimaryCategory)
+
+	if item.Categories != nil {
+		for _, c := range item.Categories {
+			result.Categories = append(result.Categories, NewCategory(c))
+		}
+	}
+
+	return result
 }
 
-type AttributeOrm struct {
-	AttributeCode           string `json:"attributeCode"`
-	AttributeName           string `json:"attributeName"`
-	AttributeValue          string `json:"attributeValue"`
-	AttributeDisplayedValue string `json:"attributeDisplayedValue"`
-	IsVariant               bool   `json:"isVariant"`
-}
-
+// Scan orm.Item into model.Item
 func (o *Item) ToModel(m *model.Item) {
 	if m == nil {
 		m = new(model.Item)
 	}
+	o.Entity.ToModel(&m.Entity)
+	m.ID = o.ID
 	m.Code = o.Code
 	m.Name = o.Name
-	m.Image = o.Image
-	m.ParentCode = o.ParentCode
-	m.BrandCode = o.BrandCode
-	m.CategoryCode = o.CategoryCode
-	m.ListedPrice = o.ListedPrice
-	m.SalesPrice = o.SalesPrice
-	m.FullPrice = o.FullPrice
-	m.Type = o.Type
-	m.Description = o.Description
-	m.IsActived = o.IsActived
+	m.ShortName = o.ShortName
+	m.MasterSKU = o.MasterSKU
 
-	if o.ItemAttribute != "" {
-		// json.Unmarshal([]byte(o.ItemAttribute), &m.ItemAttribute)
-		var result AttributeOrm
-		err := json.Unmarshal([]byte(o.ItemAttribute), &result)
-		if err != nil {
-			fmt.Print(err)
-		}
-		if result != nil {
-
-		}
+	o.PrimaryCategory.ToModel(&m.PrimaryCategory)
+	if m.PrimaryCategory.Code == "" {
+		m.PrimaryCategory.Code = o.PrimaryCategoryCode
 	}
 
-	if o.Inventorys != nil && len(o.Inventorys) > 0 {
-		m.Inventorys = make([]*model.Inventory, len(o.Inventorys))
-		for i, oc := range o.Inventorys {
-			m.Inventorys[i] = new(model.Inventory)
-			oc.ToModel(m.Inventorys[i])
-		}
+	o.Brand.ToModel(&m.Brand)
+	if m.Brand.Code == "" {
+		m.Brand.Code = o.BrandCode
 	}
 
-	if o.Brands != nil && len(o.Brands) > 0 {
-		m.Brands = make([]*model.Brand, len(o.Brands))
-		for i, oc := range o.Brands {
-			m.Brands[i] = new(model.Brand)
-			oc.ToModel(m.Brands[i])
-		}
+	if o.VariantAttributes != nil {
+		m.VariantAttributes = o.VariantAttributes.ToStrMap()
 	}
 
 	if o.Categories != nil && len(o.Categories) > 0 {
@@ -100,4 +89,14 @@ func (o *Item) ToModel(m *model.Item) {
 			oc.ToModel(m.Categories[i])
 		}
 	}
+}
+
+// Updating data in same transaction
+func (item *Item) BeforeUpdate(tx *gorm.DB) (err error) {
+	if (item.Categories != nil) && len(item.Categories) > 0 {
+		// item.Categories is a many2many association, so we need to delete it before updating.
+		// On updating, GORM will re-create new associations automatically.
+		tx.Statement.Exec("DELETE FROM item_j_category WHERE item_id = @item_id", sql.Named("item_id", item.ID))
+	}
+	return nil
 }

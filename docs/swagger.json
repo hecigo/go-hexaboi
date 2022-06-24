@@ -1,70 +1,81 @@
 {
-    "schemes": [
-        "http"
-    ],
-    "swagger": "2.0",
-    "info": {
-        "contact": {}
+  "schemes": ["http"],
+  "swagger": "2.0",
+  "info": {
+    "description": "Gohexaboi API Documentation.",
+    "title": "Gohexaboi API Documentation",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
     },
-    "host": "localhost:3000",
-    "basePath": "/v1/",
-    "paths": {
-        "/": {
-            "get": {
-                "description": "Get the status of server.",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Root"
-                ],
-                "summary": "Show the status of server.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
+    "version": "1.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Get the status of server.",
+        "consumes": ["*/*"],
+        "produces": ["application/json"],
+        "tags": ["Root"],
+        "summary": "Show the status of server.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
             }
-        },
-        "/item/{code}": {
-            "get": {
-                "description": "Get the status of server...",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Item"
-                ],
-                "summary": "Show the status of server...",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Item Code",
-                        "name": "code",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
+    },
+    "/v1/item": {
+      "get": {
+        "description": "Search order items.",
+        "consumes": ["*/*"],
+        "produces": ["application/json"],
+        "tags": ["Item"],
+        "summary": "Search order items.",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/v1/item/{code}": {
+      "get": {
+        "description": "Search order item by code.",
+        "consumes": ["*/*"],
+        "produces": ["application/json"],
+        "tags": ["Item"],
+        "summary": "Search order item by code.",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Code",
+            "name": "code",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
     }
+  }
 }

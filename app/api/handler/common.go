@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"hoangphuc.tech/dora/app/api/middleware"
-	ext "hoangphuc.tech/dora/infra/orm/ext"
+	"hoangphuc.tech/go-hexaboi/app/api/middleware"
+	ext "hoangphuc.tech/go-hexaboi/infra/orm/ext"
 )
 
 func HJSON(c *fiber.Ctx, data interface{}) error {
