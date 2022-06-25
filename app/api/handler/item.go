@@ -86,12 +86,18 @@ func (h ItemHandler) Search(c *fiber.Ctx) error {
 }
 
 func (h ItemHandler) SearchIndex(c *fiber.Ctx) error {
-	var items []interface{}
-	if err := c.BodyParser(&items); err != nil {
-		return err
+
+	// Body can be a single element or a collection of elements
+	var elements []interface{}
+	if err := c.BodyParser(&elements); err != nil {
+		var i interface{}
+		if e := c.BodyParser(&i); e != nil {
+			return e
+		}
+		elements = append(elements, i)
 	}
 
-	err := h.repoItem.SearchIndex(items...)
+	err := h.repoItem.SearchIndex(elements...)
 	if err != nil {
 		return err
 	}
