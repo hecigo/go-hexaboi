@@ -71,3 +71,16 @@ func (h ItemHandler) Update(c *fiber.Ctx) error {
 
 	return HJSON(c, item)
 }
+
+func (h ItemHandler) Search(c *fiber.Ctx) error {
+	var result []map[string]interface{}
+	total, err := h.repoItem.Search(string(c.Body()), &result)
+	if err != nil {
+		return err
+	}
+
+	return HJSON(c, map[string]interface{}{
+		"total":  total,
+		"result": result,
+	})
+}

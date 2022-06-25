@@ -22,4 +22,6 @@ func (r ItemRouter) Register(root fiber.Router) {
 	group.Post("/", valid.Body(&dto.ItemCreated{}), handle.Create)
 	group.Post("/id.:id", valid.Params(&dto.EntityID{}), valid.Body(&dto.ItemUpdated{}), handle.Update)
 
+	// Search
+	group.Post("/search", handle.Search)
 }

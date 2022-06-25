@@ -40,3 +40,23 @@ content-type: application/json
     },    
     "updated_by": "admin"
 }
+
+### SEARCH
+POST {{baseUrl}}/search HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "brandCode": {
+              "value": "1001"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

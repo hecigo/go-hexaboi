@@ -2,7 +2,6 @@ package elasticsearch
 
 import (
 	"bytes"
-	"fmt"
 
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/goccy/go-json"
@@ -10,27 +9,19 @@ import (
 	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
-var (
-	esDefaultConfig = GetConfig()
-)
-
-func Search(index string, query interface{}, result interface{}) error {
+func Search(index string, query interface{}, result interface{}) (uint64, error) {
 	client := Client()
 	var buf bytes.Buffer
 	var reqBody map[string]interface{}
 
-	switch query.(type) {
-	case string:
-		core.UnmarshalNoPanic(query, &reqBody)
-		if err := json.NewEncoder(&buf).Encode(query); err != nil {
-			return err
+	reqBody, ok := query.(map[string]interface{})
+	if !ok {
+		if err := core.UnmarshalNoPanic(query, &reqBody); err != nil {
+			return 0, err
 		}
-	case map[string]interface{}:
-		if err := json.NewEncoder(&buf).Encode(query); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("type of query must be JSON string or map[string]interface{}")
+	}
+	if err := json.NewEncoder(&buf).Encode(reqBody); err != nil {
+		return 0, err
 	}
 
 	resp, err := client.Search(
@@ -42,43 +33,56 @@ func Search(index string, query interface{}, result interface{}) error {
 		withErrorTrace(),
 	)
 	if err != nil {
-		return err
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	var respBody map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
+		return 0, err
 	}
 
 	if resp.IsError() {
-		var errBody map[string]interface{}
-		if err := json.NewDecoder(resp.Body).Decode(&errBody); err != nil {
-			return err
-		}
-		return &core.HPIResult{
+		return 0, &core.HPIResult{
 			Status:    resp.StatusCode,
 			Message:   resp.String(),
-			Data:      errBody,
+			Data:      respBody,
 			ErrorCode: "ES_ERROR",
 		}
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return err
+	esResult := respBody["hits"].(map[string]interface{})
+	totalHits := uint64(esResult["total"].(map[string]interface{})["value"].(float64))
+	var tmpResult []map[string]interface{}
+	for _, h := range esResult["hits"].([]interface{}) {
+		var m map[string]interface{}
+		if err := core.UnmarshalNoPanic(h, &m); err != nil {
+			return 0, err
+		}
+		tmpResult = append(tmpResult, m["_source"].(map[string]interface{}))
 	}
 
-	return nil
+	if err := core.UnmarshalNoPanic(tmpResult, result); err != nil {
+		return 0, err
+	}
+
+	return totalHits, nil
 }
 
 func withTimeout() func(*esapi.SearchRequest) {
 	return func(r *esapi.SearchRequest) {
-		r.Timeout = esDefaultConfig.SearchTimeout
+		r.Timeout = GetConfig().SearchTimeout
 	}
 }
 
 func withPretty() func(*esapi.SearchRequest) {
 	return func(r *esapi.SearchRequest) {
-		r.Pretty = esDefaultConfig.EnableDebugLogger
+		r.Pretty = GetConfig().EnableDebugLogger
 	}
 }
 
 func withErrorTrace() func(*esapi.SearchRequest) {
 	return func(r *esapi.SearchRequest) {
-		r.ErrorTrace = esDefaultConfig.EnableDebugLogger
+		r.ErrorTrace = GetConfig().EnableDebugLogger
 	}
 }
