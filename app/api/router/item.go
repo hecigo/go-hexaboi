@@ -23,5 +23,6 @@ func (r ItemRouter) Register(root fiber.Router) {
 	group.Post("/id.:id", valid.Params(&dto.EntityID{}), valid.Body(&dto.ItemUpdated{}), handle.Update)
 
 	// Search
+	group.Post("/search/_index", handle.SearchIndex)
 	group.Post("/search", handle.Search)
 }

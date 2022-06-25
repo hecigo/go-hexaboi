@@ -20,6 +20,7 @@ type Config struct {
 	MaxIdleConnsPerHost int
 	IdleConnTimeout     time.Duration
 	SearchTimeout       time.Duration
+	BatchIndexSize      int
 	EnableDebugLogger   bool
 }
 
@@ -74,6 +75,7 @@ func OpenConnectionByName(connName string) error {
 	maxIdleConnsPerHost := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST", _connName), 10)
 	idleConnTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_IDLE_CONN_TIMEOUT", _connName), 15*time.Minute)
 	searchTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
+	batchIndexSize := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_BATCH_INDEX_SIZE", _connName), 100)
 	enableDebugLogger := core.GetBoolEnv(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
@@ -89,6 +91,7 @@ func OpenConnectionByName(connName string) error {
 		MaxIdleConnsPerHost: maxIdleConnsPerHost,
 		IdleConnTimeout:     idleConnTimeout,
 		SearchTimeout:       searchTimeout,
+		BatchIndexSize:      batchIndexSize,
 		EnableDebugLogger:   enableDebugLogger,
 	})
 
@@ -143,6 +146,8 @@ func Print(cfg Config) {
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
 	fmt.Printf("| ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST: %d\r\n", _connName, cfg.MaxIdleConnsPerHost)
+	fmt.Printf("| ELASTICSEARCH%s_IDLE_CONN_TIMEOUT: %v\r\n", _connName, cfg.IdleConnTimeout)
+	fmt.Printf("| ELASTICSEARCH%s_BATCH_INDEX_SIZE: %d\r\n", _connName, cfg.BatchIndexSize)
 	fmt.Printf("| ELASTICSEARCH%s_DEBUG: %v\r\n", _connName, cfg.EnableDebugLogger)
 	fmt.Println("└──────────────────────────────────────────────")
 

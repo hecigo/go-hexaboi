@@ -84,3 +84,16 @@ func (h ItemHandler) Search(c *fiber.Ctx) error {
 		"result": result,
 	})
 }
+
+func (h ItemHandler) SearchIndex(c *fiber.Ctx) error {
+	var items []interface{}
+	if err := c.BodyParser(&items); err != nil {
+		return err
+	}
+
+	err := h.repoItem.SearchIndex(items...)
+	if err != nil {
+		return err
+	}
+	return HJSON(c, nil)
+}
