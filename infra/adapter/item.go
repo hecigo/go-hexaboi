@@ -3,6 +3,7 @@ package adapter
 import (
 	"hoangphuc.tech/go-hexaboi/domain/model"
 	"hoangphuc.tech/go-hexaboi/infra/bigquery"
+	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
 	"hoangphuc.tech/go-hexaboi/infra/orientdb"
 	"hoangphuc.tech/go-hexaboi/infra/orm"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
@@ -11,6 +12,7 @@ import (
 type ItemRepository struct{}
 
 var (
+	ES_INDEX                              = "dora-product-001"
 	repoItem      postgres.ItemRepository = postgres.ItemRepository{}
 	bqRepoItem    bigquery.ItemRepository = bigquery.ItemRepository{}
 	graphRepoItem orientdb.ItemRepository = orientdb.ItemRepository{}
@@ -109,4 +111,9 @@ func (*ItemRepository) BQFindAll(page uint, pageSize uint) ([]*model.Item, error
 func (*ItemRepository) BQCount() (count uint64, err error) {
 	count, err = bqRepoItem.Count()
 	return count, err
+}
+
+func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, err error) {
+	total, err = elasticsearch.Search(ES_INDEX, query, result)
+	return total, err
 }

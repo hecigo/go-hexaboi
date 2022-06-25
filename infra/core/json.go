@@ -32,6 +32,12 @@ func UnmarshalNoPanic(origin interface{}, dest interface{}) error {
 			return err
 		}
 		bytes = mbytes
+	case []map[string]interface{}:
+		mbytes, err := json.Marshal(origin)
+		if err != nil {
+			return err
+		}
+		bytes = mbytes
 	default:
 		return fmt.Errorf("failed to unmarshal JSON: origin type is invalid\n%v", origin)
 	}

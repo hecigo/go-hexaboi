@@ -50,6 +50,9 @@ func HError(c *fiber.Ctx, status int, errCode string, err error, data ...interfa
 	if e, ok := err.(*core.HPIResult); ok {
 		code = e.Status
 		data = append(data, e.Data)
+		if e.ErrorCode != "" {
+			errCode = e.ErrorCode
+		}
 		c.Response().SetStatusCode(code) // Override status code of the context with HPIResult
 	} else if e, ok := err.(*fiber.Error); ok {
 		// Retrieve the custom status code if it's an fiber.*Error
