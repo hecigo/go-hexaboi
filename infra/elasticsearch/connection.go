@@ -3,11 +3,13 @@ package elasticsearch
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v7"
 	"hoangphuc.tech/go-hexaboi/infra/core"
 )
@@ -108,6 +110,14 @@ func OpenConnection(config ...Config) error {
 				MaxIdleConnsPerHost: cfg.MaxIdleConnsPerHost,
 				IdleConnTimeout:     cfg.IdleConnTimeout,
 			},
+		}
+
+		if cfg.EnableDebugLogger {
+			esCfg.Logger = &elastictransport.ColorLogger{
+				Output:             os.Stdout,
+				EnableRequestBody:  true,
+				EnableResponseBody: true,
+			}
 		}
 
 		if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
