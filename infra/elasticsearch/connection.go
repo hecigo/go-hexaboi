@@ -2,7 +2,6 @@ package elasticsearch
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -15,15 +14,13 @@ import (
 )
 
 type Config struct {
-	ConnectionName      string
-	Addresses           []string
-	BasicAuth           []string
-	MaxRetries          int
-	MaxIdleConnsPerHost int
-	IdleConnTimeout     time.Duration
-	SearchTimeout       time.Duration
-	BatchIndexSize      int
-	EnableDebugLogger   bool
+	ConnectionName    string
+	Addresses         []string
+	BasicAuth         []string
+	MaxRetries        int
+	SearchTimeout     time.Duration
+	BatchIndexSize    int
+	EnableDebugLogger bool
 }
 
 var clients map[string]*elasticsearch.Client = make(map[string]*elasticsearch.Client)
@@ -74,8 +71,6 @@ func OpenConnectionByName(connName string) error {
 	addresses := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_URL", _connName), "")
 	basicAuth := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
 	maxRetries := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
-	maxIdleConnsPerHost := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST", _connName), 10)
-	idleConnTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_IDLE_CONN_TIMEOUT", _connName), 15*time.Minute)
 	searchTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
 	batchIndexSize := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_BATCH_INDEX_SIZE", _connName), 100)
 	enableDebugLogger := core.GetBoolEnv(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
@@ -86,15 +81,13 @@ func OpenConnectionByName(connName string) error {
 	}
 
 	err := OpenConnection(Config{
-		ConnectionName:      connName,
-		Addresses:           strings.Split(addresses, ";"),
-		BasicAuth:           strings.Split(basicAuth, ":"),
-		MaxRetries:          maxRetries,
-		MaxIdleConnsPerHost: maxIdleConnsPerHost,
-		IdleConnTimeout:     idleConnTimeout,
-		SearchTimeout:       searchTimeout,
-		BatchIndexSize:      batchIndexSize,
-		EnableDebugLogger:   enableDebugLogger,
+		ConnectionName:    connName,
+		Addresses:         strings.Split(addresses, ";"),
+		BasicAuth:         strings.Split(basicAuth, ":"),
+		MaxRetries:        maxRetries,
+		SearchTimeout:     searchTimeout,
+		BatchIndexSize:    batchIndexSize,
+		EnableDebugLogger: enableDebugLogger,
 	})
 
 	return err
@@ -106,10 +99,7 @@ func OpenConnection(config ...Config) error {
 			Addresses:         cfg.Addresses,
 			MaxRetries:        cfg.MaxRetries,
 			EnableDebugLogger: cfg.EnableDebugLogger,
-			Transport: &http.Transport{
-				MaxIdleConnsPerHost: cfg.MaxIdleConnsPerHost,
-				IdleConnTimeout:     cfg.IdleConnTimeout,
-			},
+			Transport:         &Transport{},
 		}
 
 		if cfg.EnableDebugLogger {
@@ -155,8 +145,6 @@ func Print(cfg Config) {
 		fmt.Printf("| ELASTICSEARCH%s_BASIC_AUTH: %s\r\n", _connName, cfg.BasicAuth)
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
-	fmt.Printf("| ELASTICSEARCH%s_MAX_IDLE_CONNS_PER_HOST: %d\r\n", _connName, cfg.MaxIdleConnsPerHost)
-	fmt.Printf("| ELASTICSEARCH%s_IDLE_CONN_TIMEOUT: %v\r\n", _connName, cfg.IdleConnTimeout)
 	fmt.Printf("| ELASTICSEARCH%s_BATCH_INDEX_SIZE: %d\r\n", _connName, cfg.BatchIndexSize)
 	fmt.Printf("| ELASTICSEARCH%s_DEBUG: %v\r\n", _connName, cfg.EnableDebugLogger)
 	fmt.Println("└──────────────────────────────────────────────")
