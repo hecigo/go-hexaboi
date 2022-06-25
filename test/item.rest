@@ -60,3 +60,46 @@ content-type: application/json
     }
   }
 }
+
+### SEARCH INDEX
+POST {{baseUrl}}/search/_index HTTP/1.1
+content-type: application/json
+
+[{
+  "attribute": [
+    {
+      "attributeCode": "color_code",
+      "attributeDisplayedValue": "AMAZON GREEN",
+      "attributeName": "color_code",
+      "attributeValue": "AMAZON GREEN",
+      "isVariant": true
+    },
+    {
+      "attributeCode": "color_name",
+      "attributeDisplayedValue": "Xanh lá",
+      "attributeName": "color_name",
+      "attributeValue": "Xanh lá",
+      "isVariant": true
+    },
+    {
+      "attributeCode": "size",
+      "attributeDisplayedValue": "M",
+      "attributeName": "size",
+      "attributeValue": "M",
+      "isVariant": true
+    }
+  ],
+  "brandCode": "1001",
+  "brandName": "ECKO UNLTD",
+  "categoryCode": "11009",
+  "categoryId": 0,
+  "categoryName": "POLO",
+  "fullPrice": 1267000,
+  "id": "6868002192408",
+  "listedPrice": 1267000,
+  "parentCode": "OF21-03151",
+  "productCode": "6868002192408",
+  "productImage": "/o/f/of21-03151_fw21_amazon_green_l-1_2.jpg",
+  "productName": "ECKO UNLTD ÁO THUN CÓ CỔ TAY NGẮN NAM Xanh lá (AMAZON GREEN) M",
+  "salesPrice": 1267000
+}]

@@ -12,10 +12,11 @@ import (
 type ItemRepository struct{}
 
 var (
-	ES_INDEX                              = "dora-product-001"
-	repoItem      postgres.ItemRepository = postgres.ItemRepository{}
-	bqRepoItem    bigquery.ItemRepository = bigquery.ItemRepository{}
-	graphRepoItem orientdb.ItemRepository = orientdb.ItemRepository{}
+	ES_INDEX                                = "dora-product-001"
+	ES_DOC_ID_FIELD                         = "productCode"
+	repoItem        postgres.ItemRepository = postgres.ItemRepository{}
+	bqRepoItem      bigquery.ItemRepository = bigquery.ItemRepository{}
+	graphRepoItem   orientdb.ItemRepository = orientdb.ItemRepository{}
 )
 
 func (*ItemRepository) Create(m *model.Item) error {
@@ -116,4 +117,8 @@ func (*ItemRepository) BQCount() (count uint64, err error) {
 func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, err error) {
 	total, err = elasticsearch.Search(ES_INDEX, query, result)
 	return total, err
+}
+
+func (*ItemRepository) SearchIndex(items ...interface{}) error {
+	return elasticsearch.Index(ES_INDEX, ES_DOC_ID_FIELD, items...)
 }

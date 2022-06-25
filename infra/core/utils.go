@@ -16,16 +16,39 @@ var (
 type utils struct {
 }
 
+// Convert any object to string
+func (u utils) ToStr(any interface{}) string {
+	bytes, err := json.Marshal(any)
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(bytes)
+}
+
 // Convert a map to struct type
 func (u utils) MapToStruct(source map[string]interface{}, dest interface{}) error {
 	// Convert map to json string
-	jsonStr, err := json.Marshal(source)
+	bytes, err := json.Marshal(source)
 	if err != nil {
 		return err
 	}
 
 	// Convert json string to struct
-	if err := json.Unmarshal(jsonStr, dest); err != nil {
+	if err := json.Unmarshal(bytes, dest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u utils) StructToMap(source interface{}, dest *map[string]interface{}) error {
+	bytes, err := json.Marshal(source)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(bytes, &dest); err != nil {
 		return err
 	}
 
