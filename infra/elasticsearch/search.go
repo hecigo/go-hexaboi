@@ -9,7 +9,7 @@ import (
 	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
-func Search(index string, query interface{}, result interface{}) (uint64, error) {
+func Search(index string, query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
 	client := Client()
 	var buf bytes.Buffer
 	var reqBody map[string]interface{}
@@ -17,11 +17,11 @@ func Search(index string, query interface{}, result interface{}) (uint64, error)
 	reqBody, ok := query.(map[string]interface{})
 	if !ok {
 		if err := core.UnmarshalNoPanic(query, &reqBody); err != nil {
-			return 0, err
+			return 0, nil, err
 		}
 	}
 	if err := json.NewEncoder(&buf).Encode(reqBody); err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 
 	resp, err := client.Search(
@@ -33,17 +33,19 @@ func Search(index string, query interface{}, result interface{}) (uint64, error)
 		withErrorTrace(),
 	)
 	if err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 	defer resp.Body.Close()
 
 	var respBody map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&respBody); err != nil {
-		return 0, err
+	buf.Reset()
+	buf.ReadFrom(resp.Body)
+	if err := core.UnmarshalNoPanic(buf.String(), &respBody); err != nil {
+		return 0, nil, err
 	}
 
 	if resp.IsError() {
-		return 0, &core.HPIResult{
+		return 0, nil, &core.HPIResult{
 			Status:    resp.StatusCode,
 			Message:   resp.String(),
 			Data:      respBody,
@@ -52,21 +54,24 @@ func Search(index string, query interface{}, result interface{}) (uint64, error)
 	}
 
 	esResult := respBody["hits"].(map[string]interface{})
-	totalHits := uint64(esResult["total"].(map[string]interface{})["value"].(float64))
+
+	total = uint64(esResult["total"].(map[string]interface{})["value"].(float64))
+	aggs = respBody["aggregations"].(map[string]interface{})
+
 	var tmpResult []map[string]interface{}
 	for _, h := range esResult["hits"].([]interface{}) {
 		var m map[string]interface{}
 		if err := core.UnmarshalNoPanic(h, &m); err != nil {
-			return 0, err
+			return 0, nil, err
 		}
 		tmpResult = append(tmpResult, m["_source"].(map[string]interface{}))
 	}
 
 	if err := core.UnmarshalNoPanic(tmpResult, result); err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 
-	return totalHits, nil
+	return total, aggs, nil
 }
 
 func withTimeout() func(*esapi.SearchRequest) {
