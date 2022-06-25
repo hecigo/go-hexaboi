@@ -56,7 +56,9 @@ func Search(index string, query interface{}, result interface{}) (total uint64, 
 	esResult := respBody["hits"].(map[string]interface{})
 
 	total = uint64(esResult["total"].(map[string]interface{})["value"].(float64))
-	aggs = respBody["aggregations"].(map[string]interface{})
+	if respBody["aggregations"] != nil {
+		aggs = respBody["aggregations"].(map[string]interface{})
+	}
 
 	var tmpResult []map[string]interface{}
 	for _, h := range esResult["hits"].([]interface{}) {
