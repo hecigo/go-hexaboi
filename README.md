@@ -163,6 +163,7 @@ REDIS_READ_TIMEOUT=3s
 REDIS_WRITE_TIMEOUT=3s
 
 # If you want to use cache, please add "_CACHE" to your config key
+# View more: https://redis.uptrace.dev/guide/go-redis-cache.html#go-redis-cache
 REDIS_CACHE_URL="localhost:6379"
 
 # Use local in-process storage to cache the small subset of popular keys.
