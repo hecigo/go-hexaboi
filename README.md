@@ -86,11 +86,12 @@ PPROF_ENABLE=false
 
 
 
-# ----- DB: POSTGRESQL -----
+# ----- DB: POSTGRESQL, SQL Server, SQLite -----
 # Using GORM as default ORM library.
 # View more: https://gorm.io/docs/connecting_to_the_database.html#PostgreSQL
 # Inserts connection name after DB_POSTGRES if using multiple connections.
 # For example, DB_POSTGRES_ABC_HOST..., "ABC" is the connection name.
+# Replace POSTGRES with SQLSERVER or SQLITE when you want to use these drivers.
 
 # Common options
 DB_POSTGRES_HOST=localhost
