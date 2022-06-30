@@ -50,13 +50,105 @@ content-type: application/json
     "bool": {
       "must": [
         {
-          "term": {
-            "brandCode": {
-              "value": "1001"
+          "terms": {
+            "store_code": [
+              "3101"
+            ]
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 1,
+  "aggs": {
+    "facetStatus": {
+      "terms": {
+        "field": "status.keyword",
+        "size": 100
+      },
+      "aggs": {
+        "Sum": {
+          "value_count": {
+            "field": "status.keyword"
+          }
+        },
+        "ExistsPostShipmentDate": {
+          "filter": {
+            "exists": {
+              "field": "post_shipment_date"
+            }
+          }
+        },
+        "SumGetFullPacked": {
+          "filter": {
+            "term": {
+              "soitem_picked_full": "1"
+            }
+          }
+        },
+        "GapTreLeadTime": {
+          "filter": {
+            "range": {
+              "updated_at": {
+                "gte": "now-2000d/d",
+                "lte": "now"
+              }
+            }
+          },
+          "aggs": {
+            "exsd_leadtime_minues_hours": {
+              "filter": {
+                "script": {
+                  "script": {
+                    "source": "\n                             Instant Currentdate = Instant.ofEpochMilli(new Date().getTime());\n                             ZonedDateTime mdt = doc['exsd'].length > 0 ?doc['exsd'].value : null;\n                             ZonedDateTime nowDT = ZonedDateTime.ofInstant(Currentdate, ZoneId.of('Z'));\n                             if(mdt != null){\n                                // 18 - 7\n                                if(mdt.getHour() == 11){\n                                  mdt = mdt.plusHours(-1);\n                                }else{\n                                  mdt = mdt.plusHours(-5);\n                                }\n                             }\n                             return mdt == null || nowDT.isAfter(mdt);\n                            ",
+                    "lang": "painless"
+                  }
+                }
+              }
+            },
+            "exsd_leadtime": {
+              "filter": {
+                "script": {
+                  "script": {
+                    "source": "\n                             Instant Currentdate = Instant.ofEpochMilli(new Date().getTime());\n                             ZonedDateTime mdt = doc['exsd'].length > 0 ?doc['exsd'].value : null;\n                             ZonedDateTime nowDT = ZonedDateTime.ofInstant(Currentdate, ZoneId.of('Z'));\n\n                             return mdt == null || nowDT.isAfter(mdt);\n                           ",
+                    "lang": "painless"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "duddd": {
+          "range": {
+            "field": "",
+            "ranges": [
+              {
+                "from": 50,
+                "to": 100
+              }
+            ]
+          }
+        }
+      }
+    },
+    "FacePacked": {
+      "filter": {
+        "term": {
+          "status": "packed"
+        }
+      },
+      "aggs": {
+        "ExistsPostShipmentDate": {
+          "filter": {
+            "exists": {
+              "field": "post_shipment_date"
             }
           }
         }
-      ]
+      }
     }
   }
 }

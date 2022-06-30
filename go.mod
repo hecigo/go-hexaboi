@@ -6,6 +6,8 @@ require github.com/gofiber/fiber/v2 v2.34.1 // direct
 
 require (
 	github.com/arsmn/fiber-swagger/v2 v2.31.1
+	github.com/dustin/go-humanize v1.0.0
+	github.com/elastic/elastic-transport-go/v8 v8.1.0
 	github.com/elastic/go-elasticsearch/v7 v7.17.1
 	github.com/elliotchance/pie/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.11.0
@@ -18,8 +20,11 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/swaggo/swag v1.8.2
-	gorm.io/driver/bigquery v1.0.18
+	github.com/valyala/fasthttp v1.37.0
+	gorm.io/driver/bigquery v1.0.19-beta
 	gorm.io/driver/postgres v1.3.7
+	gorm.io/driver/sqlite v1.3.5
+	gorm.io/driver/sqlserver v1.3.2
 	gorm.io/gorm v1.23.6
 	gorm.io/plugin/dbresolver v1.2.1
 )
@@ -38,13 +43,14 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/denisenkom/go-mssqldb v0.12.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/elastic/elastic-transport-go/v8 v8.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
+	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
+	github.com/golang-sql/sqlexp v0.0.0-20170517235910-f1bb20e5a188 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
@@ -63,10 +69,10 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-sqlite3 v1.14.12 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.37.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
@@ -90,4 +96,4 @@ require (
 
 )
 
-replace gorm.io/driver/bigquery v1.0.18 => ../gorm-bigquery-driver
+replace gorm.io/driver/bigquery v1.0.19-beta => github.com/hpi-tech/gorm-bigquery-driver v1.0.19-beta

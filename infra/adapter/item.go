@@ -12,7 +12,7 @@ import (
 type ItemRepository struct{}
 
 var (
-	ES_INDEX                                = "dora-product-001"
+	ES_INDEX                                = "hpi-salesorder-002"
 	ES_DOC_ID_FIELD                         = "productCode"
 	repoItem        postgres.ItemRepository = postgres.ItemRepository{}
 	bqRepoItem      bigquery.ItemRepository = bigquery.ItemRepository{}
@@ -114,9 +114,8 @@ func (*ItemRepository) BQCount() (count uint64, err error) {
 	return count, err
 }
 
-func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, err error) {
-	total, err = elasticsearch.Search(ES_INDEX, query, result)
-	return total, err
+func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
+	return elasticsearch.Search(ES_INDEX, query, result)
 }
 
 func (*ItemRepository) SearchIndex(items ...interface{}) error {
