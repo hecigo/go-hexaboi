@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"log"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/jackc/pgconn"
 	"github.com/spf13/cobra"

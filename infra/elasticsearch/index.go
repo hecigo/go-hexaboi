@@ -2,9 +2,10 @@ package elasticsearch
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/goccy/go-json"
 
 	"github.com/dustin/go-humanize"
 	"github.com/elastic/go-elasticsearch/v7/esapi"

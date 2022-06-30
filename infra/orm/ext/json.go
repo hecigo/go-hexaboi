@@ -5,8 +5,9 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
-	"log"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/goccy/go-json"
 	"hoangphuc.tech/go-hexaboi/infra/core"

@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 	"hoangphuc.tech/go-hexaboi/infra/postgres"
