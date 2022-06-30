@@ -86,11 +86,12 @@ PPROF_ENABLE=false
 
 
 
-# ----- DB: POSTGRESQL -----
+# ----- DB: POSTGRESQL, SQL Server, SQLite -----
 # Using GORM as default ORM library.
 # View more: https://gorm.io/docs/connecting_to_the_database.html#PostgreSQL
 # Inserts connection name after DB_POSTGRES if using multiple connections.
 # For example, DB_POSTGRES_ABC_HOST..., "ABC" is the connection name.
+# Replace POSTGRES with SQLSERVER or SQLITE when you want to use these drivers.
 
 # Common options
 DB_POSTGRES_HOST=localhost
@@ -162,6 +163,7 @@ REDIS_READ_TIMEOUT=3s
 REDIS_WRITE_TIMEOUT=3s
 
 # If you want to use cache, please add "_CACHE" to your config key
+# View more: https://redis.uptrace.dev/guide/go-redis-cache.html#go-redis-cache
 REDIS_CACHE_URL="localhost:6379"
 
 # Use local in-process storage to cache the small subset of popular keys.
