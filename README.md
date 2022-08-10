@@ -161,6 +161,7 @@ REDIS_MAX_RETRIES=3
 REDIS_DIAL_TIMEOUT=1s
 REDIS_READ_TIMEOUT=3s
 REDIS_WRITE_TIMEOUT=3s
+REDIS_MASTER_NAME=""
 
 # If you want to use cache, please add "_CACHE" to your config key
 # View more: https://redis.uptrace.dev/guide/go-redis-cache.html#go-redis-cache
