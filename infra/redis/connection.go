@@ -21,6 +21,7 @@ type Config struct {
 	DialTimeout    time.Duration
 	ReadTimeout    time.Duration
 	WriteTimeout   time.Duration
+	MasterName     string
 }
 
 var (
@@ -70,6 +71,7 @@ func OpenConnectionByName(connName string) error {
 	dialTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_DIAL_TIMEOUT", _connName), time.Second)
 	readTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_READ_TIMEOUT", _connName), 3*time.Second)
 	writeTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_WRITE_TIMEOUT", _connName), 3*time.Second)
+	masterName := core.Getenv(fmt.Sprintf("REDIS%s_MASTER_NAME", _connName), "")
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {
@@ -85,6 +87,7 @@ func OpenConnectionByName(connName string) error {
 		DialTimeout:    dialTimeout,
 		ReadTimeout:    readTimeout,
 		WriteTimeout:   writeTimeout,
+		MasterName:     masterName,
 	})
 
 	return err
@@ -94,11 +97,12 @@ func OpenConnection(config ...Config) error {
 	for _, cfg := range config {
 		rdsCfg := &redis.UniversalOptions{
 			Addrs:        cfg.Addresses,
+			DB:           cfg.DB,
 			MaxRetries:   cfg.MaxRetries,
 			DialTimeout:  cfg.DialTimeout,
 			ReadTimeout:  cfg.ReadTimeout,
 			WriteTimeout: cfg.WriteTimeout,
-			MasterName:   "primary",
+			MasterName:   cfg.MasterName,
 		}
 
 		if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
@@ -150,6 +154,7 @@ func Print(cfg Config) {
 	fmt.Printf("| REDIS%s_DIAL_TIMEOUT: %v\r\n", _connName, cfg.DialTimeout)
 	fmt.Printf("| REDIS%s_READ_TIMEOUT: %v\r\n", _connName, cfg.ReadTimeout)
 	fmt.Printf("| REDIS%s_WRITE_TIMEOUT: %v\r\n", _connName, cfg.WriteTimeout)
+	fmt.Printf("| REDIS%s_MASTER_NAME: %s\r\n", _connName, cfg.MasterName)
 	fmt.Println("└──────────────────────────────────────")
 
 }
