@@ -5,11 +5,10 @@ import (
 
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/goccy/go-json"
-
 	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
-func Search(index string, query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
+func Search(index string, query interface{}, result interface{}) (total uint64, extra map[string]interface{}, err error) {
 	client := Client()
 	var buf bytes.Buffer
 	var reqBody map[string]interface{}
@@ -54,26 +53,35 @@ func Search(index string, query interface{}, result interface{}) (total uint64, 
 	}
 
 	esResult := respBody["hits"].(map[string]interface{})
+	extra = make(map[string]interface{})
 
 	total = uint64(esResult["total"].(map[string]interface{})["value"].(float64))
 	if respBody["aggregations"] != nil {
-		aggs = respBody["aggregations"].(map[string]interface{})
+		extra["aggs"] = respBody["aggregations"].(map[string]interface{})
 	}
 
 	var tmpResult []map[string]interface{}
+	extraSorts := make(map[string]interface{})
 	for _, h := range esResult["hits"].([]interface{}) {
 		var m map[string]interface{}
 		if err := core.UnmarshalNoPanic(h, &m); err != nil {
 			return 0, nil, err
 		}
-		tmpResult = append(tmpResult, m["_source"].(map[string]interface{}))
+		_source := m["_source"].(map[string]interface{})
+
+		if m["sort"] != nil {
+			extraSorts[m["_id"].(string)] = m["sort"]
+		}
+
+		tmpResult = append(tmpResult, _source)
 	}
+	extra["sorts"] = extraSorts
 
 	if err := core.UnmarshalNoPanic(tmpResult, result); err != nil {
 		return 0, nil, err
 	}
 
-	return total, aggs, nil
+	return total, extra, nil
 }
 
 func withTimeout() func(*esapi.SearchRequest) {

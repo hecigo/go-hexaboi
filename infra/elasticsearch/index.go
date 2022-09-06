@@ -67,6 +67,9 @@ func Index(indexName string, docIdField string, documents ...interface{}) error 
 			return err
 		}
 		docId := core.Utils.ToStr(doc[docIdField])
+		if docId == "" {
+			return fmt.Errorf("document ID must not be empty")
+		}
 
 		// Prepare the metadata payload
 		meta := []byte(fmt.Sprintf(`{"index": {"_id": %s}}%s`, docId, "\n"))
