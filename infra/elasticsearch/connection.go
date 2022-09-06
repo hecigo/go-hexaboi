@@ -17,6 +17,7 @@ type Config struct {
 	ConnectionName    string
 	Addresses         []string
 	BasicAuth         []string
+	CACert            string
 	MaxRetries        int
 	SearchTimeout     time.Duration
 	BatchIndexSize    int
@@ -70,6 +71,7 @@ func OpenConnectionByName(connName string) error {
 
 	addresses := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_URL", _connName), "")
 	basicAuth := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
+	caCert := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_CACERT", _connName), "")
 	maxRetries := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
 	searchTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
 	batchIndexSize := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_BATCH_INDEX_SIZE", _connName), 100)
@@ -84,6 +86,7 @@ func OpenConnectionByName(connName string) error {
 		ConnectionName:    connName,
 		Addresses:         strings.Split(addresses, ";"),
 		BasicAuth:         strings.Split(basicAuth, ":"),
+		CACert:            caCert,
 		MaxRetries:        maxRetries,
 		SearchTimeout:     searchTimeout,
 		BatchIndexSize:    batchIndexSize,
@@ -99,7 +102,14 @@ func OpenConnection(config ...Config) error {
 			Addresses:         cfg.Addresses,
 			MaxRetries:        cfg.MaxRetries,
 			EnableDebugLogger: cfg.EnableDebugLogger,
-			Transport:         &Transport{},
+		}
+
+		if cfg.CACert != "" {
+			caCert, err := os.ReadFile(cfg.CACert)
+			if err != nil {
+				panic("Elasticsearch CA Certificate file is not found")
+			}
+			esCfg.CACert = caCert
 		}
 
 		if cfg.EnableDebugLogger {
@@ -143,6 +153,9 @@ func Print(cfg Config) {
 	fmt.Printf("| ELASTICSEARCH%s_URL: %s\r\n", _connName, cfg.Addresses)
 	if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
 		fmt.Printf("| ELASTICSEARCH%s_BASIC_AUTH: %s\r\n", _connName, cfg.BasicAuth)
+	}
+	if cfg.CACert != "" {
+		fmt.Printf("| ELASTICSEARCH%s_CACERT: %s\r\n", _connName, cfg.CACert)
 	}
 	fmt.Printf("| ELASTICSEARCH%s_MAX_RETRIES: %d\r\n", _connName, cfg.MaxRetries)
 	fmt.Printf("| ELASTICSEARCH%s_BATCH_INDEX_SIZE: %d\r\n", _connName, cfg.BatchIndexSize)

@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -10,11 +10,9 @@ import (
 
 // Transport implements the elastictransport interface with
 // the github.com/valyala/fasthttp HTTP client.
-//
 type Transport struct{}
 
 // RoundTrip performs the request and returns a response or error
-//
 func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	freq := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(freq)
@@ -36,7 +34,6 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 // copyRequest converts a http.Request to fasthttp.Request
-//
 func (t *Transport) copyRequest(dst *fasthttp.Request, src *http.Request) *fasthttp.Request {
 	if src.Method == "GET" && src.Body != nil {
 		src.Method = "POST"
@@ -62,7 +59,6 @@ func (t *Transport) copyRequest(dst *fasthttp.Request, src *http.Request) *fasth
 }
 
 // copyResponse converts a http.Response to fasthttp.Response
-//
 func (t *Transport) copyResponse(dst *http.Response, src *fasthttp.Response) *http.Response {
 	dst.StatusCode = src.StatusCode()
 
@@ -72,7 +68,7 @@ func (t *Transport) copyResponse(dst *http.Response, src *fasthttp.Response) *ht
 
 	// Cast to a string to make a copy seeing as src.Body() won't
 	// be valid after the response is released back to the pool (fasthttp.ReleaseResponse).
-	dst.Body = ioutil.NopCloser(strings.NewReader(string(src.Body())))
+	dst.Body = io.NopCloser(strings.NewReader(string(src.Body())))
 
 	return dst
 }
