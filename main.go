@@ -34,7 +34,7 @@ func main() {
 	// Initialize logger
 	core.InitLogger()
 
-	appName := core.Getenv("APP_NAME", "Gohexaboi")
+	appName := core.Getenv("APP_NAME", "GoHexaboi")
 	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
 	// rootCmd represents the base command when called without any subcommands
