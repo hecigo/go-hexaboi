@@ -6,10 +6,9 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"hoangphuc.tech/go-hexaboi/infra/core"
 
 	"github.com/go-redis/redis/v8"
-
-	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -29,7 +28,7 @@ var (
 )
 
 // Get the default Elasticsearch client
-func Client() redis.UniversalClient {
+func DB() redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
 	}
@@ -37,7 +36,7 @@ func Client() redis.UniversalClient {
 }
 
 // Get the default Elasticsearch client by name
-func ClientByName(name string) redis.UniversalClient {
+func DBByName(name string) redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
 	}
@@ -66,7 +65,7 @@ func OpenConnectionByName(connName string) error {
 
 	addresses := core.Getenv(fmt.Sprintf("REDIS%s_URL", _connName), "")
 	basicAuth := core.Getenv(fmt.Sprintf("REDIS%s_BASIC_AUTH", _connName), "")
-	db := core.GetIntEnv(fmt.Sprintf("REDIS%s_DB", _connName), 0)
+	db := core.GetIntEnv(fmt.Sprintf("REDIS%s_DB", _connName), 8)
 	maxRetries := core.GetIntEnv(fmt.Sprintf("REDIS%s_MAX_RETRIES", _connName), 3)
 	dialTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_DIAL_TIMEOUT", _connName), time.Second)
 	readTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_READ_TIMEOUT", _connName), 3*time.Second)
@@ -97,8 +96,8 @@ func OpenConnection(config ...Config) error {
 	for _, cfg := range config {
 		rdsCfg := &redis.UniversalOptions{
 			Addrs:        cfg.Addresses,
-			DB:           cfg.DB,
 			MaxRetries:   cfg.MaxRetries,
+			DB:           cfg.DB,
 			DialTimeout:  cfg.DialTimeout,
 			ReadTimeout:  cfg.ReadTimeout,
 			WriteTimeout: cfg.WriteTimeout,
@@ -154,7 +153,7 @@ func Print(cfg Config) {
 	fmt.Printf("| REDIS%s_DIAL_TIMEOUT: %v\r\n", _connName, cfg.DialTimeout)
 	fmt.Printf("| REDIS%s_READ_TIMEOUT: %v\r\n", _connName, cfg.ReadTimeout)
 	fmt.Printf("| REDIS%s_WRITE_TIMEOUT: %v\r\n", _connName, cfg.WriteTimeout)
-	fmt.Printf("| REDIS%s_MASTER_NAME: %s\r\n", _connName, cfg.MasterName)
+	fmt.Printf("| REDIS%s_MASTER_NAME: %v\r\n", _connName, cfg.MasterName)
 	fmt.Println("└──────────────────────────────────────")
 
 }
