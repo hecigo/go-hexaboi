@@ -9,7 +9,7 @@ import (
 
 var defaultInstance *cache.Cache
 
-//  Initialize cache instance with Redis
+// Initialize cache instance with Redis
 func InitCache() {
 
 	// Use local in-process storage to cache the small subset of popular keys
@@ -18,7 +18,7 @@ func InitCache() {
 	duration := core.GetDurationEnv("REDIS_CACHE_TINYFLU_DURATION", time.Minute)
 
 	defaultInstance = cache.New(&cache.Options{
-		Redis:      ClientByName("cache"),
+		Redis:      DBByName("cache"),
 		LocalCache: cache.NewTinyLFU(size, duration),
 	})
 }
