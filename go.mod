@@ -5,6 +5,7 @@ go 1.19
 require github.com/gofiber/fiber/v2 v2.38.1 // direct
 
 require (
+	github.com/MicahParks/keyfunc v1.4.0
 	github.com/arsmn/fiber-swagger/v2 v2.31.1
 	github.com/dustin/go-humanize v1.0.0
 	github.com/elastic/elastic-transport-go/v8 v8.1.0
@@ -15,6 +16,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/goccy/go-json v0.9.11
+	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/jackc/pgconn v1.13.0
 	github.com/joho/godotenv v1.4.0
 	github.com/segmentio/kafka-go v0.4.35

@@ -46,6 +46,7 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 
 			// Initialize Redis clients
 			redis.OpenDefaultConnection()
+			redis.EnableSession() // Enable session store for Redis
 			defer redis.CloseAll()
 
 			// Open OrientDB connections
