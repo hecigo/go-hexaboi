@@ -63,9 +63,18 @@ func AppVersion() string {
 // Load API keys from env
 func LoadClientSecretKeys() {
 	apiClients := strings.Split(Getenv("API_CLIENT_IDS", ""), ",")
-	API_CLIENT_SECRETS = make(map[string]string)
-	for _, client := range apiClients {
-		clientName := strings.ToUpper(client)
-		API_CLIENT_SECRETS[clientName] = Getenv(fmt.Sprintf("API_CLIENT_SECRET_%s", strings.ToUpper(clientName)), "")
+	if len(apiClients) != 0 {
+		fmt.Printf("\r\n┌─────── CLIENT_SECRET: ─────────\r\n")
+		fmt.Printf("| API_CLIENT_IDS: %v\r\n", Getenv("API_CLIENT_IDS", ""))
+
+		API_CLIENT_SECRETS = make(map[string]string)
+		for _, client := range apiClients {
+			clientSecretEnv := fmt.Sprintf("API_CLIENT_SECRET_%s", strings.TrimSpace(strings.ToUpper(client)))
+			API_CLIENT_SECRETS[clientSecretEnv] = Getenv(clientSecretEnv, "")
+
+			fmt.Printf("| %s: %v\r\n", clientSecretEnv, API_CLIENT_SECRETS[clientSecretEnv])
+		}
+
+		fmt.Println("└──────────────────────────────────────")
 	}
 }
