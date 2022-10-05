@@ -37,6 +37,9 @@ func main() {
 	appName := core.Getenv("APP_NAME", "GoHexaboi")
 	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
+	// Load client secret keys
+	core.LoadClientSecretKeys()
+
 	// rootCmd represents the base command when called without any subcommands
 	var rootCmd = &cobra.Command{
 		Use:     strings.ToLower(appName),

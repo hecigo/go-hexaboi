@@ -15,7 +15,6 @@ func Encode(b []byte) string {
 }
 
 func Decode(s string) []byte {
-
 	data, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
 		panic(err)

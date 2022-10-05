@@ -71,15 +71,16 @@ func (*AuthService) AuthCheck(c *fiber.Ctx) error {
 		return response(c, 401, "Permission denied")
 	}
 
-	// TODO: dynamic key
-	switch stringDecrypt {
-	case core.Getenv("HPI_SECRET_TORII_TO_SAWAN", "HPI_SECRET_TORII_TO_SAWAN"):
-		return c.Next()
-	case core.Getenv("HPI_SECRET_WEB_V2_TO_SAWAN", "HPI_SECRET_WEB_V2_TO_SAWAN"):
-		return c.Next()
-	default:
-		return response(c, 401, "Permission denied")
+	// Scan all client secrets
+	if core.API_CLIENT_SECRETS != nil {
+		for _, v := range core.API_CLIENT_SECRETS {
+			if stringDecrypt == v {
+				return c.Next()
+			}
+		}
 	}
+
+	return response(c, 401, "Permission denied")
 }
 
 func response(c *fiber.Ctx, status int, msg string) error {

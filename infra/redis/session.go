@@ -13,7 +13,6 @@ type Session struct {
 	UserID        string `json:"userId"`
 	UserFullname  string `json:"userFullName"`
 	UserEmail     string `json:"userEmail"`
-	UserPassword  string `json:"userPassword"`
 	UserLastLogin string `json:"userLastLogin"`
 	PhoneNumber   string `json:"phoneNumber"`
 	IsActivated   int    `json:"isActivated"`
