@@ -9,6 +9,7 @@ import (
 	"hoangphuc.tech/go-hexaboi/infra/core"
 
 	"github.com/go-redis/redis/v8"
+	apmgoredis "go.elastic.co/apm/module/apmgoredisv8/v2"
 )
 
 type Config struct {
@@ -27,7 +28,7 @@ var (
 	clients map[string]redis.UniversalClient = make(map[string]redis.UniversalClient)
 )
 
-// Get the default Elasticsearch client
+// Open a connection to the default database
 func DB() redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
@@ -35,7 +36,7 @@ func DB() redis.UniversalClient {
 	return clients["default"]
 }
 
-// Get the default Elasticsearch client by name
+// Open a connection to specific database
 func DBByName(name string) redis.UniversalClient {
 	if len(clients) == 0 {
 		panic("No client found")
@@ -110,6 +111,10 @@ func OpenConnection(config ...Config) error {
 		}
 
 		client := redis.NewUniversalClient(rdsCfg)
+
+		if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+			client.AddHook(apmgoredis.NewHook())
+		}
 
 		// Clear existed connection to renew
 		if clients[cfg.ConnectionName] != nil {

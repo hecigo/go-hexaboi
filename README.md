@@ -208,6 +208,10 @@ ELASTIC_APM_ENVIRONMENT=dev
 ELASTIC_APM_SERVICE_NAME=$APP_NAME
 ELASTIC_APM_SERVICE_VERSION=$APP_VERSION
 
+
+# ----- Authentication Middleware -----
+AUTH_ENABLE=true
+
 ```
 
 ### Start the application

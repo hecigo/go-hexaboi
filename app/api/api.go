@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/cobra"
+	"go.elastic.co/apm/module/apmfiber"
 
 	"hoangphuc.tech/go-hexaboi/app/api/handler"
 	"hoangphuc.tech/go-hexaboi/app/api/middleware"
@@ -108,6 +109,15 @@ func New(env string) *API {
 
 	if core.GetBoolEnv("HTTP_LOG_ENABLE", false) {
 		(&middleware.HttpLogger{}).Enable(app)
+	}
+
+	if core.GetBoolEnv("AUTH_ENABLE", true) {
+		(&middleware.Auth{}).Enable(app)
+	}
+
+	// APM
+	if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+		app.Use(apmfiber.Middleware())
 	}
 
 	// Create a /v1 endpoint. Just replaces if the frontend is already.

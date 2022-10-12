@@ -12,8 +12,7 @@ import (
 )
 
 var (
-	ctx     = context.Background()
-	appName = core.Getenv("APP_NAME", "GoHexaboi")
+	appName = core.AppName()
 )
 
 func getRedisKey(key string) string {
@@ -27,7 +26,7 @@ func removePrefix(key string) string {
 }
 
 // Set value by key
-func Set(key string, value interface{}) error {
+func Set(ctx context.Context, key string, value interface{}) error {
 	err := DB().Set(ctx, getRedisKey(key), value, 0).Err()
 	if err != nil {
 		return err
@@ -36,12 +35,12 @@ func Set(key string, value interface{}) error {
 }
 
 // Get value by key with default format
-func Get[T any](key string) (*T, error) {
-	return GetSpecificKey[T](getRedisKey(key))
+func Get[T any](ctx context.Context, key string) (*T, error) {
+	return GetSpecificKey[T](ctx, getRedisKey(key))
 }
 
 // Get value by a specific key
-func GetSpecificKey[T any](key string) (*T, error) {
+func GetSpecificKey[T any](ctx context.Context, key string) (*T, error) {
 	val, err := DB().Get(ctx, key).Result()
 	if err != nil {
 		return nil, err
@@ -55,7 +54,7 @@ func GetSpecificKey[T any](key string) (*T, error) {
 	return &t, err
 }
 
-func IncrBy(key string, value int64) (int64, error) {
+func IncrBy(ctx context.Context, key string, value int64) (int64, error) {
 	val, err := DB().IncrBy(ctx, getRedisKey(key), value).Result()
 	if err != nil {
 		return 0, err
@@ -63,7 +62,7 @@ func IncrBy(key string, value int64) (int64, error) {
 	return val, nil
 }
 
-func MultiIncrBy(kv map[string]int64) (map[string]int64, error) {
+func MultiIncrBy(ctx context.Context, kv map[string]int64) (map[string]int64, error) {
 	cmds, err := DB().TxPipelined(ctx, func(pipe redis.Pipeliner) error {
 		for k, v := range kv {
 			pipe.IncrBy(ctx, getRedisKey(k), v)

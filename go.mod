@@ -24,9 +24,10 @@ require (
 	github.com/spf13/cobra v1.6.0
 	github.com/swaggo/swag v1.8.6
 	github.com/valyala/fasthttp v1.40.0
+	go.elastic.co/apm/module/apmfiber v1.15.0
+	go.elastic.co/apm/module/apmgoredisv8/v2 v2.1.0
 	go.elastic.co/apm/module/apmgormv2/v2 v2.1.0
 	gorm.io/driver/bigquery v1.0.19-beta
-	gorm.io/driver/sqlite v1.4.2
 	gorm.io/driver/sqlserver v1.4.1
 	gorm.io/gorm v1.24.0
 	gorm.io/plugin/dbresolver v1.3.0
@@ -93,12 +94,16 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg/scram v1.0.5 // indirect
 	github.com/xdg/stringprep v1.0.3 // indirect
+	go.elastic.co/apm v1.15.0 // indirect
+	go.elastic.co/apm/module/apmfasthttp v1.15.0 // indirect
+	go.elastic.co/apm/module/apmhttp v1.15.0 // indirect
 	go.elastic.co/apm/module/apmsql/v2 v2.1.0 // indirect
 	go.elastic.co/apm/v2 v2.1.0 // indirect
 	go.elastic.co/fastjson v1.1.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
 	golang.org/x/exp v0.0.0-20221011201855-a3968a42eed6 // indirect
+	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1 // indirect
@@ -114,6 +119,7 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.4.4 // indirect
+	gorm.io/driver/sqlite v1.4.2 // indirect
 	howett.net/plist v1.0.0 // indirect
 
 )
