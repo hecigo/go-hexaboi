@@ -63,14 +63,13 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 }
 
 func New(env string) *API {
-	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
 
 	// go run app.go -prod
 	isProduction := (env == "prod" || env == "production")
 
 	// Create a new app
 	app := fiber.New(fiber.Config{
-		AppName:       core.Getenv("APP_NAME", "gohexaboi") + " " + appVersion,
+		AppName:       core.AppName() + " " + core.AppVersion(),
 		StrictRouting: false,
 		CaseSensitive: false,
 		Prefork:       isProduction,
@@ -112,7 +111,7 @@ func New(env string) *API {
 	}
 
 	// Create a /v1 endpoint. Just replaces if the frontend is already.
-	root := app.Group(core.Getenv("APP_ROOT_PATH", appVersion[0:2]))
+	root := app.Group(core.AppRootPath())
 	router.RegisterDefaultRouter(root)
 
 	// Always response NotFound at the end of routes

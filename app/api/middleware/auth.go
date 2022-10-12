@@ -3,19 +3,17 @@ package middleware
 import (
 	log "github.com/sirupsen/logrus"
 	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hoangphuc.tech/go-hexaboi/infra/jwt"
 	"hoangphuc.tech/go-hexaboi/infra/redis"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
-
-	"hoangphuc.tech/go-hexaboi/infra/jwt"
 
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
 )
 
-type AuthService struct{}
+type Auth struct{}
 
 type AuthServiceError struct {
 	Status  int    `json:"status"`
@@ -27,21 +25,18 @@ type AuthHeader struct {
 	Authorization string `reqHeader:"Authorization"`
 }
 
-var bytes = core.BytesCrypt
-
-const MySecret = core.MySecretCrypt
-
-func NewAuthService() *AuthService {
-	return &AuthService{}
+func (_auth *Auth) Enable(app *fiber.App) error {
+	app.Use(_auth.AuthCheck)
+	return nil
 }
 
-func (*AuthService) AuthCheck(c *fiber.Ctx) error {
+func (*Auth) AuthCheck(c *fiber.Ctx) error {
 
 	a := new(AuthHeader)
 
 	if err := c.ReqHeaderParser(a); err != nil {
-		log.Println(fiber.StatusBadRequest, err)
-		return response(c, 401, "Permission denied")
+		log.Error("parse Auth header --> ", err)
+		return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 	}
 
 	// client to server
@@ -50,28 +45,31 @@ func (*AuthService) AuthCheck(c *fiber.Ctx) error {
 		var claims *jwt.AWSCognitoClaims
 		claims, err := jwt.ValidateJWTToken[jwt.AWSCognitoClaims](a.Authorization)
 		if err != nil {
-			return response(c, 401, err.Error())
+			log.Error("claim JWT --> ", err)
+			return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 		}
 
 		// get claims; using phone number as username
-		session := redis.GetSession(claims.Username)
+		session := redis.GetSession(claims.Username, a.Authorization)
 
 		// session is found
-		if (session != nil) && (session.PhoneNumber == claims.Username) {
+		if (session != nil) && (session.UserID == claims.Username) {
 			return c.Next()
 		}
 
-		return response(c, 401, "session not found")
+		log.Error("no session --> ", err)
+		return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 	}
 
 	// server to server
 	stringDecrypt, err := decrypt(c, a.APIKey)
 	if err != nil {
-		log.Println("error decrypting your classified ---> ", err)
-		return response(c, 401, "Permission denied")
+		log.Println("error decrypting your classified --> ", err)
+		// Should NOT expose error message to client
+		return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 	}
 
-	// Scan all client secrets
+	// Check Client API Key
 	if core.API_CLIENT_SECRETS != nil {
 		for _, v := range core.API_CLIENT_SECRETS {
 			if stringDecrypt == v {
@@ -80,47 +78,29 @@ func (*AuthService) AuthCheck(c *fiber.Ctx) error {
 		}
 	}
 
-	return response(c, 401, "Permission denied")
-}
-
-func response(c *fiber.Ctx, status int, msg string) error {
-	data := AuthServiceError{
-		Status:  status,
-		Message: msg,
-	}
-
-	if status <= 0 {
-		data.Status = c.Response().StatusCode()
-	}
-	if msg == "" {
-		data.Message = utils.StatusMessage(data.Status)
-	}
-
-	c.Response().SetStatusCode(status)
-
-	return c.JSON(data)
+	return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 }
 
 func decode(c *fiber.Ctx, s string) ([]byte, error) {
 	data, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
-		return nil, response(c, 401, "Permission denied")
+		return nil, err
 	}
 	return data, nil
 }
 
 func decrypt(c *fiber.Ctx, text string) (string, error) {
-	block, err := aes.NewCipher([]byte(MySecret))
+	block, err := aes.NewCipher([]byte(core.MySecretCrypt))
 	if err != nil {
-		return "", response(c, 401, "Permission denied")
+		return "", err
 	}
 
 	cipherText, err := decode(c, text)
 	if err != nil {
-		return "", response(c, 401, "Permission denied")
+		return "", err
 	}
 
-	cfb := cipher.NewCFBDecrypter(block, bytes)
+	cfb := cipher.NewCFBDecrypter(block, core.BytesCrypt)
 	plainText := make([]byte, len(cipherText))
 	cfb.XORKeyStream(plainText, cipherText)
 

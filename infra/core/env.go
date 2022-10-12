@@ -60,6 +60,10 @@ func AppVersion() string {
 	return Getenv("APP_VERSION", "v0.0.0")
 }
 
+func AppRootPath() string {
+	return Getenv("APP_ROOT_PATH", "/"+AppVersion()[0:2])
+}
+
 // Load API keys from env
 func LoadClientSecretKeys() {
 	apiClients := strings.Split(Getenv("API_CLIENT_IDS", ""), ",")

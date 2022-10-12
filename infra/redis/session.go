@@ -1,6 +1,8 @@
 package redis
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
@@ -20,19 +22,28 @@ type Session struct {
 	base.Entity
 }
 
-var SESSION_KEY_FORMAT string
+var sessionKeyFormat, randHashKey string
 
 func EnableSession() {
-	SESSION_KEY_FORMAT = core.Getenv("REDIS_SESSION_KEY_FORMAT", "session:%s")
+	sessionKeyFormat = core.Getenv("REDIS_SESSION_KEY_FORMAT", "gohexaboi.session:%s/%s")
+	randHashKey = core.Getenv("REDIS_SESSION_HASH_KEY", "")
 }
 
-func GetSession(uuid string) *Session {
-	if SESSION_KEY_FORMAT == "" {
+// TODO: Làm thêm
+func GetSession(uuid string, args ...string) *Session {
+	if sessionKeyFormat == "" {
 		log.Errorln("session key format is empty, let call EnableSession() first to load key format from environemnt variable")
 		return nil
 	}
 
-	session, err := GetSpecificKey[Session](fmt.Sprintf(SESSION_KEY_FORMAT, uuid))
+	// hash session key
+	sessionKey := fmt.Sprintf(sessionKeyFormat, uuid, args) // {uuid}/{args}
+	hasher := md5.New()
+	hasher.Write([]byte(sessionKey + randHashKey))
+	hashed := hex.EncodeToString(hasher.Sum(nil))
+	sessionKey = fmt.Sprintf(sessionKeyFormat, uuid, hashed) // {uuid}/{hashed({uuid}/{args})}
+
+	session, err := GetSpecificKey[Session](sessionKey)
 	if err != nil {
 		log.Errorln(err)
 		return nil

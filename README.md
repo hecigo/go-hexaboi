@@ -173,6 +173,10 @@ REDIS_CACHE_URL="localhost:6379"
 REDIS_CACHE_TINYFLU_SIZE=1000
 REDIS_CACHE_TINYFLU_DURATION=1m
 
+# Session
+REDIS_SESSION_KEY_FORMAT="gohexaboi.session:%s/%s"
+REDIS_SESSION_HASH_KEY="akjwonls"
+
 
 
 # ----- DB: OrientDB -----
