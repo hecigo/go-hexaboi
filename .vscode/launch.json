@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/main.go",
-      "args": ["pull", "-d", "bigquery", "-m", "item"],
+      "args": ["serve"],
       "showLog": true
     },
     {
