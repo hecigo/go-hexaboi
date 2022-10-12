@@ -1,13 +1,14 @@
 package postgres
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
-	"gorm.io/driver/postgres"
+	postgres "go.elastic.co/apm/module/apmgormv2/v2/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
@@ -25,7 +26,7 @@ type Config struct {
 
 var databases map[string]*gorm.DB = make(map[string]*gorm.DB)
 
-// Get the default database
+// Open a connection to the default database
 func DB() *gorm.DB {
 	if len(databases) == 0 {
 		panic("No database found")
@@ -33,12 +34,22 @@ func DB() *gorm.DB {
 	return databases["default"]
 }
 
-// Get a database by name
+// Open a connection to the database with context. It is commonly used to monitor APM.
+func DBWithContext(ctx context.Context) *gorm.DB {
+	return DB().WithContext(ctx)
+}
+
+// Open a connection to the database with specified name.
 func DBByName(name string) *gorm.DB {
 	if len(databases) == 0 {
 		panic("No database found")
 	}
 	return databases[name]
+}
+
+// Open a connection to the database with specified name and context. It is commonly used to monitor APM.
+func DBByNameWithContext(ctx context.Context, name string) *gorm.DB {
+	return DBByName(name).WithContext(ctx)
 }
 
 // Open the default connection to main database.
