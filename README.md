@@ -196,6 +196,7 @@ ORIENTDB_RETRY_MAX_WAIT_TIMEOUT=3s # Total of waiting time for attempts. Default
 # ----- JWT: AWS Cognito -----
 # AWS Cognito
 # View more: https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
+AUTH_ENABLE=true
 JWT_JWKS_URL=https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
 
 
@@ -208,9 +209,6 @@ ELASTIC_APM_ENVIRONMENT=dev
 ELASTIC_APM_SERVICE_NAME=$APP_NAME
 ELASTIC_APM_SERVICE_VERSION=$APP_VERSION
 
-
-# ----- Authentication Middleware -----
-AUTH_ENABLE=true
 
 ```
 
