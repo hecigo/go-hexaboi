@@ -1,6 +1,8 @@
 package adapter
 
 import (
+	"context"
+
 	"hoangphuc.tech/go-hexaboi/domain/model"
 	"hoangphuc.tech/go-hexaboi/infra/bigquery"
 	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
@@ -114,10 +116,10 @@ func (*ItemRepository) BQCount() (count uint64, err error) {
 	return count, err
 }
 
-func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
-	return elasticsearch.Search(ES_INDEX, query, result)
+func (*ItemRepository) Search(ctx context.Context, query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
+	return elasticsearch.Search(ctx, ES_INDEX, query, result)
 }
 
-func (*ItemRepository) SearchIndex(items ...interface{}) error {
-	return elasticsearch.Index(ES_INDEX, ES_DOC_ID_FIELD, items...)
+func (*ItemRepository) SearchIndex(ctx context.Context, items ...interface{}) error {
+	return elasticsearch.Index(ctx, ES_INDEX, ES_DOC_ID_FIELD, items...)
 }

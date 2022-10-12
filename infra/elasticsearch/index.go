@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/goccy/go-json"
+	"golang.org/x/net/context"
 
 	"github.com/dustin/go-humanize"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
@@ -33,7 +34,7 @@ type bulkResponse struct {
 	} `json:"items"`
 }
 
-func Index(indexName string, docIdField string, documents ...interface{}) error {
+func Index(ctx context.Context, indexName string, docIdField string, documents ...interface{}) error {
 	var (
 		buf bytes.Buffer
 		res *esapi.Response
@@ -97,7 +98,7 @@ func Index(indexName string, docIdField string, documents ...interface{}) error 
 		// When a threshold is reached, execute the Bulk() request with body from buffer
 		if i > 0 && i%cfg.BatchIndexSize == 0 || i == count-1 {
 
-			res, err = es.Bulk(bytes.NewReader(buf.Bytes()), es.Bulk.WithIndex(indexName))
+			res, err = es.Bulk(bytes.NewReader(buf.Bytes()), es.Bulk.WithContext(ctx), es.Bulk.WithIndex(indexName))
 			if err != nil {
 				return fmt.Errorf("failure indexing batch %d: %s", currBatch, err)
 			}

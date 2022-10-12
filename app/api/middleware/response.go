@@ -46,22 +46,30 @@ func HError(c *fiber.Ctx, status int, errCode string, err error, data ...interfa
 		data = make([]interface{}, 0)
 	}
 
+	message := ""
+
 	// Retrieve the custom status code if it's an *core.HPIResult
-	if e, ok := err.(*core.HPIResult); ok {
-		code = e.Status
-		data = append(data, e.Data)
-		if e.ErrorCode != "" {
-			errCode = e.ErrorCode
+	if err == nil {
+		c.Response().SetStatusCode(code)
+	} else {
+		if e, ok := err.(*core.HPIResult); ok {
+			code = e.Status
+			data = append(data, e.Data)
+			if e.ErrorCode != "" {
+				errCode = e.ErrorCode
+			}
+			c.Response().SetStatusCode(code) // Override status code of the context with HPIResult
+		} else if e, ok := err.(*fiber.Error); ok {
+			// Retrieve the custom status code if it's an fiber.*Error
+			code = e.Code
 		}
-		c.Response().SetStatusCode(code) // Override status code of the context with HPIResult
-	} else if e, ok := err.(*fiber.Error); ok {
-		// Retrieve the custom status code if it's an fiber.*Error
-		code = e.Code
+
+		message = err.Error()
 	}
 
 	return HJSON(c, core.HPIResult{
 		Status:    code,
-		Message:   err.Error(),
+		Message:   message,
 		ErrorCode: errCode,
 		Data:      data,
 	})

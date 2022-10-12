@@ -23,11 +23,14 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.0
 	github.com/swaggo/swag v1.8.6
-	github.com/valyala/fasthttp v1.40.0
+	go.elastic.co/apm/module/apmelasticsearch/v2 v2.1.0
 	go.elastic.co/apm/module/apmfiber v1.15.0
 	go.elastic.co/apm/module/apmgoredisv8/v2 v2.1.0
 	go.elastic.co/apm/module/apmgormv2/v2 v2.1.0
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af
 	gorm.io/driver/bigquery v1.0.19-beta
+	gorm.io/driver/postgres v1.4.4
+	gorm.io/driver/sqlite v1.4.2
 	gorm.io/driver/sqlserver v1.4.1
 	gorm.io/gorm v1.24.0
 	gorm.io/plugin/dbresolver v1.3.0
@@ -88,6 +91,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.40.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
@@ -97,6 +101,7 @@ require (
 	go.elastic.co/apm v1.15.0 // indirect
 	go.elastic.co/apm/module/apmfasthttp v1.15.0 // indirect
 	go.elastic.co/apm/module/apmhttp v1.15.0 // indirect
+	go.elastic.co/apm/module/apmhttp/v2 v2.1.0 // indirect
 	go.elastic.co/apm/module/apmsql/v2 v2.1.0 // indirect
 	go.elastic.co/apm/v2 v2.1.0 // indirect
 	go.elastic.co/fastjson v1.1.0 // indirect
@@ -105,7 +110,6 @@ require (
 	golang.org/x/exp v0.0.0-20221011201855-a3968a42eed6 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1 // indirect
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
 	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
@@ -118,8 +122,6 @@ require (
 	google.golang.org/grpc v1.50.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/postgres v1.4.4 // indirect
-	gorm.io/driver/sqlite v1.4.2 // indirect
 	howett.net/plist v1.0.0 // indirect
 
 )

@@ -8,7 +8,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	sqlite "go.elastic.co/apm/module/apmgormv2/v2/driver/sqlite"
+	apmsqlite "go.elastic.co/apm/module/apmgormv2/v2/driver/sqlite"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
@@ -102,7 +103,7 @@ func OpenConnection(config ...Config) error {
 			continue
 		}
 
-		db, err := gorm.Open(sqlite.Open(cfg.DSN[0]), &gorm.Config{
+		db, err := gorm.Open(openDialector(cfg.DSN[0]), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true, // Always use singular table name
 			},
@@ -118,7 +119,7 @@ func OpenConnection(config ...Config) error {
 		if len(cfg.DSN) > 1 {
 			for i := 1; i < len(cfg.DSN); i++ {
 				if cfg.DSN[i] != "" {
-					dsnDialectors = append(dsnDialectors, sqlite.Open(cfg.DSN[i]))
+					dsnDialectors = append(dsnDialectors, openDialector(cfg.DSN[i]))
 				}
 			}
 
@@ -129,7 +130,7 @@ func OpenConnection(config ...Config) error {
 		if len(cfg.DSNRelicas) > 0 {
 			for _, dsn := range cfg.DSNRelicas {
 				if dsn != "" {
-					dsnRelicasDialectors = append(dsnRelicasDialectors, sqlite.Open(dsn))
+					dsnRelicasDialectors = append(dsnRelicasDialectors, openDialector(dsn))
 				}
 			}
 
@@ -208,4 +209,11 @@ func Print(cfg Config) {
 	fmt.Printf("| DB_SQLITE%s_CONN_MAX_LIFETIME: %v\r\n", _connName, cfg.ConnectionMaxLifetime)
 	fmt.Println("└───────────────────────────────────────────────")
 
+}
+
+func openDialector(dsn string) gorm.Dialector {
+	if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+		return apmsqlite.Open(dsn)
+	}
+	return sqlite.Open(dsn)
 }

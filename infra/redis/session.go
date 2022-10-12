@@ -44,7 +44,7 @@ func GetSession(uuid string, args ...string) *Session {
 	hashed := hex.EncodeToString(hasher.Sum(nil))
 	sessionKey = fmt.Sprintf(sessionKeyFormat, uuid, hashed) // {uuid}/{hashed({uuid}/{args})}
 
-	session, err := GetSpecificKey[Session](context.TODO(), sessionKey)
+	session, err := GetSpecificKey[Session](context.Background(), sessionKey)
 	if err != nil {
 		log.Errorln(err)
 		return nil

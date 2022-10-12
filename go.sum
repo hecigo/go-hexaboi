@@ -747,6 +747,8 @@ github.com/yuin/goldmark v1.4.1/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
 go.elastic.co/apm v1.15.0 h1:uPk2g/whK7c7XiZyz/YCUnAUBNPiyNeE3ARX3G6Gx7Q=
 go.elastic.co/apm v1.15.0/go.mod h1:dylGv2HKR0tiCV+wliJz1KHtDyuD8SPe69oV7VyK6WY=
+go.elastic.co/apm/module/apmelasticsearch/v2 v2.1.0 h1:fM29oVjmdwN07KB/sesNH2AfGEeYz8rVEEPdV/8FA/Y=
+go.elastic.co/apm/module/apmelasticsearch/v2 v2.1.0/go.mod h1:9BTZi9SRWtcA1JR0Tf6B182Aza9dY8Q24Fi0eLfnS/0=
 go.elastic.co/apm/module/apmfasthttp v1.15.0 h1:z+GI1uhXlkhYNeKNZ14Cg5OQDwPbZyJOq35PHe9YsFQ=
 go.elastic.co/apm/module/apmfasthttp v1.15.0/go.mod h1:gm96k683Tp2lESzntOPdLIUkOWNXqrDN+L+4h8fEYag=
 go.elastic.co/apm/module/apmfiber v1.15.0 h1:hXduSAJHQcf3KxXdJibaZdH9s8h0WA4QFWj+MG+NtOQ=
@@ -757,6 +759,8 @@ go.elastic.co/apm/module/apmgormv2/v2 v2.1.0 h1:fmlVFRvsSH4sB/vr2Orzl4qwrqsnvzpS
 go.elastic.co/apm/module/apmgormv2/v2 v2.1.0/go.mod h1:RqTD8XAfBsQM5LyOWIzEHIig3CVtgv+D/JdmTUXN5Xw=
 go.elastic.co/apm/module/apmhttp v1.15.0 h1:Le/DhI0Cqpr9wG/NIGOkbz7+rOMqJrfE4MRG6q/+leU=
 go.elastic.co/apm/module/apmhttp v1.15.0/go.mod h1:NruY6Jq8ALLzWUVUQ7t4wIzn+onKoiP5woJJdTV7GMg=
+go.elastic.co/apm/module/apmhttp/v2 v2.1.0 h1:3knDFopO6LmgrqY5z9HlmCaIG+PtM9HwZGhByFCCjh4=
+go.elastic.co/apm/module/apmhttp/v2 v2.1.0/go.mod h1:cKGRK1snYy5Sl/zs0GD+msE9b/amcM0CWbZn8XXBa9s=
 go.elastic.co/apm/module/apmsql/v2 v2.1.0 h1:M93LsLAypsJCU968b2kHNLBcrfEZ9H1relY7HtS7ILI=
 go.elastic.co/apm/module/apmsql/v2 v2.1.0/go.mod h1:CAzQrjoLpxN5fI7w3bdfCkd18Ya17u/gvEnHfZFKN6o=
 go.elastic.co/apm/v2 v2.1.0 h1:rkJSHE4ggekHhUR5v0KKkoMbrRSJN8YoBiEgQnkV1OY=

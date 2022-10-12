@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v7"
+	"go.elastic.co/apm/module/apmelasticsearch/v2"
 	"hoangphuc.tech/go-hexaboi/infra/core"
 )
 
@@ -123,6 +125,10 @@ func OpenConnection(config ...Config) error {
 		if cfg.BasicAuth != nil && len(cfg.BasicAuth) == 2 {
 			esCfg.Username = cfg.BasicAuth[0]
 			esCfg.Password = cfg.BasicAuth[1]
+		}
+
+		if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+			esCfg.Transport = apmelasticsearch.WrapRoundTripper(http.DefaultTransport)
 		}
 
 		client, err := elasticsearch.NewClient(esCfg)

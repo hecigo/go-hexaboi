@@ -74,7 +74,7 @@ func (h ItemHandler) Update(c *fiber.Ctx) error {
 
 func (h ItemHandler) Search(c *fiber.Ctx) error {
 	var result []map[string]interface{}
-	total, aggs, err := h.repoItem.Search(string(c.Body()), &result)
+	total, aggs, err := h.repoItem.Search(c.Context(), string(c.Body()), &result)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (h ItemHandler) SearchIndex(c *fiber.Ctx) error {
 		elements = append(elements, i)
 	}
 
-	err := h.repoItem.SearchIndex(elements...)
+	err := h.repoItem.SearchIndex(c.Context(), elements...)
 	if err != nil {
 		return err
 	}
