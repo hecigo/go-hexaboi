@@ -1,7 +1,7 @@
 package orm
 
 import (
-	model "hoangphuc.tech/go-hexaboi/domain/model"
+	model "hecigo.com/go-hexaboi/domain/model"
 )
 
 type Category struct {

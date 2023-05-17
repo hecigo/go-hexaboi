@@ -3,9 +3,9 @@ package bigquery
 import (
 	"fmt"
 
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/orm"
+	"hecigo.com/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/infra/orm"
 )
 
 type CategoryRepository struct {

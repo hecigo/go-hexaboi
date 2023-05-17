@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Session struct {

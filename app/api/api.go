@@ -8,16 +8,16 @@ import (
 	"github.com/spf13/cobra"
 	"go.elastic.co/apm/module/apmfiber"
 
-	"hoangphuc.tech/go-hexaboi/app/api/handler"
-	"hoangphuc.tech/go-hexaboi/app/api/middleware"
-	"hoangphuc.tech/go-hexaboi/app/api/router"
-	"hoangphuc.tech/go-hexaboi/infra/core"
-	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
-	"hoangphuc.tech/go-hexaboi/infra/orientdb"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
-	"hoangphuc.tech/go-hexaboi/infra/redis"
+	"hecigo.com/go-hexaboi/app/api/handler"
+	"hecigo.com/go-hexaboi/app/api/middleware"
+	"hecigo.com/go-hexaboi/app/api/router"
+	"hecigo.com/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/elasticsearch"
+	"hecigo.com/go-hexaboi/infra/orientdb"
+	"hecigo.com/go-hexaboi/infra/postgres"
+	"hecigo.com/go-hexaboi/infra/redis"
 
-	_ "hoangphuc.tech/go-hexaboi/docs"
+	_ "hecigo.com/go-hexaboi/docs"
 )
 
 type API struct {

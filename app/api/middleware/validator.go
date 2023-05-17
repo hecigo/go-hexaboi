@@ -6,7 +6,7 @@ import (
 	"github.com/elliotchance/pie/v2"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Validator struct {

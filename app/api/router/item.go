@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/app/api/dto"
-	"hoangphuc.tech/go-hexaboi/app/api/handler"
-	"hoangphuc.tech/go-hexaboi/app/api/middleware"
+	"hecigo.com/go-hexaboi/app/api/dto"
+	"hecigo.com/go-hexaboi/app/api/handler"
+	"hecigo.com/go-hexaboi/app/api/middleware"
 )
 
 type ItemRouter struct{}

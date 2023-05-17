@@ -5,8 +5,8 @@ import (
 
 	"github.com/goccy/go-json"
 
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/infra/core"
 
 	"github.com/segmentio/kafka-go"
 )
