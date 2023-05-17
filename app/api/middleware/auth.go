@@ -2,9 +2,9 @@ package middleware
 
 import (
 	log "github.com/sirupsen/logrus"
-	"hoangphuc.tech/go-hexaboi/infra/core"
-	"hoangphuc.tech/go-hexaboi/infra/jwt"
-	"hoangphuc.tech/go-hexaboi/infra/redis"
+	"hecigo.com/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/jwt"
+	"hecigo.com/go-hexaboi/infra/redis"
 
 	"github.com/gofiber/fiber/v2"
 

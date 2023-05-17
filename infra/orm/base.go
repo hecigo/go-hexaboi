@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"hoangphuc.tech/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/domain/base"
 )
 
 type EntityToModel interface {

@@ -4,7 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hecigo.com/go-hexaboi/infra/postgres"
 )
 
 type Migrate struct {

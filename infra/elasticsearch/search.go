@@ -5,7 +5,7 @@ import (
 
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/goccy/go-json"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 func Search(index string, query interface{}, result interface{}) (total uint64, extra map[string]interface{}, err error) {

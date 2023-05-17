@@ -11,7 +11,7 @@ import (
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 
 	log "github.com/sirupsen/logrus"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type bulkResponse struct {

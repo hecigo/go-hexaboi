@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/goccy/go-json"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 
 	"github.com/go-redis/redis/v8"
 )

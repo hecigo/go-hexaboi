@@ -19,7 +19,7 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=build \
-    ["/go/src/hoangphuc.tech/go-hexaboi", \
+    ["/go/src/hecigo.com/go-hexaboi", \
     "/go/src/hoangphuc.tech/favicon.ico", \
     "/go/src/hoangphuc.tech/.env", "./"]
 

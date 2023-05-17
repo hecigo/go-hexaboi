@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/domain/model"
 )
 
 type Brand struct {

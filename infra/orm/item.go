@@ -4,8 +4,8 @@ import (
 	"database/sql"
 
 	"gorm.io/gorm"
-	model "hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/orm/ext"
+	model "hecigo.com/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/infra/orm/ext"
 )
 
 type Item struct {

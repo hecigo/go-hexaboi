@@ -1,12 +1,12 @@
 package adapter
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
-	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
-	"hoangphuc.tech/go-hexaboi/infra/orientdb"
-	"hoangphuc.tech/go-hexaboi/infra/orm"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hecigo.com/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/infra/bigquery"
+	"hecigo.com/go-hexaboi/infra/elasticsearch"
+	"hecigo.com/go-hexaboi/infra/orientdb"
+	"hecigo.com/go-hexaboi/infra/orm"
+	"hecigo.com/go-hexaboi/infra/postgres"
 )
 
 type ItemRepository struct{}

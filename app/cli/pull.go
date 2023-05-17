@@ -8,9 +8,9 @@ import (
 
 	"github.com/jackc/pgconn"
 	"github.com/spf13/cobra"
-	"hoangphuc.tech/go-hexaboi/infra/adapter"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hecigo.com/go-hexaboi/infra/adapter"
+	"hecigo.com/go-hexaboi/infra/bigquery"
+	"hecigo.com/go-hexaboi/infra/postgres"
 )
 
 type Pull struct {
