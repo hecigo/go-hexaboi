@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"hoangphuc.tech/go-hexaboi/app/api/dto"
-	"hoangphuc.tech/go-hexaboi/infra/adapter"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/app/api/dto"
+	"hecigo.com/go-hexaboi/infra/adapter"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type ItemHandler struct {
@@ -74,7 +74,7 @@ func (h ItemHandler) Update(c *fiber.Ctx) error {
 
 func (h ItemHandler) Search(c *fiber.Ctx) error {
 	var result []map[string]interface{}
-	total, aggs, err := h.repoItem.Search(string(c.Body()), &result)
+	total, aggs, err := h.repoItem.Search(c.Context(), string(c.Body()), &result)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (h ItemHandler) SearchIndex(c *fiber.Ctx) error {
 		elements = append(elements, i)
 	}
 
-	err := h.repoItem.SearchIndex(elements...)
+	err := h.repoItem.SearchIndex(c.Context(), elements...)
 	if err != nil {
 		return err
 	}

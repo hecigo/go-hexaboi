@@ -191,6 +191,25 @@ ORIENTDB_MAX_RETRIES=3 # Maximum number of retry attempts. Default is 3
 ORIENTDB_RETRY_WAIT_TIMEOUT=250ms # Waiting for each attempt. Default is 250ms
 ORIENTDB_RETRY_MAX_WAIT_TIMEOUT=3s # Total of waiting time for attempts. Default is 3s
 
+
+
+# ----- JWT: AWS Cognito -----
+# AWS Cognito
+# View more: https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
+AUTH_ENABLE=true
+JWT_JWKS_URL=https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
+
+
+
+# ----- Elastic APM -----
+ELASTIC_APM_ENABLE=true
+ELASTIC_APM_SERVER_URL="localhost:8200"
+ELASTIC_APM_SECRET_TOKEN="gohexaboi"
+ELASTIC_APM_ENVIRONMENT=dev
+ELASTIC_APM_SERVICE_NAME=$APP_NAME
+ELASTIC_APM_SERVICE_VERSION=$APP_VERSION
+
+
 ```
 
 ### Start the application

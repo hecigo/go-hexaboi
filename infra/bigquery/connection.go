@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/bigquery"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {

@@ -1,20 +1,5 @@
 {
   "go.delveConfig": {
     "debugAdapter": "dlv-dap"
-  },
-
-  // Copy and push into User settings.json
-  "material-icon-theme.folders.associations": {
-    "dto": "client",
-    "infra": "server",
-    "domain": "delta",
-    "adapter": "connection",
-    "orm": "class",
-    "postgres": "postgres",
-    "ext": "middleware",
-    "migration": "markdown",
-    "bigquery": "bigquery",
-    "elasticsearch": "elasticsearch",
-    "redis": "redis"
   }
 }

@@ -2,13 +2,14 @@ package elasticsearch
 
 import (
 	"bytes"
+	"context"
 
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/goccy/go-json"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
-func Search(index string, query interface{}, result interface{}) (total uint64, extra map[string]interface{}, err error) {
+func Search(ctx context.Context, index string, query interface{}, result interface{}) (total uint64, extra map[string]interface{}, err error) {
 	client := Client()
 	var buf bytes.Buffer
 	var reqBody map[string]interface{}
@@ -24,6 +25,7 @@ func Search(index string, query interface{}, result interface{}) (total uint64, 
 	}
 
 	resp, err := client.Search(
+		client.Search.WithContext(ctx),
 		client.Search.WithIndex(index),
 		client.Search.WithBody(&buf),
 		client.Search.WithTrackTotalHits(true),

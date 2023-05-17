@@ -12,7 +12,7 @@ import (
 	"github.com/segmentio/kafka-go/sasl"
 	"github.com/segmentio/kafka-go/sasl/plain"
 	"github.com/segmentio/kafka-go/sasl/scram"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {

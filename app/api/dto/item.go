@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/domain/model"
 )
 
 type Item struct {

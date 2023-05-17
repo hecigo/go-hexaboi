@@ -1,12 +1,12 @@
 package adapter
 
 import (
-	"hoangphuc.tech/go-hexaboi/domain/model"
-	"hoangphuc.tech/go-hexaboi/infra/bigquery"
-	"hoangphuc.tech/go-hexaboi/infra/elasticsearch"
-	"hoangphuc.tech/go-hexaboi/infra/orientdb"
-	"hoangphuc.tech/go-hexaboi/infra/orm"
-	"hoangphuc.tech/go-hexaboi/infra/postgres"
+	"hecigo.com/go-hexaboi/domain/model"
+	"hecigo.com/go-hexaboi/infra/bigquery"
+	"hecigo.com/go-hexaboi/infra/elasticsearch"
+	"hecigo.com/go-hexaboi/infra/orientdb"
+	"hecigo.com/go-hexaboi/infra/orm"
+	"hecigo.com/go-hexaboi/infra/postgres"
 )
 
 type ItemRepository struct{}
@@ -114,10 +114,10 @@ func (*ItemRepository) BQCount() (count uint64, err error) {
 	return count, err
 }
 
-func (*ItemRepository) Search(query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
-	return elasticsearch.Search(ES_INDEX, query, result)
+func (*ItemRepository) Search(ctx context.Context, query interface{}, result interface{}) (total uint64, aggs map[string]interface{}, err error) {
+	return elasticsearch.Search(ctx, ES_INDEX, query, result)
 }
 
-func (*ItemRepository) SearchIndex(items ...interface{}) error {
-	return elasticsearch.Index(ES_INDEX, ES_DOC_ID_FIELD, items...)
+func (*ItemRepository) SearchIndex(ctx context.Context, items ...interface{}) error {
+	return elasticsearch.Index(ctx, ES_INDEX, ES_DOC_ID_FIELD, items...)
 }

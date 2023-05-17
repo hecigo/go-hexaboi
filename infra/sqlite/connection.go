@@ -1,17 +1,19 @@
 package sqlite
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 
+	apmsqlite "go.elastic.co/apm/module/apmgormv2/v2/driver/sqlite"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -25,7 +27,7 @@ type Config struct {
 
 var databases map[string]*gorm.DB = make(map[string]*gorm.DB)
 
-// Get the default database
+// Open a connection to the default database
 func DB() *gorm.DB {
 	if len(databases) == 0 {
 		panic("No database found")
@@ -33,12 +35,22 @@ func DB() *gorm.DB {
 	return databases["default"]
 }
 
-// Get a database by name
+// Open a connection to the database with context. It is commonly used to monitor APM.
+func DBWithContext(ctx context.Context) *gorm.DB {
+	return DB().WithContext(ctx)
+}
+
+// Open a connection to the database with specified name.
 func DBByName(name string) *gorm.DB {
 	if len(databases) == 0 {
 		panic("No database found")
 	}
 	return databases[name]
+}
+
+// Open a connection to the database with specified name and context. It is commonly used to monitor APM.
+func DBByNameWithContext(ctx context.Context, name string) *gorm.DB {
+	return DBByName(name).WithContext(ctx)
 }
 
 // Open the default connection to main database.
@@ -91,7 +103,7 @@ func OpenConnection(config ...Config) error {
 			continue
 		}
 
-		db, err := gorm.Open(sqlite.Open(cfg.DSN[0]), &gorm.Config{
+		db, err := gorm.Open(openDialector(cfg.DSN[0]), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true, // Always use singular table name
 			},
@@ -107,7 +119,7 @@ func OpenConnection(config ...Config) error {
 		if len(cfg.DSN) > 1 {
 			for i := 1; i < len(cfg.DSN); i++ {
 				if cfg.DSN[i] != "" {
-					dsnDialectors = append(dsnDialectors, sqlite.Open(cfg.DSN[i]))
+					dsnDialectors = append(dsnDialectors, openDialector(cfg.DSN[i]))
 				}
 			}
 
@@ -118,7 +130,7 @@ func OpenConnection(config ...Config) error {
 		if len(cfg.DSNRelicas) > 0 {
 			for _, dsn := range cfg.DSNRelicas {
 				if dsn != "" {
-					dsnRelicasDialectors = append(dsnRelicasDialectors, sqlite.Open(dsn))
+					dsnRelicasDialectors = append(dsnRelicasDialectors, openDialector(dsn))
 				}
 			}
 
@@ -197,4 +209,11 @@ func Print(cfg Config) {
 	fmt.Printf("| DB_SQLITE%s_CONN_MAX_LIFETIME: %v\r\n", _connName, cfg.ConnectionMaxLifetime)
 	fmt.Println("└───────────────────────────────────────────────")
 
+}
+
+func openDialector(dsn string) gorm.Dialector {
+	if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+		return apmsqlite.Open(dsn)
+	}
+	return sqlite.Open(dsn)
 }

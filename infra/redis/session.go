@@ -1,13 +1,14 @@
 package redis
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
-	"hoangphuc.tech/go-hexaboi/domain/base"
-	"hoangphuc.tech/go-hexaboi/infra/core"
+	"hecigo.com/go-hexaboi/domain/base"
+	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Session struct {
@@ -29,7 +30,7 @@ func EnableSession() {
 	randHashKey = core.Getenv("REDIS_SESSION_HASH_KEY", "")
 }
 
-// TODO: Làm thêm
+// Get session by user info
 func GetSession(uuid string, args ...string) *Session {
 	if sessionKeyFormat == "" {
 		log.Errorln("session key format is empty, let call EnableSession() first to load key format from environemnt variable")
@@ -43,7 +44,7 @@ func GetSession(uuid string, args ...string) *Session {
 	hashed := hex.EncodeToString(hasher.Sum(nil))
 	sessionKey = fmt.Sprintf(sessionKeyFormat, uuid, hashed) // {uuid}/{hashed({uuid}/{args})}
 
-	session, err := GetSpecificKey[Session](sessionKey)
+	session, err := GetSpecificKey[Session](context.Background(), sessionKey)
 	if err != nil {
 		log.Errorln(err)
 		return nil
