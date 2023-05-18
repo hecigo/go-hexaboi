@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/go-resty/resty/v2"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -57,12 +57,12 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	baseUrl := core.Getenv(fmt.Sprintf("REST%s_BASE_URL", _connName), "")
-	enableDebug := core.GetBoolEnv(fmt.Sprintf("REST%s_ENABLE_DEBUG", _connName), false)
-	timeout := core.GetDurationEnv(fmt.Sprintf("REST%s_TIMEOUT", _connName), time.Second)
-	basicAuth := core.Getenv(fmt.Sprintf("REST%s_BASIC_AUTH", _connName), "")
-	bearerAuth := core.Getenv(fmt.Sprintf("REST%s_BEARER_AUTH", _connName), "")
-	retryCount := core.GetIntEnv(fmt.Sprintf("REST%s_RETRY_COUNT", _connName), 3)
+	baseUrl := goutils.Env(fmt.Sprintf("REST%s_BASE_URL", _connName), "")
+	enableDebug := goutils.Env(fmt.Sprintf("REST%s_ENABLE_DEBUG", _connName), false)
+	timeout := goutils.Env(fmt.Sprintf("REST%s_TIMEOUT", _connName), time.Second)
+	basicAuth := goutils.Env(fmt.Sprintf("REST%s_BASIC_AUTH", _connName), "")
+	bearerAuth := goutils.Env(fmt.Sprintf("REST%s_BEARER_AUTH", _connName), "")
+	retryCount := goutils.Env(fmt.Sprintf("REST%s_RETRY_COUNT", _connName), 3)
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {

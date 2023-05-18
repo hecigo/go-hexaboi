@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/goccy/go-json"
-	"hecigo.com/go-hexaboi/infra/core"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -99,12 +99,12 @@ func (j JSON) ToStrMap() *map[string]string {
 	if jMap == nil {
 		return nil
 	}
-	result, err := core.Utils.MapToStringMap(jMap)
+	result, err := goutils.Unmarshal[map[string]string](jMap)
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
-	return result
+	return &result
 }
 
 func (j JSON) String() string {

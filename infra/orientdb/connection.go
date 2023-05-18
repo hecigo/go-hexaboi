@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/go-resty/resty/v2"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -60,14 +60,14 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	baseURL := core.Getenv(fmt.Sprintf("ORIENTDB%s_URL", _connName), "")
-	database := core.Getenv(fmt.Sprintf("ORIENTDB%s_DB", _connName), "")
-	auth := core.Getenv(fmt.Sprintf("ORIENTDB%s_AUTH", _connName), "")
-	timeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_TIMEOUT", _connName), 10*time.Second)
-	maxRetries := core.GetIntEnv(fmt.Sprintf("ORIENTDB%s_MAX_RETRIES", _connName), 3)
-	retryWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_WAIT_TIMEOUT", _connName), 250*time.Millisecond)
-	retryMaxWaitTimeout := core.GetDurationEnv(fmt.Sprintf("ORIENTDB%s_RETRY_MAX_WAIT_TIMEOUT", _connName), 3*time.Second)
-	isDebug := core.GetBoolEnv(fmt.Sprintf("ORIENTDB%s_DEBUG", _connName), false)
+	baseURL := goutils.Env(fmt.Sprintf("ORIENTDB%s_URL", _connName), "")
+	database := goutils.Env(fmt.Sprintf("ORIENTDB%s_DB", _connName), "")
+	auth := goutils.Env(fmt.Sprintf("ORIENTDB%s_AUTH", _connName), "")
+	timeout := goutils.Env(fmt.Sprintf("ORIENTDB%s_TIMEOUT", _connName), 10*time.Second)
+	maxRetries := goutils.Env(fmt.Sprintf("ORIENTDB%s_MAX_RETRIES", _connName), 3)
+	retryWaitTimeout := goutils.Env(fmt.Sprintf("ORIENTDB%s_RETRY_WAIT_TIMEOUT", _connName), 250*time.Millisecond)
+	retryMaxWaitTimeout := goutils.Env(fmt.Sprintf("ORIENTDB%s_RETRY_MAX_WAIT_TIMEOUT", _connName), 3*time.Second)
+	isDebug := goutils.Env(fmt.Sprintf("ORIENTDB%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {

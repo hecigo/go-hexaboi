@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
-	"hecigo.com/go-hexaboi/infra/core"
 
 	"github.com/go-redis/redis/v8"
 	apmgoredis "go.elastic.co/apm/module/apmgoredisv8/v2"
@@ -64,14 +64,14 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	addresses := core.Getenv(fmt.Sprintf("REDIS%s_URL", _connName), "")
-	basicAuth := core.Getenv(fmt.Sprintf("REDIS%s_BASIC_AUTH", _connName), "")
-	db := core.GetIntEnv(fmt.Sprintf("REDIS%s_DB", _connName), 8)
-	maxRetries := core.GetIntEnv(fmt.Sprintf("REDIS%s_MAX_RETRIES", _connName), 3)
-	dialTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_DIAL_TIMEOUT", _connName), time.Second)
-	readTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_READ_TIMEOUT", _connName), 3*time.Second)
-	writeTimeout := core.GetDurationEnv(fmt.Sprintf("REDIS%s_WRITE_TIMEOUT", _connName), 3*time.Second)
-	masterName := core.Getenv(fmt.Sprintf("REDIS%s_MASTER_NAME", _connName), "")
+	addresses := goutils.Env(fmt.Sprintf("REDIS%s_URL", _connName), "")
+	basicAuth := goutils.Env(fmt.Sprintf("REDIS%s_BASIC_AUTH", _connName), "")
+	db := goutils.Env(fmt.Sprintf("REDIS%s_DB", _connName), 8)
+	maxRetries := goutils.Env(fmt.Sprintf("REDIS%s_MAX_RETRIES", _connName), 3)
+	dialTimeout := goutils.Env(fmt.Sprintf("REDIS%s_DIAL_TIMEOUT", _connName), time.Second)
+	readTimeout := goutils.Env(fmt.Sprintf("REDIS%s_READ_TIMEOUT", _connName), 3*time.Second)
+	writeTimeout := goutils.Env(fmt.Sprintf("REDIS%s_WRITE_TIMEOUT", _connName), 3*time.Second)
+	masterName := goutils.Env(fmt.Sprintf("REDIS%s_MASTER_NAME", _connName), "")
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {
@@ -112,7 +112,7 @@ func OpenConnection(config ...Config) error {
 
 		client := redis.NewUniversalClient(rdsCfg)
 
-		if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+		if goutils.Env("ELASTIC_APM_ENABLE", true) {
 			client.AddHook(apmgoredis.NewHook())
 		}
 

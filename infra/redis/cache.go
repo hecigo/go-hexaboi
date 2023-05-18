@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/go-redis/cache/v8"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 var defaultInstance *cache.Cache
@@ -14,8 +14,8 @@ func InitCache() {
 
 	// Use local in-process storage to cache the small subset of popular keys
 	// Default cache 1000 keys for 1 minute.
-	size := core.GetIntEnv("REDIS_CACHE_TINYFLU_SIZE", 1000)
-	duration := core.GetDurationEnv("REDIS_CACHE_TINYFLU_DURATION", time.Minute)
+	size := goutils.Env("REDIS_CACHE_TINYFLU_SIZE", 1000)
+	duration := goutils.Env("REDIS_CACHE_TINYFLU_DURATION", time.Minute)
 
 	defaultInstance = cache.New(&cache.Options{
 		Redis:      DBByName("cache"),

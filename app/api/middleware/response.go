@@ -3,23 +3,23 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 // Response anything
 func HJSON(c *fiber.Ctx, data interface{}) error {
-	if hpiResult, ok := data.(core.HPIResult); ok {
+	if hpiResult, ok := data.(goutils.APIRes); ok {
 		return hJSON(c, hpiResult)
 	}
 	status := c.Response().StatusCode()
-	return hJSON(c, core.HPIResult{
+	return hJSON(c, goutils.APIRes{
 		Status:  status,
 		Data:    data,
 		Message: utils.StatusMessage(status),
 	})
 }
 
-func hJSON(c *fiber.Ctx, data core.HPIResult) error {
+func hJSON(c *fiber.Ctx, data goutils.APIRes) error {
 	if data.Status <= 0 {
 		data.Status = c.Response().StatusCode()
 	}
@@ -48,11 +48,11 @@ func HError(c *fiber.Ctx, status int, errCode string, err error, data ...interfa
 
 	message := ""
 
-	// Retrieve the custom status code if it's an *core.HPIResult
+	// Retrieve the custom status code if it's an *goutils.APIRes
 	if err == nil {
 		c.Response().SetStatusCode(code)
 	} else {
-		if e, ok := err.(*core.HPIResult); ok {
+		if e, ok := err.(*goutils.APIRes); ok {
 			code = e.Status
 			data = append(data, e.Data)
 			if e.ErrorCode != "" {
@@ -67,7 +67,7 @@ func HError(c *fiber.Ctx, status int, errCode string, err error, data ...interfa
 		message = err.Error()
 	}
 
-	return HJSON(c, core.HPIResult{
+	return HJSON(c, goutils.APIRes{
 		Status:    code,
 		Message:   message,
 		ErrorCode: errCode,

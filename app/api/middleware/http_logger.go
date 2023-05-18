@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type HttpLogger struct {
@@ -13,7 +13,7 @@ type HttpLogger struct {
 }
 
 func (_logger *HttpLogger) Enable(app *fiber.App) error {
-	_logger.Format = core.Getenv("HTTP_LOG_FORMAT",
+	_logger.Format = goutils.Env("HTTP_LOG_FORMAT",
 		`[${time}] | PID: ${pid} | ${latency} | `+
 			`${reqHeader:X-Hpi-App-Version} ${status} ${method} ${path} ?${queryParams} ${body}`) + "\r\n"
 

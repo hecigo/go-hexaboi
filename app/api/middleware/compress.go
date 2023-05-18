@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type Compress struct {
@@ -13,7 +13,7 @@ type Compress struct {
 }
 
 func (_comp *Compress) Enable(app *fiber.App) error {
-	_comp.CompressLevel = core.GetIntEnv("COMPRESS_LEVEL", 0)
+	_comp.CompressLevel = goutils.Env("COMPRESS_LEVEL", 0)
 
 	app.Use(compress.New(compress.Config{
 		Level: compress.Level(_comp.CompressLevel),

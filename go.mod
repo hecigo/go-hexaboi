@@ -17,6 +17,7 @@ require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/goccy/go-json v0.10.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/hecigo/goutils v0.0.0-20230517093642-15c393e8b4ce
 	github.com/jackc/pgconn v1.14.0
 	github.com/joho/godotenv v1.5.1
 	github.com/segmentio/kafka-go v0.4.40
@@ -146,3 +147,5 @@ require (
 	howett.net/plist v1.0.0 // indirect
 
 )
+
+replace github.com/hecigo/goutils => ../goutils

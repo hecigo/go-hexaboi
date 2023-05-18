@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/etag"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type Cache struct {
@@ -25,7 +25,7 @@ type Cache struct {
 func (_cache *Cache) Enable(app *fiber.App) error {
 
 	// If the cache expiration is ZERO, that means disabled cache
-	_cache.CacheExpiration = core.Getenv("CACHE_EXPIRATION", "1m")
+	_cache.CacheExpiration = goutils.Env("CACHE_EXPIRATION", "1m")
 	if strings.HasPrefix(_cache.CacheExpiration, "0") {
 		log.Println("Middleware/Cache: disabled by ZERO expiration")
 		return nil
@@ -40,8 +40,8 @@ func (_cache *Cache) Enable(app *fiber.App) error {
 		return cacheExpErr
 	}
 
-	_cache.CacheControl = core.GetBoolEnv("CACHE_CONTROL", false)
-	_cache.CacheKeyPrefix = core.Getenv("CACHE_KEY_PREFIX", "hpi")
+	_cache.CacheControl = goutils.Env("CACHE_CONTROL", false)
+	_cache.CacheKeyPrefix = goutils.Env("CACHE_KEY_PREFIX", "hpi")
 
 	// Initialize cache with config
 	app.Use(cache.New(cache.Config{
@@ -88,7 +88,7 @@ func (_cache *Cache) Enable(app *fiber.App) error {
 		},
 	}))
 
-	_cache.ETag = core.GetBoolEnv("CACHE_ETAG", true)
+	_cache.ETag = goutils.Env("CACHE_ETAG", true)
 	if _cache.ETag {
 		app.Use(etag.New())
 	}

@@ -6,22 +6,22 @@ import (
 	"strings"
 
 	"github.com/goccy/go-json"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 
 	"github.com/go-redis/redis/v8"
 )
 
 var (
-	appName = core.AppName()
+	appName = goutils.AppName()
 )
 
 func getRedisKey(key string) string {
-	keyPrefix := core.Getenv("REDIS_KEY_PREFIX", appName+".")
+	keyPrefix := goutils.Env("REDIS_KEY_PREFIX", appName+".")
 	return keyPrefix + key
 }
 
 func removePrefix(key string) string {
-	keyPrefix := core.Getenv("REDIS_KEY_PREFIX", appName+".")
+	keyPrefix := goutils.Env("REDIS_KEY_PREFIX", appName+".")
 	return strings.TrimPrefix(key, keyPrefix)
 }
 

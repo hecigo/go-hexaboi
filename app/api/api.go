@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 	"go.elastic.co/apm/module/apmfiber"
 
+	"github.com/hecigo/goutils"
 	"hecigo.com/go-hexaboi/app/api/handler"
 	"hecigo.com/go-hexaboi/app/api/middleware"
 	"hecigo.com/go-hexaboi/app/api/router"
-	"hecigo.com/go-hexaboi/infra/core"
 	"hecigo.com/go-hexaboi/infra/elasticsearch"
 	"hecigo.com/go-hexaboi/infra/orientdb"
 	"hecigo.com/go-hexaboi/infra/postgres"
@@ -70,7 +70,7 @@ func New(env string) *API {
 
 	// Create a new app
 	app := fiber.New(fiber.Config{
-		AppName:       core.AppName() + " " + core.AppVersion(),
+		AppName:       goutils.AppName() + " " + goutils.AppVersion(),
 		StrictRouting: false,
 		CaseSensitive: false,
 		Prefork:       isProduction,
@@ -88,40 +88,40 @@ func New(env string) *API {
 		EnableStackTrace: true,
 	}))
 
-	if core.GetBoolEnv("COMPRESS_ENABLE", false) {
+	if goutils.Env("COMPRESS_ENABLE", false) {
 		(&middleware.Compress{}).Enable(app)
 	}
 
-	if core.GetBoolEnv("CORS_ENABLE", true) {
+	if goutils.Env("CORS_ENABLE", true) {
 		(&middleware.CORS{}).Enable(app)
 	}
 
 	// App health check. It must be by pass some middlewares.
 	app.Get("/", handler.HealthCheck)
 
-	if core.GetBoolEnv("CACHE_ENABLE", false) {
+	if goutils.Env("CACHE_ENABLE", false) {
 		(&middleware.Cache{}).Enable(app)
 	}
 
-	if core.GetBoolEnv("PPROF_ENABLE", false) {
+	if goutils.Env("PPROF_ENABLE", false) {
 		(&middleware.Pprof{}).Enable(app)
 	}
 
-	if core.GetBoolEnv("HTTP_LOG_ENABLE", false) {
+	if goutils.Env("HTTP_LOG_ENABLE", false) {
 		(&middleware.HttpLogger{}).Enable(app)
 	}
 
-	if core.GetBoolEnv("AUTH_ENABLE", true) {
+	if goutils.Env("AUTH_ENABLE", true) {
 		(&middleware.Auth{}).Enable(app)
 	}
 
 	// APM
-	if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+	if goutils.Env("ELASTIC_APM_ENABLE", true) {
 		app.Use(apmfiber.Middleware())
 	}
 
 	// Create a /v1 endpoint. Just replaces if the frontend is already.
-	root := app.Group(core.AppRootPath())
+	root := app.Group(goutils.APIRootPath())
 	router.RegisterDefaultRouter(root)
 
 	// Always response NotFound at the end of routes

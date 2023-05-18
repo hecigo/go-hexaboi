@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/hecigo/goutils"
 	"hecigo.com/go-hexaboi/app/api/dto"
 	"hecigo.com/go-hexaboi/infra/adapter"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type BrandHandler struct {
@@ -27,7 +27,7 @@ func (h BrandHandler) GetByCode(c *fiber.Ctx) error {
 }
 
 func (h BrandHandler) Get(c *fiber.Ctx) error {
-	id, _ := core.Utils.ParseUint(c.Params("id"))
+	id, _ := goutils.StrConv[uint](c.Params("id"))
 	item, err := h.repoBrand.GetByID(id)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func (h BrandHandler) Create(c *fiber.Ctx) error {
 }
 
 func (h BrandHandler) Update(c *fiber.Ctx) error {
-	id, _ := core.Utils.ParseUint(c.Params("id"))
+	id, _ := goutils.StrConv[uint](c.Params("id"))
 
 	// Parse payload as domain
 	d := new(dto.BrandUpdated)

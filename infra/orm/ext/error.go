@@ -3,15 +3,15 @@ package ext
 import (
 	"errors"
 
+	"github.com/hecigo/goutils"
 	"github.com/jackc/pgconn"
 	"gorm.io/gorm"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 // Used to format any error to HPIResult
 func Errorf(err error) (error, bool) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return &core.HPIResult{
+		return &goutils.APIRes{
 			Status:    404,
 			Message:   err.Error(),
 			ErrorCode: "ORM_ERROR",
@@ -19,7 +19,7 @@ func Errorf(err error) (error, bool) {
 	}
 
 	if errors.Is(err, gorm.ErrInvalidField) || errors.Is(err, gorm.ErrEmptySlice) {
-		return &core.HPIResult{
+		return &goutils.APIRes{
 			Status:    400,
 			Message:   err.Error(),
 			ErrorCode: "ORM_ERROR",
@@ -28,14 +28,14 @@ func Errorf(err error) (error, bool) {
 
 	// GORM doesn't override dialect errors, have to detect manually.
 	if err, ok := err.(*pgconn.PgError); ok {
-		return &core.HPIResult{
+		return &goutils.APIRes{
 			Status:    500,
 			Message:   err.Error(),
 			ErrorCode: "ORM_ERROR",
 		}, true
 	}
 
-	if err, ok := err.(*core.HPIResult); ok {
+	if err, ok := err.(*goutils.APIRes); ok {
 		return err, true
 	}
 

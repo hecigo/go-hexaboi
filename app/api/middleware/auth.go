@@ -1,16 +1,12 @@
 package middleware
 
 import (
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
-	"hecigo.com/go-hexaboi/infra/core"
 	"hecigo.com/go-hexaboi/infra/jwt"
 	"hecigo.com/go-hexaboi/infra/redis"
 
 	"github.com/gofiber/fiber/v2"
-
-	"crypto/aes"
-	"crypto/cipher"
-	"encoding/base64"
 )
 
 type Auth struct{}
@@ -61,49 +57,11 @@ func (*Auth) AuthCheck(c *fiber.Ctx) error {
 		return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 	}
 
-	// server to server
-	stringDecrypt, err := decrypt(c, a.APIKey)
+	err := goutils.CheckAPISecretKey(a.APIKey)
 	if err != nil {
-		log.Println("error decrypting your classified --> ", err)
-		// Should NOT expose error message to client
+		log.Println(err)
 		return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
 	}
 
-	// Check Client API Key
-	if core.API_CLIENT_SECRETS != nil {
-		for _, v := range core.API_CLIENT_SECRETS {
-			if stringDecrypt == v {
-				return c.Next()
-			}
-		}
-	}
-
-	return HError(c, fiber.StatusUnauthorized, "UNAUTHORIZED", nil)
-}
-
-func decode(c *fiber.Ctx, s string) ([]byte, error) {
-	data, err := base64.StdEncoding.DecodeString(s)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func decrypt(c *fiber.Ctx, text string) (string, error) {
-	block, err := aes.NewCipher([]byte(core.MySecretCrypt))
-	if err != nil {
-		return "", err
-	}
-
-	cipherText, err := decode(c, text)
-	if err != nil {
-		return "", err
-	}
-
-	cfb := cipher.NewCFBDecrypter(block, core.BytesCrypt)
-	plainText := make([]byte, len(cipherText))
-	cfb.XORKeyStream(plainText, cipherText)
-
-	return string(plainText), nil
-
+	return c.Next()
 }

@@ -11,8 +11,8 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type bulkResponse struct {
@@ -63,11 +63,14 @@ func Index(ctx context.Context, indexName string, docIdField string, documents .
 			currBatch++
 		}
 
-		var doc map[string]interface{}
-		if err := core.UnmarshalNoPanic(d, &doc); err != nil {
+		doc, err := goutils.Unmarshal[map[string]interface{}](d)
+		if err != nil {
 			return err
 		}
-		docId := core.Utils.ToStr(doc[docIdField])
+		docId, err := goutils.AnyToStr(doc[docIdField])
+		if err != nil {
+			return err
+		}
 		if docId == "" {
 			return fmt.Errorf("document ID must not be empty")
 		}
@@ -109,7 +112,7 @@ func Index(ctx context.Context, indexName string, docIdField string, documents .
 				if err := json.NewDecoder(res.Body).Decode(&raw); err != nil {
 					return fmt.Errorf("failure to to parse response body: %s", err)
 				} else {
-					return &core.HPIResult{
+					return &goutils.APIRes{
 						Status:    res.StatusCode,
 						Message:   fmt.Sprintf("failure indexing batch %d", currBatch),
 						Data:      raw["error"],
@@ -130,7 +133,7 @@ func Index(ctx context.Context, indexName string, docIdField string, documents .
 							numErrors++
 
 							// ... and print the response status and error information ...
-							errData = append(errData, core.Utils.ToStr(d.Index))
+							errData = append(errData, goutils.ToStr(d.Index))
 						} else {
 							// ... otherwise increase the success counter.
 							numIndexed++
@@ -138,7 +141,7 @@ func Index(ctx context.Context, indexName string, docIdField string, documents .
 					}
 
 					if numErrors > 0 {
-						return &core.HPIResult{
+						return &goutils.APIRes{
 							Status:    http.StatusInternalServerError,
 							Message:   fmt.Sprintf("There are [%d] failed documents", numErrors),
 							Data:      errData,

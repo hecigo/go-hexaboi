@@ -6,9 +6,9 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 	"hecigo.com/go-hexaboi/domain/base"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Session struct {
@@ -26,8 +26,8 @@ type Session struct {
 var sessionKeyFormat, randHashKey string
 
 func EnableSession() {
-	sessionKeyFormat = core.Getenv("REDIS_SESSION_KEY_FORMAT", "gohexaboi.session:%s/%s")
-	randHashKey = core.Getenv("REDIS_SESSION_HASH_KEY", "")
+	sessionKeyFormat = goutils.Env("REDIS_SESSION_KEY_FORMAT", "gohexaboi.session:%s/%s")
+	randHashKey = goutils.Env("REDIS_SESSION_HASH_KEY", "")
 }
 
 // Get session by user info

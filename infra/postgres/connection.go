@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	apmPostgres "go.elastic.co/apm/module/apmgormv2/v2/driver/postgres"
@@ -13,7 +14,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -72,13 +72,13 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	dsn := core.Getenv(fmt.Sprintf("DB_POSTGRES%s_DSN", _connName), "")
-	dsnReplicas := core.Getenv(fmt.Sprintf("DB_POSTGRES%s_DSN_REPLICAS", _connName), "")
+	dsn := goutils.Env(fmt.Sprintf("DB_POSTGRES%s_DSN", _connName), "")
+	dsnReplicas := goutils.Env(fmt.Sprintf("DB_POSTGRES%s_DSN_REPLICAS", _connName), "")
 
 	// Connection pool config
-	maxIdleConns := core.GetIntEnv(fmt.Sprintf("DB_POSTGRES%s_MAX_IDLE_CONNS", _connName), 5)
-	maxOpenConns := core.GetIntEnv(fmt.Sprintf("DB_POSTGRES%s_MAX_OPEN_CONNS", _connName), 20)
-	connMaxLifetime := core.GetDurationEnv(fmt.Sprintf("DB_POSTGRES%s_CONN_MAX_LIFETIME", _connName), 30*time.Minute)
+	maxIdleConns := goutils.Env(fmt.Sprintf("DB_POSTGRES%s_MAX_IDLE_CONNS", _connName), 5)
+	maxOpenConns := goutils.Env(fmt.Sprintf("DB_POSTGRES%s_MAX_OPEN_CONNS", _connName), 20)
+	connMaxLifetime := goutils.Env(fmt.Sprintf("DB_POSTGRES%s_CONN_MAX_LIFETIME", _connName), 30*time.Minute)
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {
@@ -212,7 +212,7 @@ func Print(cfg Config) {
 }
 
 func openDialector(dsn string) gorm.Dialector {
-	if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+	if goutils.Env("ELASTIC_APM_ENABLE", true) {
 		return apmPostgres.Open(dsn)
 	}
 	return postgres.Open(dsn)

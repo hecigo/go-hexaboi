@@ -7,12 +7,12 @@ import (
 
 	"strings"
 
+	"github.com/hecigo/goutils"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
 	"hecigo.com/go-hexaboi/app/api"
 	"hecigo.com/go-hexaboi/app/cli"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 var (
@@ -32,13 +32,13 @@ func main() {
 	godotenv.Load() // Load the default environment
 
 	// Initialize logger
-	core.InitLogger()
+	goutils.EnableLogrus()
 
-	appName := core.Getenv("APP_NAME", "GoHexaboi")
-	appVersion := core.Getenv("APP_VERSION", "v0.0.0")
+	appName := goutils.Env("APP_NAME", "GoHexaboi")
+	appVersion := goutils.Env("APP_VERSION", "v0.0.0")
 
 	// Load client secret keys
-	core.LoadClientSecretKeys()
+	goutils.EnableAPISecretKeys()
 
 	// rootCmd represents the base command when called without any subcommands
 	var rootCmd = &cobra.Command{

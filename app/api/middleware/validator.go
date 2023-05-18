@@ -6,7 +6,7 @@ import (
 	"github.com/elliotchance/pie/v2"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type Validator struct {
@@ -79,8 +79,8 @@ func (v *Validator) validateParams(c *fiber.Ctx, dto interface{}) error {
 	var numFields []string
 	for i := 0; i < fieldsLen; i++ {
 		f := elem.Field(i)
-		if core.Utils.IsNumberField(f) {
-			jsonFieldName := core.Utils.GetJSONFieldName(f.Tag)
+		if goutils.IsNumberField(f) {
+			jsonFieldName := goutils.GetJSONTag(f.Tag)
 			numFields = append(numFields, jsonFieldName)
 		}
 	}
@@ -89,9 +89,13 @@ func (v *Validator) validateParams(c *fiber.Ctx, dto interface{}) error {
 	params := make(map[string]interface{})
 	for k, v := range fiberParams {
 		if pie.Contains(numFields, k) {
-			vInt, err := core.Utils.ParseUint(v)
+			vInt, err := goutils.StrConv[int](v)
 			if err != nil {
-				return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
+				vFloat, err := goutils.StrConv[float64](v)
+				if err != nil {
+					return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
+				}
+				params[k] = vFloat
 			}
 			params[k] = vInt
 		} else {
@@ -100,7 +104,7 @@ func (v *Validator) validateParams(c *fiber.Ctx, dto interface{}) error {
 	}
 
 	// Convert map[string]interface{} to struct
-	err := core.Utils.MapToStruct(params, dto)
+	err := goutils.MapStrAnyToStruct(params, dto)
 	if err != nil {
 		return HError(c, fiber.StatusBadRequest, "CAN_NOT_PARSE_PARAMS", err)
 	}

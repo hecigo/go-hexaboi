@@ -3,7 +3,7 @@ package orientdb
 import (
 	"strconv"
 
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type Errors struct {
@@ -21,7 +21,7 @@ func (e Error) Error() string {
 }
 
 func (e Error) ToHPIError() error {
-	return &core.HPIResult{
+	return &goutils.APIRes{
 		Status:    e.Code,
 		Message:   strconv.Itoa(e.Reason),
 		ErrorCode: "ORM_ERROR",

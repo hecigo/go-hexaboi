@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 type CORS struct {
@@ -16,9 +16,9 @@ type CORS struct {
 
 func (_cors *CORS) Enable(app *fiber.App) error {
 
-	_cors.AllowOrigins = core.Getenv("CORS_ALLOW_ORIGINS", "localhost")
-	_cors.AllowHeaders = core.Getenv("CORS_ALLOW_HEADERS", "")
-	_cors.AllowMethods = core.Getenv("CORS_ALLOW_METHODS", "GET,POST,HEAD,PUT,PATCH")
+	_cors.AllowOrigins = goutils.Env("CORS_ALLOW_ORIGINS", "localhost")
+	_cors.AllowHeaders = goutils.Env("CORS_ALLOW_HEADERS", "")
+	_cors.AllowMethods = goutils.Env("CORS_ALLOW_METHODS", "GET,POST,HEAD,PUT,PATCH")
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: _cors.AllowOrigins,
