@@ -19,7 +19,6 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/hecigo/goutils v0.0.0-20230517093642-15c393e8b4ce
 	github.com/jackc/pgconn v1.14.0
-	github.com/joho/godotenv v1.5.1
 	github.com/segmentio/kafka-go v0.4.40
 	github.com/sirupsen/logrus v1.9.1
 	github.com/spf13/cobra v1.7.0
@@ -87,6 +86,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/asmfmt v1.3.2 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
