@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"gorm.io/plugin/dbresolver"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -60,13 +60,13 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	dsn := core.Getenv(fmt.Sprintf("DB_SQLSERVER%s_DSN", _connName), "")
-	dsnReplicas := core.Getenv(fmt.Sprintf("DB_SQLSERVER%s_DSN_REPLICAS", _connName), "")
+	dsn := goutils.Env(fmt.Sprintf("DB_SQLSERVER%s_DSN", _connName), "")
+	dsnReplicas := goutils.Env(fmt.Sprintf("DB_SQLSERVER%s_DSN_REPLICAS", _connName), "")
 
 	// Connection pool config
-	maxIdleConns := core.GetIntEnv(fmt.Sprintf("DB_SQLSERVER%s_MAX_IDLE_CONNS", _connName), 5)
-	maxOpenConns := core.GetIntEnv(fmt.Sprintf("DB_SQLSERVER%s_MAX_OPEN_CONNS", _connName), 20)
-	connMaxLifetime := core.GetDurationEnv(fmt.Sprintf("DB_SQLSERVER%s_CONN_MAX_LIFETIME", _connName), 30*time.Minute)
+	maxIdleConns := goutils.Env(fmt.Sprintf("DB_SQLSERVER%s_MAX_IDLE_CONNS", _connName), 5)
+	maxOpenConns := goutils.Env(fmt.Sprintf("DB_SQLSERVER%s_MAX_OPEN_CONNS", _connName), 20)
+	connMaxLifetime := goutils.Env(fmt.Sprintf("DB_SQLSERVER%s_CONN_MAX_LIFETIME", _connName), 30*time.Minute)
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {

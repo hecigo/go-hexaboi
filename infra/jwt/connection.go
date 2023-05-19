@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/MicahParks/keyfunc"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 var jwksStore map[string]*keyfunc.JWKS = make(map[string]*keyfunc.JWKS)
@@ -36,7 +36,7 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	jwksUrl := core.Getenv(fmt.Sprintf("JWT%s_JWKS_URL", _connName), "")
+	jwksUrl := goutils.Env(fmt.Sprintf("JWT%s_JWKS_URL", _connName), "")
 
 	if connName == "" {
 		connName = "default"

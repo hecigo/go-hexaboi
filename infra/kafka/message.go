@@ -6,8 +6,8 @@ import (
 	"github.com/goccy/go-json"
 
 	"hecigo.com/go-hexaboi/domain/base"
-	"hecigo.com/go-hexaboi/infra/core"
 
+	"github.com/hecigo/goutils"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -25,15 +25,15 @@ func NewMessage(uuid string, event string, payload base.KafkaPayload) *KafkaMess
 		UUID:      uuid,
 		ClassName: payload.ClassName(),
 		Event:     event,
-		CreatedBy: core.AppName(),
-		Timestamp: core.Utils.NowStr(),
+		CreatedBy: goutils.AppName(),
+		Timestamp: goutils.TimeStr(goutils.Now()),
 		Payload:   payload.ToPayload(),
 	}
 }
 
 func ScanMessage(data []byte) (*KafkaMessage, error) {
 	var msg *KafkaMessage
-	if err := core.UnmarshalNoPanic(data, &msg); err != nil {
+	if err := goutils.UnmarshalIntf(data, &msg); err != nil {
 		return nil, err
 	}
 	return msg, nil

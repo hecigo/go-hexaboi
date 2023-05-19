@@ -6,7 +6,7 @@ import (
 
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/goccy/go-json"
-	"hecigo.com/go-hexaboi/infra/core"
+	"github.com/hecigo/goutils"
 )
 
 func Search(ctx context.Context, index string, query interface{}, result interface{}) (total uint64, extra map[string]interface{}, err error) {
@@ -16,7 +16,7 @@ func Search(ctx context.Context, index string, query interface{}, result interfa
 
 	reqBody, ok := query.(map[string]interface{})
 	if !ok {
-		if err := core.UnmarshalNoPanic(query, &reqBody); err != nil {
+		if err := goutils.UnmarshalIntf(query, &reqBody); err != nil {
 			return 0, nil, err
 		}
 	}
@@ -41,12 +41,12 @@ func Search(ctx context.Context, index string, query interface{}, result interfa
 	var respBody map[string]interface{}
 	buf.Reset()
 	buf.ReadFrom(resp.Body)
-	if err := core.UnmarshalNoPanic(buf.String(), &respBody); err != nil {
+	if err := goutils.UnmarshalIntf(buf.String(), &respBody); err != nil {
 		return 0, nil, err
 	}
 
 	if resp.IsError() {
-		return 0, nil, &core.HPIResult{
+		return 0, nil, &goutils.APIRes{
 			Status:    resp.StatusCode,
 			Message:   resp.String(),
 			Data:      respBody,
@@ -66,7 +66,7 @@ func Search(ctx context.Context, index string, query interface{}, result interfa
 	extraSorts := make(map[string]interface{})
 	for _, h := range esResult["hits"].([]interface{}) {
 		var m map[string]interface{}
-		if err := core.UnmarshalNoPanic(h, &m); err != nil {
+		if err := goutils.UnmarshalIntf(h, &m); err != nil {
 			return 0, nil, err
 		}
 		_source := m["_source"].(map[string]interface{})
@@ -79,7 +79,7 @@ func Search(ctx context.Context, index string, query interface{}, result interfa
 	}
 	extra["sorts"] = extraSorts
 
-	if err := core.UnmarshalNoPanic(tmpResult, result); err != nil {
+	if err := goutils.UnmarshalIntf(tmpResult, result); err != nil {
 		return 0, nil, err
 	}
 

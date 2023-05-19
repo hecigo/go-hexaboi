@@ -1,10 +1,10 @@
 package orientdb
 
 import (
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"hecigo.com/go-hexaboi/domain/base"
-	"hecigo.com/go-hexaboi/infra/core"
 	"hecigo.com/go-hexaboi/infra/orm"
 )
 
@@ -33,8 +33,11 @@ func (r *ItemRepository) GetByCode(code string) (*orm.Item, error) {
 	}
 
 	// TODO: Map Result to orm.Item
-	var item *orm.Item
-	core.UnmarshalNoPanic(funcResult.Result[0], &item)
+	item, err := goutils.Unmarshal[orm.Item](funcResult.Result[0])
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
 
-	return item, nil
+	return &item, nil
 }

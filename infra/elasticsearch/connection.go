@@ -11,8 +11,8 @@ import (
 
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/hecigo/goutils"
 	"go.elastic.co/apm/module/apmelasticsearch/v2"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -71,13 +71,13 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	addresses := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_URL", _connName), "")
-	basicAuth := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
-	caCert := core.Getenv(fmt.Sprintf("ELASTICSEARCH%s_CACERT", _connName), "")
-	maxRetries := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
-	searchTimeout := core.GetDurationEnv(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
-	batchIndexSize := core.GetIntEnv(fmt.Sprintf("ELASTICSEARCH%s_BATCH_INDEX_SIZE", _connName), 100)
-	enableDebugLogger := core.GetBoolEnv(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
+	addresses := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_URL", _connName), "")
+	basicAuth := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_BASIC_AUTH", _connName), "")
+	caCert := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_CACERT", _connName), "")
+	maxRetries := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_MAX_RETRIES", _connName), 3)
+	searchTimeout := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_SEARCH_TIMEOUT", _connName), 5*time.Second)
+	batchIndexSize := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_BATCH_INDEX_SIZE", _connName), 100)
+	enableDebugLogger := goutils.Env(fmt.Sprintf("ELASTICSEARCH%s_DEBUG", _connName), false)
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {
@@ -127,7 +127,7 @@ func OpenConnection(config ...Config) error {
 			esCfg.Password = cfg.BasicAuth[1]
 		}
 
-		if core.GetBoolEnv("ELASTIC_APM_ENABLE", true) {
+		if goutils.Env("ELASTIC_APM_ENABLE", true) {
 			esCfg.Transport = apmelasticsearch.WrapRoundTripper(http.DefaultTransport)
 		}
 

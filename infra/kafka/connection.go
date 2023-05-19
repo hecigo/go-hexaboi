@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hecigo/goutils"
 	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/sasl"
 	"github.com/segmentio/kafka-go/sasl/plain"
 	"github.com/segmentio/kafka-go/sasl/scram"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -104,30 +104,30 @@ func OpenConnectionByName(connName string) error {
 		connName = "default"
 	}
 
-	brokers := core.Getenv("KAFKA_BROKERS", "")
-	sasl := core.Getenv("KAFKA_SASL", "")
-	showLog := core.GetBoolEnv("KAFKA_SHOW_LOG", false)
-	dialTimeout := core.GetDurationEnv("KAFKA_DIAL_TIMEOUT", 3*time.Minute)
-	incomingGroupId := core.Getenv("KAFKA_INCOMING_CONSUMER_GROUP", "")
-	incomingTopic := core.Getenv("KAFKA_INCOMING_TOPIC", "")
-	outgoingTopic := core.Getenv("KAFKA_OUTGOING_TOPIC", "")
-	retry := core.GetIntEnv("KAFKA_MAX_ATTEMPTS", 3)
-	attemptWait := core.GetDurationEnv("KAFKA_ATTEMPT_WAIT", 100*time.Millisecond)
-	allowAutoTopicCreation := core.GetBoolEnv("KAFKA_ALLOW_AUTO_TOPIC_CREATION", false)
+	brokers := goutils.Env("KAFKA_BROKERS", "")
+	sasl := goutils.Env("KAFKA_SASL", "")
+	showLog := goutils.Env("KAFKA_SHOW_LOG", false)
+	dialTimeout := goutils.Env("KAFKA_DIAL_TIMEOUT", 3*time.Minute)
+	incomingGroupId := goutils.Env("KAFKA_INCOMING_CONSUMER_GROUP", "")
+	incomingTopic := goutils.Env("KAFKA_INCOMING_TOPIC", "")
+	outgoingTopic := goutils.Env("KAFKA_OUTGOING_TOPIC", "")
+	retry := goutils.Env("KAFKA_MAX_ATTEMPTS", 3)
+	attemptWait := goutils.Env("KAFKA_ATTEMPT_WAIT", 100*time.Millisecond)
+	allowAutoTopicCreation := goutils.Env("KAFKA_ALLOW_AUTO_TOPIC_CREATION", false)
 
 	// Override if specialize a profile
 	if _connName != "" {
-		profileBrokers := core.Getenv(fmt.Sprintf("KAFKA%s_BROKERS", _connName), "")
+		profileBrokers := goutils.Env(fmt.Sprintf("KAFKA%s_BROKERS", _connName), "")
 		if profileBrokers != "" {
 			brokers = profileBrokers
 		}
 
-		profileSasl := core.Getenv(fmt.Sprintf("KAFKA%s_SASL", _connName), "")
+		profileSasl := goutils.Env(fmt.Sprintf("KAFKA%s_SASL", _connName), "")
 		if profileSasl != "" {
 			sasl = profileSasl
 		}
 
-		profileShowLog := core.Getenv(fmt.Sprintf("KAFKA%s_SHOW_LOG", _connName), "")
+		profileShowLog := goutils.Env(fmt.Sprintf("KAFKA%s_SHOW_LOG", _connName), "")
 		if profileShowLog != "" {
 			val, e := strconv.ParseBool(profileShowLog)
 			if e == nil {
@@ -135,7 +135,7 @@ func OpenConnectionByName(connName string) error {
 			}
 		}
 
-		profileDialTimeout := core.Getenv(fmt.Sprintf("KAFKA%s_DIAL_TIMEOUT", _connName), "")
+		profileDialTimeout := goutils.Env(fmt.Sprintf("KAFKA%s_DIAL_TIMEOUT", _connName), "")
 		if profileDialTimeout != "" {
 			val, e := time.ParseDuration(profileDialTimeout)
 			if e == nil {
@@ -143,22 +143,22 @@ func OpenConnectionByName(connName string) error {
 			}
 		}
 
-		profileIncomingGroupId := core.Getenv(fmt.Sprintf("KAFKA%s_INCOMING_CONSUMER_GROUP", _connName), "")
+		profileIncomingGroupId := goutils.Env(fmt.Sprintf("KAFKA%s_INCOMING_CONSUMER_GROUP", _connName), "")
 		if profileIncomingGroupId != "" {
 			incomingGroupId = profileIncomingGroupId
 		}
 
-		profileIncomingTopic := core.Getenv(fmt.Sprintf("KAFKA%s_INCOMING_TOPIC", _connName), "")
+		profileIncomingTopic := goutils.Env(fmt.Sprintf("KAFKA%s_INCOMING_TOPIC", _connName), "")
 		if profileIncomingTopic != "" {
 			incomingTopic = profileIncomingTopic
 		}
 
-		profileOutcomingTopic := core.Getenv(fmt.Sprintf("KAFKA%s_OUTGOING_TOPIC", _connName), "")
+		profileOutcomingTopic := goutils.Env(fmt.Sprintf("KAFKA%s_OUTGOING_TOPIC", _connName), "")
 		if profileOutcomingTopic != "" {
 			outgoingTopic = profileOutcomingTopic
 		}
 
-		profileRetry := core.Getenv(fmt.Sprintf("KAFKA%s_MAX_ATTEMPTS", _connName), "")
+		profileRetry := goutils.Env(fmt.Sprintf("KAFKA%s_MAX_ATTEMPTS", _connName), "")
 		if profileRetry != "" {
 			val, e := strconv.Atoi(profileRetry)
 			if e == nil {
@@ -166,7 +166,7 @@ func OpenConnectionByName(connName string) error {
 			}
 		}
 
-		profileAttempWait := core.Getenv(fmt.Sprintf("KAFKA%s_ATTEMPT_WAIT", _connName), "")
+		profileAttempWait := goutils.Env(fmt.Sprintf("KAFKA%s_ATTEMPT_WAIT", _connName), "")
 		if profileAttempWait != "" {
 			val, e := time.ParseDuration(profileAttempWait)
 			if e == nil {
@@ -174,7 +174,7 @@ func OpenConnectionByName(connName string) error {
 			}
 		}
 
-		profileAllowAutoTopicCreation := core.Getenv(fmt.Sprintf("KAFKA%s_ALLOW_AUTO_TOPIC_CREATION", _connName), "")
+		profileAllowAutoTopicCreation := goutils.Env(fmt.Sprintf("KAFKA%s_ALLOW_AUTO_TOPIC_CREATION", _connName), "")
 		if profileAllowAutoTopicCreation != "" {
 			val, e := strconv.ParseBool(profileAllowAutoTopicCreation)
 			if e == nil {

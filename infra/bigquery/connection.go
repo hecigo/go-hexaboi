@@ -3,12 +3,12 @@ package bigquery
 import (
 	"fmt"
 
+	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 
 	"gorm.io/driver/bigquery"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"hecigo.com/go-hexaboi/infra/core"
 )
 
 type Config struct {
@@ -40,7 +40,7 @@ func OpenConnectionByName(connName string) error {
 		_connName = "_" + connName
 	}
 
-	dsn := core.Getenv(fmt.Sprintf("DB_BIGQUERY%s_DSN", _connName), "")
+	dsn := goutils.Env(fmt.Sprintf("DB_BIGQUERY%s_DSN", _connName), "")
 
 	// Generate the default name as a key for the DB map
 	if connName == "" {
