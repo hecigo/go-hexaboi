@@ -46,7 +46,7 @@ func (*Auth) AuthCheck(c *fiber.Ctx) error {
 		}
 
 		// get claims; using phone number as username
-		session := redis.GetSession(claims.Username, a.Authorization)
+		session := redis.GetSession(c.Context(), claims.Username, a.Authorization)
 
 		// session is found
 		if (session != nil) && (session.UserID == claims.Username) {

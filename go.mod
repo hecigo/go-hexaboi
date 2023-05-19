@@ -12,11 +12,10 @@ require (
 	github.com/elastic/go-elasticsearch/v7 v7.17.10
 	github.com/elliotchance/pie/v2 v2.5.2
 	github.com/go-playground/validator/v10 v10.13.0
-	github.com/go-redis/cache/v8 v8.4.4
-	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/goccy/go-json v0.10.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/hecigo/goredis v0.0.0-00010101000000-000000000000
 	github.com/hecigo/goutils v0.0.0-20230517093642-15c393e8b4ce
 	github.com/jackc/pgconn v1.14.0
 	github.com/segmentio/kafka-go v0.4.40
@@ -25,7 +24,6 @@ require (
 	github.com/swaggo/swag v1.16.1
 	go.elastic.co/apm/module/apmelasticsearch/v2 v2.4.1
 	go.elastic.co/apm/module/apmfiber v1.15.0
-	go.elastic.co/apm/module/apmgoredisv8/v2 v2.4.1
 	go.elastic.co/apm/module/apmgormv2/v2 v2.4.1
 	golang.org/x/net v0.10.0
 	gorm.io/driver/bigquery v1.2.0
@@ -62,6 +60,8 @@ require (
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
+	github.com/go-redis/cache/v8 v8.4.4 // indirect
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -122,6 +122,7 @@ require (
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.elastic.co/apm v1.15.0 // indirect
 	go.elastic.co/apm/module/apmfasthttp v1.15.0 // indirect
+	go.elastic.co/apm/module/apmgoredisv8/v2 v2.4.1 // indirect
 	go.elastic.co/apm/module/apmhttp v1.15.0 // indirect
 	go.elastic.co/apm/module/apmhttp/v2 v2.4.1 // indirect
 	go.elastic.co/apm/module/apmsql/v2 v2.4.1 // indirect
@@ -149,3 +150,5 @@ require (
 )
 
 replace github.com/hecigo/goutils => ../goutils
+
+replace github.com/hecigo/goredis => ../goredis

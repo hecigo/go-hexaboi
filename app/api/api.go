@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.elastic.co/apm/module/apmfiber"
 
+	"github.com/hecigo/goredis"
 	"github.com/hecigo/goutils"
 	"hecigo.com/go-hexaboi/app/api/handler"
 	"hecigo.com/go-hexaboi/app/api/middleware"
@@ -46,9 +47,9 @@ func Register(rootApp string, env string, rootCmd *cobra.Command) {
 			elasticsearch.OpenDefaultConnection()
 
 			// Initialize Redis clients
-			redis.OpenDefaultConnection()
+			goredis.Open()
 			redis.EnableSession() // Enable session store for Redis
-			defer redis.CloseAll()
+			defer goredis.Close()
 
 			// Open OrientDB connections
 			orientdb.OpenDefaultConnection()

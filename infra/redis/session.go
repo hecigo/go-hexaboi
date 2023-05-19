@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/hecigo/goredis"
 	"github.com/hecigo/goutils"
 	log "github.com/sirupsen/logrus"
 	"hecigo.com/go-hexaboi/domain/base"
@@ -31,7 +32,7 @@ func EnableSession() {
 }
 
 // Get session by user info
-func GetSession(uuid string, args ...string) *Session {
+func GetSession(ctx context.Context, uuid string, args ...string) *Session {
 	if sessionKeyFormat == "" {
 		log.Errorln("session key format is empty, let call EnableSession() first to load key format from environemnt variable")
 		return nil
@@ -44,10 +45,12 @@ func GetSession(uuid string, args ...string) *Session {
 	hashed := hex.EncodeToString(hasher.Sum(nil))
 	sessionKey = fmt.Sprintf(sessionKeyFormat, uuid, hashed) // {uuid}/{hashed({uuid}/{args})}
 
-	session, err := GetSpecificKey[Session](context.Background(), sessionKey)
+	val, err := goredis.Get[Session](ctx, sessionKey)
 	if err != nil {
 		log.Errorln(err)
 		return nil
 	}
-	return session
+	session := val.(Session)
+
+	return &session
 }
